@@ -1,0 +1,175 @@
+/**
+ * Survivor 51 Fantasy League — Apps Script backend.
+ *
+ * How this works:
+ *  - This script lives inside a Google Sheet (Extensions > Apps Script).
+ *  - The sheet itself IS the database: one tab for entries, one for
+ *    castaways, one for settings. You run the league by editing cells.
+ *  - Deployed as a Web App, it exposes:
+ *      GET  ?  -> returns { castaways, entries, settings } as JSON
+ *      POST {action:"submitEntry", ...} -> appends a new locked entry
+ *
+ * Setup (see README.md for the full walkthrough):
+ *  1. Run `setupSheets` once from the Apps Script editor (or the
+ *     "League Admin" menu that appears in the sheet) to create the three
+ *     tabs with headers and the 21 Survivor 51 castaways pre-loaded.
+ *  2. Deploy > New deployment > Web app > Execute as "Me", Who has access
+ *     "Anyone". Copy the /exec URL into js/config.js on the website.
+ *  3. Whenever you edit this file, you must create a NEW deployment (or
+ *     "Manage deployments" > edit > new version) for the live URL to see
+ *     the change — saving alone is not enough.
+ */
+
+const SHEET_ENTRIES = "Entries";
+const SHEET_CASTAWAYS = "Castaways";
+const SHEET_SETTINGS = "Settings";
+
+// Keep this in sync with js/castaways.js on the website — same ids, same
+// names. This is only used the first time you run setupSheets(); after
+// that, the Castaways tab in the sheet is the source of truth.
+const CASTAWAY_SEED = [
+  { id: "aaliyah-puglia",     name: "Aaliyah Puglia",                 hometown: "Providence, RI",       occupation: "Chef" },
+  { id: "alexis-levine",      name: "Alexis Levine",                  hometown: "Atlanta, GA",          occupation: "Criminal Defense Attorney" },
+  { id: "thien-an-nguyen",    name: "An \u201cThien An\u201d Nguyen", hometown: "Fort Worth, TX",       occupation: "Medical Student" },
+  { id: "ana-sani",           name: "Ana Sani",                       hometown: "Toronto, ON",          occupation: "Voice Actress" },
+  { id: "jelly-loblack",      name: "Angelica \u201cJelly\u201d Loblack", hometown: "Bloomington, IN",  occupation: "Sociology Professor" },
+  { id: "rob-antonson",       name: "Rob Antonson",                   hometown: "Cumberland, RI",       occupation: "Airline Gate Agent" },
+  { id: "brady-booker",       name: "Brady Booker",                   hometown: "Knoxville, TN",        occupation: "Pro Wrestler" },
+  { id: "patt-cannaday",      name: "Patt Cannaday",                  hometown: "Washington, D.C.",     occupation: "Federal Prosecutor" },
+  { id: "linnea-capobianco",  name: "Linnea Capobianco",              hometown: "Jersey City, NJ",      occupation: "Entrepreneur" },
+  { id: "cristian-chavez",    name: "Cristian Chavez",                hometown: "Salt Lake City, UT",   occupation: "Head of HR" },
+  { id: "sharonda-cox",       name: "Sharonda Cox",                   hometown: "Richmond, KY",         occupation: "Resident OB-GYN" },
+  { id: "jenna-doore",        name: "Jenna Doore",                    hometown: "Toledo, OH",           occupation: "Wedding Photographer" },
+  { id: "kristin-flickinger", name: "Kristin Flickinger",             hometown: "Santa Barbara, CA",    occupation: "Crisis Management" },
+  { id: "ori-jean-charles",   name: "Ori Jean-Charles",               hometown: "Spring Valley, NY",    occupation: "Personal Trainer" },
+  { id: "lewis-kelly",        name: "Lewis Kelly",                    hometown: "Corozal, Puerto Rico", occupation: "Farmer" },
+  { id: "danny-kilby",        name: "Danny Kilby",                    hometown: "London, ON",           occupation: "Game Designer" },
+  { id: "carter-krull",       name: "Carter Krull",                   hometown: "Sioux Falls, SD",      occupation: "Livestock Farmer" },
+  { id: "eric-macksoud",      name: "Eric Macksoud",                  hometown: "Windsor Locks, CT",    occupation: "Mental Health Counselor" },
+  { id: "maggie-nestor",      name: "Maggie Nestor",                  hometown: "Charles Town, WV",     occupation: "Farmer" },
+  { id: "mike-pinsky",        name: "Mike Pinsky",                    hometown: "New York, NY",         occupation: "Baseball Operations Executive" },
+  { id: "devin-way",          name: "Devin Way",                      hometown: "Los Angeles, CA",      occupation: "Actor" },
+];
+
+function onOpen() {
+  SpreadsheetApp.getUi()
+    .createMenu("League Admin")
+    .addItem("Set up sheets (run once)", "setupSheets")
+    .addToUi();
+}
+
+function setupSheets() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  let entries = ss.getSheetByName(SHEET_ENTRIES);
+  if (!entries) entries = ss.insertSheet(SHEET_ENTRIES);
+  if (entries.getLastRow() === 0) {
+    entries.appendRow(["Timestamp", "PlayerName", "TeamName", "Pick1", "Pick2", "Pick3", "Pick4", "Pick5", "Paid"]);
+  }
+
+  let cast = ss.getSheetByName(SHEET_CASTAWAYS);
+  if (!cast) cast = ss.insertSheet(SHEET_CASTAWAYS);
+  if (cast.getLastRow() === 0) {
+    cast.appendRow(["Id", "Name", "Hometown", "Occupation", "Outcome"]);
+    CASTAWAY_SEED.forEach((c) => cast.appendRow([c.id, c.name, c.hometown, c.occupation, ""]));
+  }
+
+  let settings = ss.getSheetByName(SHEET_SETTINGS);
+  if (!settings) settings = ss.insertSheet(SHEET_SETTINGS);
+  if (settings.getLastRow() === 0) {
+    settings.appendRow(["Key", "Value"]);
+    settings.appendRow(["seasonStarted", "FALSE"]);
+  }
+
+  SpreadsheetApp.getUi().alert("Sheets are set up. Add a checkbox column look to Paid/Outcome if you like — this only ran once.");
+}
+
+function doGet(e) {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const payload = {
+    castaways: readCastaways(ss),
+    entries: readEntries(ss),
+    settings: readSettings(ss),
+  };
+  return jsonResponse(payload);
+}
+
+function doPost(e) {
+  let body;
+  try {
+    body = JSON.parse(e.postData.contents);
+  } catch (err) {
+    return jsonResponse({ error: "Malformed request." });
+  }
+
+  if (body.action !== "submitEntry") {
+    return jsonResponse({ error: "Unknown action." });
+  }
+
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const playerName = (body.playerName || "").toString().trim();
+  const teamName = (body.teamName || "").toString().trim();
+  const picks = Array.isArray(body.picks) ? body.picks : [];
+
+  if (!playerName || !teamName || picks.length !== 5 || new Set(picks).size !== 5) {
+    return jsonResponse({ error: "Invalid submission — pick five different castaways." });
+  }
+
+  const existing = readEntries(ss);
+  const dupe = existing.some((en) => en.playerName.trim().toLowerCase() === playerName.toLowerCase());
+  if (dupe) {
+    return jsonResponse({ error: "That name has already submitted a team." });
+  }
+
+  const sheet = ss.getSheetByName(SHEET_ENTRIES);
+  sheet.appendRow([new Date(), playerName, teamName, picks[0], picks[1], picks[2], picks[3], picks[4], "FALSE"]);
+  return jsonResponse({ ok: true });
+}
+
+function readCastaways(ss) {
+  const sheet = ss.getSheetByName(SHEET_CASTAWAYS);
+  if (!sheet) return [];
+  const values = sheet.getDataRange().getValues();
+  const rows = values.slice(1);
+  return rows
+    .filter((r) => r[0])
+    .map((r) => ({
+      id: String(r[0]),
+      name: String(r[1]),
+      hometown: String(r[2]),
+      occupation: String(r[3]),
+      outcome: r[4] === "" || r[4] === null || r[4] === undefined ? null : Number(r[4]),
+    }));
+}
+
+function readEntries(ss) {
+  const sheet = ss.getSheetByName(SHEET_ENTRIES);
+  if (!sheet) return [];
+  const values = sheet.getDataRange().getValues();
+  const rows = values.slice(1);
+  return rows
+    .filter((r) => r[1])
+    .map((r) => ({
+      timestamp: r[0] instanceof Date ? r[0].toISOString() : String(r[0]),
+      playerName: String(r[1]),
+      teamName: String(r[2]),
+      picks: [String(r[3]), String(r[4]), String(r[5]), String(r[6]), String(r[7])],
+      paid: String(r[8]).toUpperCase() === "TRUE",
+    }));
+}
+
+function readSettings(ss) {
+  const sheet = ss.getSheetByName(SHEET_SETTINGS);
+  if (!sheet) return { seasonStarted: false };
+  const values = sheet.getDataRange().getValues();
+  const settings = {};
+  values.slice(1).forEach(([key, value]) => {
+    if (!key) return;
+    settings[key] = String(value).toUpperCase() === "TRUE" ? true : String(value).toUpperCase() === "FALSE" ? false : value;
+  });
+  return settings;
+}
+
+function jsonResponse(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj)).setMimeType(ContentService.MimeType.JSON);
+}
