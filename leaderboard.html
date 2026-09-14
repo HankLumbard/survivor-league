@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Leaderboard — Survivor 51 Fantasy League</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="container">
+    <a class="brand" href="index.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2C10 6 6 8 6 13a6 6 0 0012 0c0-3-2-4-2-7 0 2-1 3-2 3 0-3-1-5-2-7z" fill="#DB6423"/></svg>
+      Survivor 51 Fantasy League
+    </a>
+    <div class="navlinks">
+      <a href="index.html">Home</a>
+      <a href="entry.html">Enter</a>
+      <a href="leaderboard.html" class="active">Leaderboard</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" style="padding:56px 0 40px;">
+  <div class="container">
+    <div class="eyebrow" id="week-label">Leaderboard</div>
+    <h1 style="font-size:clamp(1.8rem,4vw,2.6rem);">Standings</h1>
+    <p class="muted" id="lead-sub">Loading&hellip;</p>
+  </div>
+</header>
+
+<section id="pre-season" class="hidden">
+  <div class="container">
+    <div class="panel center">
+      <h3>Picks are locked, but hidden until premiere night</h3>
+      <p class="muted"><span id="entry-count">0</span> teams have entered so far. Everyone's picks and live scoring
+      will be posted here once Survivor 51 premieres on September 23, 2026.</p>
+      <a class="btn" href="entry.html">Draft your team</a>
+    </div>
+  </div>
+</section>
+
+<section id="live-board" class="hidden">
+  <div class="container">
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Team</th>
+            <th>Player</th>
+            <th>Points</th>
+            <th>Max possible</th>
+            <th>Picks</th>
+          </tr>
+        </thead>
+        <tbody id="board-body"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section id="cast-pool" class="hidden tight">
+  <div class="container">
+    <h2>Castaway pool</h2>
+    <p class="muted small">Where every castaway currently stands.</p>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead><tr><th>Castaway</th><th>Hometown</th><th>Status</th></tr></thead>
+        <tbody id="cast-body"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    Survivor 51 Fantasy League &mdash; run by Henry &middot; entry fee $10 via Venmo (@Henry-Lumbard-1)
+  </div>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/castaways.js"></script>
+<script src="js/scoring.js"></script>
+<script>
+async function load() {
+  const data = await fetchLeagueData();
+  const settings = data.settings || { seasonStarted: false };
+  const entries = data.entries || [];
+
+  document.getElementById("entry-count").textContent = entries.length;
+
+  if (!settings.seasonStarted) {
+    document.getElementById("lead-sub").textContent = "Picks reveal once the season premieres.";
+    document.getElementById("pre-season").classList.remove("hidden");
+    return;
+  }
+
+  document.getElementById("lead-sub").textContent = "Updated as the commissioner logs each Tribal Council.";
+
+  // Load castaways (falls back to the static list if the sheet hasn't been seeded yet).
+  const castawaysById = {};
+  if (data.castaways && data.castaways.length) {
+    data.castaways.forEach((c) => (castawaysById[c.id] = c));
+  } else {
+    SURVIVOR_51_CAST.forEach((c) => (castawaysById[c.id] = { ...c, outcome: null }));
+  }
+
+  // Build & sort leaderboard.
+  const rows = entries.map((entry) => {
+    const { current, max, breakdown } = scoreEntry(entry, castawaysById);
+    return { ...entry, current, max, breakdown };
+  });
+  rows.sort((a, b) => b.current - a.current || b.max - a.max);
+
+  const tbody = document.getElementById("board-body");
+  tbody.innerHTML = "";
+  rows.forEach((r, idx) => {
+    const tr = document.createElement("tr");
+    if (idx === 0) tr.className = "rank-1";
+    const picksHtml = r.breakdown
+      .map((b) => {
+        let cls = "active";
+        if (b.outcome === 20) cls = "winner";
+        else if (b.outcome === 17) cls = "final3";
+        else if (typeof b.outcome === "number") cls = "out";
+        return `<span class="pick-tag ${cls}">${b.name}</span>`;
+      })
+      .join("");
+    tr.innerHTML = `
+      <td>${idx + 1}</td>
+      <td>${r.teamName}</td>
+      <td>${r.playerName}</td>
+      <td>${r.current}</td>
+      <td>${r.max}</td>
+      <td>${picksHtml}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const castBody = document.getElementById("cast-body");
+  castBody.innerHTML = "";
+  Object.values(castawaysById)
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .forEach((c) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${c.name}</td><td>${c.hometown}</td><td>${describeOutcome(c.outcome)}</td>`;
+      castBody.appendChild(tr);
+    });
+
+  document.getElementById("live-board").classList.remove("hidden");
+  document.getElementById("cast-pool").classList.remove("hidden");
+}
+
+load().catch((err) => {
+  console.error(err);
+  document.getElementById("lead-sub").textContent = "Couldn't load the leaderboard right now.";
+});
+</script>
+</body>
+</html>

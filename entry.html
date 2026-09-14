@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Draft Your Team — Survivor 51 Fantasy League</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<nav class="topnav">
+  <div class="container">
+    <a class="brand" href="index.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2C10 6 6 8 6 13a6 6 0 0012 0c0-3-2-4-2-7 0 2-1 3-2 3 0-3-1-5-2-7z" fill="#DB6423"/></svg>
+      Survivor 51 Fantasy League
+    </a>
+    <div class="navlinks">
+      <a href="index.html">Home</a>
+      <a href="entry.html" class="active">Enter</a>
+      <a href="leaderboard.html">Leaderboard</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" style="padding:56px 0 40px;">
+  <div class="container">
+    <div class="eyebrow">Draft your team</div>
+    <h1 style="font-size:clamp(1.8rem,4vw,2.6rem);">Pick five. Lock it in.</h1>
+    <p class="muted">Entries are final the moment you submit &mdash; there's no editing after that, so double-check before you hit submit.</p>
+  </div>
+</header>
+
+<section id="form-section">
+  <div class="container" style="max-width:640px;">
+    <div id="status" class="hidden"></div>
+
+    <form id="entry-form">
+      <div class="field">
+        <label for="playerName">Your name</label>
+        <input type="text" id="playerName" required placeholder="e.g. Jordan Smith" />
+      </div>
+      <div class="field">
+        <label for="teamName">Team name</label>
+        <input type="text" id="teamName" required placeholder="e.g. The Immunity Idles" />
+      </div>
+
+      <div class="hairline"></div>
+      <h3 style="margin-top:20px;">Your five castaways</h3>
+      <p class="small muted">Each castaway can only be picked once per slot &mdash; the lists update as you choose.</p>
+
+      <div class="pick-grid" id="pick-grid"></div>
+
+      <div style="margin-top:28px;">
+        <button type="submit" class="btn" id="submit-btn">Submit &amp; lock my team</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<section id="confirmation" class="hidden">
+  <div class="container" style="max-width:640px;">
+    <div class="panel center">
+      <h2>You're in! 🔥</h2>
+      <p class="muted">Your team is locked. Last step: send your $10 entry fee via Venmo to finish signing up.</p>
+      <a class="btn" style="margin-top:8px;" target="_blank" rel="noopener"
+         href="https://venmo.com/Henry-Lumbard-1?txn=pay&note=Survivor%2051%20Fantasy%20League%20entry">
+        Pay $10 on Venmo (@Henry-Lumbard-1)
+      </a>
+      <p class="small muted" style="margin-top:20px;">
+        Picks stay hidden until the season starts. Check the
+        <a href="leaderboard.html">leaderboard</a> after premiere night to see everyone's teams.
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    Survivor 51 Fantasy League &mdash; run by Henry &middot; entry fee $10 via Venmo (@Henry-Lumbard-1)
+  </div>
+</footer>
+
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/castaways.js"></script>
+<script>
+const NUM_PICKS = LEAGUE.picksPerTeam;
+const grid = document.getElementById("pick-grid");
+const selects = [];
+
+for (let i = 0; i < NUM_PICKS; i++) {
+  const field = document.createElement("div");
+  field.className = "field";
+  const label = document.createElement("label");
+  label.textContent = `Pick ${i + 1}`;
+  const select = document.createElement("select");
+  select.required = true;
+  select.dataset.index = i;
+  field.appendChild(label);
+  field.appendChild(select);
+  grid.appendChild(field);
+  selects.push(select);
+}
+
+function renderOptions() {
+  const chosen = selects.map((s) => s.value).filter(Boolean);
+  selects.forEach((select) => {
+    const current = select.value;
+    select.innerHTML = '<option value="">Choose a castaway&hellip;</option>';
+    SURVIVOR_51_CAST.forEach((c) => {
+      if (chosen.includes(c.id) && c.id !== current) return; // already taken by another slot
+      const opt = document.createElement("option");
+      opt.value = c.id;
+      opt.textContent = `${c.name} \u2014 ${c.hometown}`;
+      if (c.id === current) opt.selected = true;
+      select.appendChild(opt);
+    });
+  });
+}
+selects.forEach((s) => s.addEventListener("change", renderOptions));
+renderOptions();
+
+function showStatus(msg, type) {
+  const el = document.getElementById("status");
+  el.textContent = msg;
+  el.className = `status-msg ${type}`;
+}
+
+document.getElementById("entry-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const playerName = document.getElementById("playerName").value.trim();
+  const teamName = document.getElementById("teamName").value.trim();
+  const picks = selects.map((s) => s.value);
+
+  if (new Set(picks).size !== NUM_PICKS || picks.includes("")) {
+    showStatus("Pick five different castaways before submitting.", "error");
+    return;
+  }
+
+  const submitBtn = document.getElementById("submit-btn");
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Locking it in\u2026";
+
+  try {
+    const result = await submitEntry({ playerName, teamName, picks });
+    if (result.error) {
+      showStatus(result.error, "error");
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Submit & lock my team";
+      return;
+    }
+
+    document.getElementById("form-section").classList.add("hidden");
+    document.getElementById("confirmation").classList.remove("hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  } catch (err) {
+    console.error(err);
+    showStatus("Something went wrong submitting your team. Please try again.", "error");
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Submit & lock my team";
+  }
+});
+</script>
+</body>
+</html>
