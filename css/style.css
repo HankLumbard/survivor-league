@@ -262,15 +262,19 @@ tr.rank-1 td:first-child { color: var(--gold-400); font-weight: 700; }
 /* Keeps each team's five picks on one line rather than wrapping the row
    onto multiple lines. The table's overflow-x:auto wrapper (in the page)
    handles any horizontal overflow with a scrollbar instead. */
-/* Keeps each team's five picks on one line, but only once the screen is
-   wide enough to actually fit them -- below that (phones, narrow windows)
-   picks wrap onto extra lines within the row instead, which reads better
-   than a horizontal scrollbar on a small screen. */
-.picks-cell .pick-tag { margin: 0 4px 6px 0; }
-@media (min-width: 900px) {
-  .picks-cell { white-space: nowrap; }
-  .picks-cell .pick-tag { margin: 0 4px 0 0; }
-  #standings-table td, #standings-table th { white-space: nowrap; }
+/* Keeps each team's five picks on one line at every screen size. On a
+   normal monitor the wide container (see .container-wide) usually fits
+   this without any scrollbar; on a phone it won't, so the table's
+   overflow-x:auto wrapper lets people scroll sideways to see every pick
+   rather than the row wrapping onto multiple lines. */
+.picks-cell {
+  white-space: nowrap;
+}
+.picks-cell .pick-tag {
+  margin: 0 4px 0 0;
+}
+#standings-table td, #standings-table th {
+  white-space: nowrap;
 }
 
 .badge {
