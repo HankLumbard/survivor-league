@@ -136,17 +136,20 @@ a:hover { color: #b4f2f4; }
 }
 .hero-cta-hotspot:focus-visible { outline: 3px solid #fff1c6; outline-offset: 4px; }
 .poster-caption {
-  position: absolute;
+  position: relative;
   z-index: 4;
-  left: 50%;
-  bottom: 18px;
-  transform: translateX(-50%);
+  left: auto;
+  bottom: auto;
+  transform: none;
+  width: fit-content;
+  max-width: calc(100% - 28px);
+  margin: 12px auto 14px;
   color: rgba(244,228,189,.88);
   font-family: "Oswald", sans-serif;
   font-size: .78rem;
   text-transform: uppercase;
   letter-spacing: .12em;
-  background: rgba(2,12,16,.72);
+  background: rgba(2,12,16,.92);
   border: 1px solid rgba(244,228,189,.18);
   border-radius: 999px;
   padding: 7px 13px;
@@ -303,7 +306,7 @@ footer { border-top:1px solid var(--line); padding:30px 0; color:#aeb8b3; font-s
   .navlinks { width:100%; justify-content:space-between; gap:12px; }
   .navlinks a { padding:4px 0 6px; font-size:.82rem; }
   .hero-cta-hotspot { left:32%; width:36%; top:54%; height:12%; }
-  .poster-caption { display:none; }
+  .poster-caption { display:block; }
 }
 @media (max-width: 640px) {
   .container { padding:0 17px; }
