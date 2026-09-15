@@ -255,6 +255,13 @@ tr.rank-1 td:first-child { color: var(--gold-400); font-weight: 700; }
 .pick-tag.winner { border-color: var(--gold-400); background: rgba(201,162,39,0.15); color: var(--gold-400); }
 .pick-tag.active { border-color: var(--ember-300); color: var(--ember-300); }
 
+/* Keeps each team's five picks on one line rather than wrapping the row
+   onto multiple lines. The table's overflow-x:auto wrapper (in the page)
+   handles any horizontal overflow with a scrollbar instead. */
+.picks-cell { white-space: nowrap; }
+.picks-cell .pick-tag { margin: 0 4px 0 0; }
+#standings-table td, #standings-table th { white-space: nowrap; }
+
 .badge {
   display: inline-block;
   padding: 3px 9px;
