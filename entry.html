@@ -28,6 +28,7 @@
     <div class="eyebrow">Draft your team</div>
     <h1 style="font-size:clamp(1.8rem,4vw,2.6rem);">Pick five. Lock it in.</h1>
     <p class="muted">Entries are final the moment you submit &mdash; there's no editing after that, so double-check before you hit submit.</p>
+    <p class="muted small" style="margin-top:-4px;">Tip: instead of hunting through the dropdowns, you can scroll down and tap a castaway's photo card to add them to your team &mdash; tap it again to remove them.</p>
   </div>
 </header>
 
@@ -65,6 +66,11 @@
         <label for="teamName">Team name</label>
         <input type="text" id="teamName" required placeholder="e.g. The Immunity Idles" />
       </div>
+      <div class="field">
+        <label for="phone">Cell phone number</label>
+        <input type="tel" id="phone" required placeholder="e.g. 555-123-4567" />
+        <p class="small muted" style="margin-top:6px;">Used to add you to the group text for the season &mdash; not shown on the public leaderboard.</p>
+      </div>
 
       <div class="hairline"></div>
       <h3 style="margin-top:20px;">Your five castaways</h3>
@@ -85,8 +91,9 @@
     <p class="muted small">
       Headshots and bios courtesy of CBS press materials, linked from
       <a href="https://cbs6albany.com/news/entertainment/meet-the-castaways-of-survivor-51" target="_blank" rel="noopener">official cast coverage</a>
-      rather than copied here.
+      rather than copied here. Tap a card to add or remove that castaway from your team above.
     </p>
+    <div id="roster-status" class="hidden status-msg" style="margin-top:12px;"></div>
     <div class="roster-grid" id="roster-grid"></div>
   </div>
 </section>
@@ -128,6 +135,7 @@ function renderRoster() {
   SURVIVOR_51_CAST.forEach((c) => {
     const card = document.createElement("div");
     card.className = "roster-card";
+    card.dataset.id = c.id;
 
     const photoWrap = document.createElement("div");
     photoWrap.className = "roster-photo";
@@ -212,9 +220,54 @@ function renderOptions() {
       select.appendChild(opt);
     });
   });
+  syncRosterSelection();
 }
 selects.forEach((s) => s.addEventListener("change", renderOptions));
 renderOptions();
+
+// ---- Roster card click-to-select, kept in sync with the dropdowns ----
+function syncRosterSelection() {
+  const chosen = selects.map((s) => s.value).filter(Boolean);
+  document.querySelectorAll(".roster-card").forEach((card) => {
+    card.classList.toggle("selected", chosen.includes(card.dataset.id));
+  });
+}
+
+function flashRosterStatus(msg) {
+  const el = document.getElementById("roster-status");
+  el.textContent = msg;
+  el.className = "status-msg error";
+  clearTimeout(flashRosterStatus._t);
+  flashRosterStatus._t = setTimeout(() => el.classList.add("hidden"), 2600);
+}
+
+function toggleCastaway(id) {
+  const alreadyIn = selects.find((s) => s.value === id);
+  if (alreadyIn) {
+    alreadyIn.value = "";
+  } else {
+    const emptySlot = selects.find((s) => s.value === "");
+    if (!emptySlot) {
+      flashRosterStatus("Your team is already full \u2014 tap a selected castaway to remove them first.");
+      return;
+    }
+    emptySlot.value = id;
+  }
+  renderOptions();
+}
+
+document.querySelectorAll(".roster-card").forEach((card) => {
+  card.classList.add("clickable");
+  card.setAttribute("role", "button");
+  card.setAttribute("tabindex", "0");
+  card.addEventListener("click", () => toggleCastaway(card.dataset.id));
+  card.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      toggleCastaway(card.dataset.id);
+    }
+  });
+});
 
 function showStatus(msg, type) {
   const el = document.getElementById("status");
@@ -226,10 +279,15 @@ document.getElementById("entry-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const playerName = document.getElementById("playerName").value.trim();
   const teamName = document.getElementById("teamName").value.trim();
+  const phone = document.getElementById("phone").value.trim();
   const picks = selects.map((s) => s.value);
 
   if (new Set(picks).size !== NUM_PICKS || picks.includes("")) {
     showStatus("Pick five different castaways before submitting.", "error");
+    return;
+  }
+  if (!phone) {
+    showStatus("Add a cell phone number so you can be added to the group text.", "error");
     return;
   }
 
@@ -238,7 +296,7 @@ document.getElementById("entry-form").addEventListener("submit", async (e) => {
   submitBtn.textContent = "Locking it in\u2026";
 
   try {
-    const result = await submitEntry({ playerName, teamName, picks });
+    const result = await submitEntry({ playerName, teamName, phone, picks });
     if (result.error) {
       showStatus(result.error, "error");
       submitBtn.disabled = false;
