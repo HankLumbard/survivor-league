@@ -72,13 +72,8 @@
       <p class="torch-sub">Where every castaway stands, and what each one is worth.</p>
     </div>
   </div>
-  <div class="container" style="padding-top:8px;">
-    <div style="overflow-x:auto;">
-      <table>
-        <thead><tr><th>Castaway</th><th>Occupation</th><th>Status</th></tr></thead>
-        <tbody id="cast-body"></tbody>
-      </table>
-    </div>
+  <div class="container container-wide" style="padding-top:8px;">
+    <div class="roster-grid" id="cast-roster-grid"></div>
   </div>
 </section>
 
@@ -108,12 +103,18 @@ async function load() {
 
   document.getElementById("lead-sub").textContent = "Updated as the commissioner logs each Tribal Council.";
 
-  // Load castaways (falls back to the static list if the sheet hasn't been seeded yet).
+  // Load castaways. The sheet is the live source for outcome/name/etc, but it
+  // has no photo column -- photos only live in the static SURVIVOR_51_CAST
+  // list -- so start from that list and layer the sheet's fields on top.
+  // Spreading `c` after `base` only overwrites keys `c` actually has, so
+  // base.photo survives untouched since the sheet data never includes one.
   const castawaysById = {};
+  SURVIVOR_51_CAST.forEach((c) => (castawaysById[c.id] = { ...c, outcome: null }));
   if (data.castaways && data.castaways.length) {
-    data.castaways.forEach((c) => (castawaysById[c.id] = c));
-  } else {
-    SURVIVOR_51_CAST.forEach((c) => (castawaysById[c.id] = { ...c, outcome: null }));
+    data.castaways.forEach((c) => {
+      const base = castawaysById[c.id] || {};
+      castawaysById[c.id] = { ...base, ...c };
+    });
   }
 
   // Build & sort leaderboard.
@@ -148,18 +149,64 @@ async function load() {
     tbody.appendChild(tr);
   });
 
-  const castBody = document.getElementById("cast-body");
-  castBody.innerHTML = "";
-  Object.values(castawaysById)
-    .sort((a, b) => a.name.localeCompare(b.name))
-    .forEach((c) => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `<td>${c.name}</td><td>${c.occupation}</td><td>${describeOutcome(c.outcome)}</td>`;
-      castBody.appendChild(tr);
-    });
+  renderCastawayCards(castawaysById);
 
   document.getElementById("live-board").classList.remove("hidden");
   document.getElementById("cast-pool").classList.remove("hidden");
+}
+
+function initials(name) {
+  return name.replace(/[\u201c\u201d"]/g, "").split(" ").filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
+}
+
+function statusClass(outcome) {
+  if (outcome === 20) return "winner";
+  if (outcome === 17) return "final3";
+  if (typeof outcome === "number") return "out";
+  return "";
+}
+
+function renderCastawayCards(castawaysById) {
+  const grid = document.getElementById("cast-roster-grid");
+  grid.innerHTML = "";
+  Object.values(castawaysById)
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .forEach((c) => {
+      const card = document.createElement("div");
+      const cls = statusClass(c.outcome);
+      card.className = "roster-card" + (cls ? ` ${cls}` : "");
+
+      const photoWrap = document.createElement("div");
+      photoWrap.className = "roster-photo";
+      if (c.photo) {
+        const img = document.createElement("img");
+        img.src = c.photo;
+        img.alt = c.name.replace(/[\u201c\u201d]/g, '"');
+        img.loading = "lazy";
+        img.onerror = function () {
+          photoWrap.innerHTML = `<div class="roster-initials">${initials(c.name)}</div>`;
+        };
+        photoWrap.appendChild(img);
+      } else {
+        photoWrap.innerHTML = `<div class="roster-initials">${initials(c.name)}</div>`;
+      }
+
+      const info = document.createElement("div");
+      info.className = "roster-info";
+      const badge = c.outcome !== null && c.outcome !== undefined
+        ? `<p class="roster-badge ${cls}">${describeOutcome(c.outcome)}</p>`
+        : "";
+      info.innerHTML = `
+        <h3>${c.name}</h3>
+        <p class="roster-meta">Age ${c.age} &middot; ${c.hometown}</p>
+        <p class="roster-occ">${c.occupation}</p>
+        ${badge}
+      `;
+
+      card.appendChild(info);
+      card.appendChild(photoWrap);
+      grid.appendChild(card);
+    });
 }
 
 load().catch((err) => {
