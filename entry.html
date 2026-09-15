@@ -63,12 +63,11 @@
       <div class="hairline"></div>
       <h3 style="margin-top:20px;">Your five castaways</h3>
       <p class="small muted">Each castaway can only be selected once. The five slots update as you make your choices.</p>
+      <p class="small muted center" style="margin:16px 0 18px;">
+        👇 <strong>Player cards are below the dropdowns.</strong> Scroll down to see photos and bios. You can <strong>tap a player card to select them</strong>, or use the <strong>dropdowns</strong> above.
+      </p>
 
       <div class="pick-grid" id="pick-grid"></div>
-
-      <p class="small muted center" style="margin:16px 0 0;">
-        👇 Player cards are below the dropdowns — scroll down to see photos, bios, and more about each castaway.
-      </p>
 
       <div style="margin-top:28px;">
         <button type="submit" class="btn" id="submit-btn">Submit &amp; lock my team</button>
@@ -172,11 +171,40 @@ function renderRoster() {
 // (see the click-wiring in setupForm, which skips .fake-card). Clicking it
 // reveals a reason, rather than adding him to anyone's team.
 const RIZO_REASONS = [
-  "Told the group chat he \u201cbasically already won\u201d before the season even aired.",
+  "Told the group chat he “basically already won” before the season even aired.",
   "Once explained the hidden immunity idol rules to a room full of people who have watched every season.",
-  "Refers to strategic gameplay as \u201cwhat I would have done.\u201d",
+  "Refers to strategic gameplay as “what I would have done.”",
   "Still brings up that one time he almost auditioned for the show.",
   "Has never once received a torch snuff, and will not let anyone forget it.",
+  "Said he has a foolproof alliance strategy. Unfortunately, nobody else is in the alliance.",
+  "Volunteered to be the camp provider, then remembered he doesn't know how to fish.",
+  "Would absolutely play his Shot in the Dark on Day 1.",
+  "Has already blamed the edit for something that hasn't happened yet.",
+  "Calls himself a “social threat” despite being left on read in the group chat.",
+  "Would find the hidden immunity idol and immediately tell everyone where it is.",
+  "Spent three hours making a fake alliance chart on a whiteboard.",
+  "His strategy is to “lay low” until everyone forgets he's there.",
+  "Would negotiate his vote for a sandwich and still think he won the deal.",
+  "Claims he could beat any Survivor challenge because he watched all the challenge compilations.",
+  "Would form a final-four alliance before the opening credits finish.",
+  "Has a backup speech prepared for every possible Tribal… except the one where he gets voted out.",
+  "Thinks “trust” is a strategy.",
+  "Would accidentally vote himself out and then argue the parchment was confusing.",
+  "Has been practicing his confessional face in the bathroom mirror.",
+  "Says “I’m not here to make friends” immediately after making friends.",
+  "Would find an idol clue and somehow lose it before reading it.",
+  "Already knows exactly who he would vote for at every Tribal Council.",
+  "Would tell Jeff Probst his vote is “a business decision” and then vote based on vibes.",
+  "His master strategy is to “hope everyone else makes bigger mistakes.”",
+  "Would get blindsided and insist it was part of his plan.",
+  "Has a three-step plan: survive, dominate, explain afterward why it was all intentional.",
+  "Would bring an actual PowerPoint to a Tribal Council.",
+  "Claims he's a challenge beast because he once won a backyard cornhole tournament.",
+  "Would spend his entire day searching for an idol that isn't there.",
+  "His alliance has one member: Rizo.",
+  "Would give a 10-minute confessional explaining why his 2–3–1 vote split was genius.",
+  "Somehow manages to be both the biggest threat and the easiest person to forget.",
+  "If voted out, he will immediately request a recount.",
 ];
 
 function renderRizoCard(grid) {
