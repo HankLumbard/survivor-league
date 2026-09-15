@@ -28,7 +28,12 @@
     <!-- The generated poster contains the visual 'ENTER YOUR TEAM' plaque. This invisible,
          accessible HTML hotspot makes that artwork actually clickable without relying on text baked into an image. -->
     <a class="hero-cta-hotspot" href="entry.html" aria-label="Enter your Survivor 51 fantasy team">Enter your team</a>
-    <div class="poster-caption">The season begins September 23, 2026 · Pick 5 · $10 entry</div>
+    <div class="poster-caption premiere-countdown" aria-live="polite">
+      <div class="countdown-kicker">SURVIVOR 51 PREMIERE</div>
+      <div class="countdown-time" id="premiere-countdown">Loading countdown…</div>
+      <div class="countdown-date">Wednesday, September 23 · 8:00 PM ET</div>
+      <div class="countdown-note">Pick 5 · $10 entry · Lock in before the season begins</div>
+    </div>
   </section>
 
   <section>
@@ -83,5 +88,6 @@
 </main>
 
 <footer><div class="container">Survivor 51 Fantasy League · run by Henry · $10 via Venmo (@Henry-Lumbard-1)</div></footer>
+  <script src="js/countdown.js"></script>
 </body>
 </html>
