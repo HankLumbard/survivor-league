@@ -64,7 +64,7 @@ function setupSheets() {
   let entries = ss.getSheetByName(SHEET_ENTRIES);
   if (!entries) entries = ss.insertSheet(SHEET_ENTRIES);
   if (entries.getLastRow() === 0) {
-    entries.appendRow(["Timestamp", "PlayerName", "TeamName", "Pick1", "Pick2", "Pick3", "Pick4", "Pick5", "Paid"]);
+    entries.appendRow(["Timestamp", "PlayerName", "TeamName", "Pick1", "Pick2", "Pick3", "Pick4", "Pick5", "Paid", "Phone"]);
   }
 
   let cast = ss.getSheetByName(SHEET_CASTAWAYS);
@@ -107,12 +107,19 @@ function doPost(e) {
   }
 
   const ss = SpreadsheetApp.getActiveSpreadsheet();
+
+  const settings = readSettings(ss);
+  if (settings.seasonStarted === true) {
+    return jsonResponse({ error: "Entries are closed \u2014 the season has already started." });
+  }
+
   const playerName = (body.playerName || "").toString().trim();
   const teamName = (body.teamName || "").toString().trim();
+  const phone = (body.phone || "").toString().trim();
   const picks = Array.isArray(body.picks) ? body.picks : [];
 
-  if (!playerName || !teamName || picks.length !== 5 || new Set(picks).size !== 5) {
-    return jsonResponse({ error: "Invalid submission — pick five different castaways." });
+  if (!playerName || !teamName || !phone || picks.length !== 5 || new Set(picks).size !== 5) {
+    return jsonResponse({ error: "Invalid submission \u2014 fill in your name, phone number, and five different castaways." });
   }
 
   const existing = readEntries(ss);
@@ -122,7 +129,7 @@ function doPost(e) {
   }
 
   const sheet = ss.getSheetByName(SHEET_ENTRIES);
-  sheet.appendRow([new Date(), playerName, teamName, picks[0], picks[1], picks[2], picks[3], picks[4], "FALSE"]);
+  sheet.appendRow([new Date(), playerName, teamName, picks[0], picks[1], picks[2], picks[3], picks[4], "FALSE", phone]);
   return jsonResponse({ ok: true });
 }
 
@@ -155,6 +162,7 @@ function readEntries(ss) {
       teamName: String(r[2]),
       picks: [String(r[3]), String(r[4]), String(r[5]), String(r[6]), String(r[7])],
       paid: String(r[8]).toUpperCase() === "TRUE",
+      phone: r[9] ? String(r[9]) : "",
     }));
 }
 
