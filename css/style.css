@@ -466,3 +466,69 @@ body {
   .torch-band { padding: 52px 0 44px; }
   .nopick { flex-direction: column; text-align: center; gap: 16px; }
 }
+
+/* ---------- Castaway roster (entry page) ---------- */
+.roster-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+.roster-card {
+  background: var(--jungle-900);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: border-color 0.15s ease;
+}
+.roster-card:hover { border-color: var(--ember-300); }
+.roster-photo {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--jungle-800);
+  border: 1px solid var(--line);
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+.roster-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 18%;
+}
+.roster-initials {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: var(--ember-300);
+}
+.roster-info h3 {
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+.roster-meta {
+  font-size: 0.82rem;
+  color: var(--sand-200);
+  margin: 0 0 2px;
+}
+.roster-occ {
+  font-size: 0.82rem;
+  color: var(--ember-300);
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .roster-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+  .roster-photo { width: 64px; height: 64px; }
+}
