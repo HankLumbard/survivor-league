@@ -38,9 +38,9 @@
 <section id="pre-season" class="hidden">
   <div class="container">
     <div class="panel center">
-      <h3>Picks are locked and hidden until premiere night</h3>
-      <p><span id="entry-count">0</span> teams have entered so far. Everyone's picks and live scoring
-      will be posted here after Survivor 51 premieres and right before episode 2 on September 30th, 2026.</p>
+      <h3>Picks are locked, but hidden until premiere night</h3>
+      <p class="muted"><span id="entry-count">0</span> teams have entered so far. Everyone's picks and live scoring
+      will be posted here once Survivor 51 premieres on September 23, 2026.</p>
       <a class="btn" href="entry.html">Draft your team</a>
     </div>
   </div>
@@ -84,7 +84,7 @@
 
 <footer>
   <div class="container">
-    Survivor 51 Fantasy League &mdash; run by Hank &middot; entry fee $10 via Venmo (@Henry-Lumbard-1)
+    Survivor 51 Fantasy League &mdash; run by Henry &middot; entry fee $10 via Venmo (@Henry-Lumbard-1)
   </div>
 </footer>
 
@@ -119,6 +119,7 @@ async function load() {
   // Build & sort leaderboard.
   const rows = entries.map((entry) => {
     const { current, max, breakdown } = scoreEntry(entry, castawaysById);
+    breakdown.sort((a, b) => a.name.localeCompare(b.name));
     return { ...entry, current, max, breakdown };
   });
   rows.sort((a, b) => b.current - a.current || b.max - a.max);
