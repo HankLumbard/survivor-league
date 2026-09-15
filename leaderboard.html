@@ -6,6 +6,11 @@
 <title>Leaderboard — Survivor 51 Fantasy League</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%94%A5</text></svg>" />
 <link rel="stylesheet" href="css/style.css" />
+<style>
+  .admin-column { display: none; }
+  .admin-column.revealed { display: table-cell; }
+  .admin-reveal-section { padding-top: 12px; }
+</style>
 </head>
 <body>
 
@@ -52,8 +57,8 @@
             <th>Rank</th>
             <th>Team</th>
             <th>Points</th>
-            <th>Max possible</th>
-            <th>Upside</th>
+            <th class="admin-column">Max possible</th>
+            <th class="admin-column">Upside</th>
             <th>Picks</th>
           </tr>
         </thead>
@@ -73,6 +78,12 @@
   </div>
   <div class="container container-wide" style="padding-top:8px;">
     <div class="roster-grid" id="cast-roster-grid"></div>
+  </div>
+</section>
+
+<section class="tight admin-reveal-section">
+  <div class="container center">
+    <button type="button" class="btn secondary" id="reveal-admin-btn">Show Max Points &amp; Upside</button>
   </div>
 </section>
 
@@ -142,8 +153,8 @@ async function load() {
       <td>${idx + 1}</td>
       <td><strong>${r.teamName}</strong></td>
       <td><strong>${r.current}</strong></td>
-      <td><strong>${r.max}</strong></td>
-      <td>${r.upside > 0 ? `+${r.upside}` : "—"}</td>
+      <td class="admin-column"><strong>${r.max}</strong></td>
+      <td class="admin-column">${r.upside > 0 ? `+${r.upside}` : "—"}</td>
       <td class="picks-cell">${picksHtml}</td>
     `;
     tbody.appendChild(tr);
@@ -153,6 +164,8 @@ async function load() {
 
   document.getElementById("live-board").classList.remove("hidden");
   document.getElementById("cast-pool").classList.remove("hidden");
+
+  document.getElementById("reveal-admin-btn").addEventListener("click", revealAdminColumns);
 }
 
 function initials(name) {
@@ -164,6 +177,19 @@ function statusClass(outcome) {
   if (outcome === 17) return "final3";
   if (typeof outcome === "number") return "out";
   return "";
+}
+
+function revealAdminColumns() {
+  const pin = window.prompt("Enter PIN to reveal Max Points and Upside:");
+  if (pin === "187") {
+    document.querySelectorAll(".admin-column").forEach((el) => {
+      el.classList.add("revealed");
+    });
+    document.getElementById("reveal-admin-btn").textContent = "Max Points & Upside Revealed";
+    document.getElementById("reveal-admin-btn").disabled = true;
+  } else if (pin !== null) {
+    window.alert("Incorrect PIN.");
+  }
 }
 
 function renderCastawayCards(castawaysById) {
