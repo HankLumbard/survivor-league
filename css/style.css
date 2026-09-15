@@ -307,7 +307,8 @@ footer { border-top:1px solid var(--line); padding:30px 0; color:#aeb8b3; font-s
 @media (max-width: 640px) {
   .container { padding:0 17px; }
   .brand { font-size:.96rem; }
-  .poster-art { min-height:390px; object-fit:cover; object-position:center; }
+  .poster-hero { width:100%; }
+  .poster-art { min-height:0; object-fit:contain; object-position:center; }
   .hero { padding:48px 0 38px; background-position:center; }
   section { padding:42px 0; }
   .panel { padding:21px; }
