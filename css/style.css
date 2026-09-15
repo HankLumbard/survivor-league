@@ -487,6 +487,33 @@ body {
   transition: border-color 0.15s ease;
 }
 .roster-card:hover { border-color: var(--ember-300); }
+.roster-card.clickable { cursor: pointer; }
+.roster-card.clickable:focus-visible { outline: 2px solid var(--ember-400); outline-offset: 2px; }
+/* "Goes grey" once picked -- desaturated and dimmed, with a small checkmark
+   badge on the photo so it reads as "on your team" rather than "unavailable". */
+.roster-card.selected {
+  opacity: 0.55;
+  filter: grayscale(0.7);
+  border-color: var(--sand-200);
+}
+.roster-card.selected .roster-photo { position: relative; }
+.roster-card.selected .roster-photo::after {
+  content: "\2713";
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--ember-500);
+  color: var(--sand-100);
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--jungle-900);
+}
 .roster-info {
   text-align: left;
   min-width: 0;
@@ -505,7 +532,7 @@ body {
   height: 100%;
   object-fit: cover;
   object-position: 50% 5%;
-  transform: scale(3.5);
+  transform: scale(2.2);
   transform-origin: 50% 5%;
 }
 .roster-initials {
