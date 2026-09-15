@@ -103,18 +103,15 @@ a:hover { color: #b4f2f4; }
   position: relative;
   width: 100%;
   overflow: hidden;
-  display: flex;
-  justify-content: center;
   background: #020c11;
   border-bottom: 1px solid rgba(244,228,189,.18);
 }
 .poster-art {
   display: block;
-  width: min(100%, calc(78vh * 1.64454));
+  width: 100%;
   height: auto;
-  max-width: 100%;
   max-height: 78vh;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
 }
 .poster-hero::after {
@@ -310,8 +307,7 @@ footer { border-top:1px solid var(--line); padding:30px 0; color:#aeb8b3; font-s
 @media (max-width: 640px) {
   .container { padding:0 17px; }
   .brand { font-size:.96rem; }
-  .poster-hero { width:100%; }
-  .poster-art { min-height:0; object-fit:contain; object-position:center; }
+  .poster-art { min-height:390px; object-fit:cover; object-position:center; }
   .hero { padding:48px 0 38px; background-position:center; }
   section { padding:42px 0; }
   .panel { padding:21px; }
@@ -324,24 +320,63 @@ footer { border-top:1px solid var(--line); padding:30px 0; color:#aeb8b3; font-s
   .hero-stats { gap:18px; }
 }
 
+/* Premiere countdown */
+.premiere-countdown {
+  padding: 14px 20px 16px;
+  text-align: center;
+  letter-spacing: .04em;
+}
 
-/* Hero poster: preserve the complete artwork; width is capped by viewport height.
-   Source artwork ratio: 1536 / 934 = 1.64454. */
-.poster-hero {
-  min-height: 0;
-  align-items: flex-start;
+.countdown-kicker {
+  color: var(--gold);
+  font-family: Oswald, sans-serif;
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  margin-bottom: 5px;
 }
-.poster-art {
-  flex: 0 1 auto;
-  width: min(100%, calc(78vh * 1.64454));
-  max-width: 100%;
-  max-height: 78vh;
-  height: auto;
-  object-fit: contain;
+
+.countdown-time {
+  color: #fff7df;
+  font-family: Oswald, Impact, sans-serif;
+  font-size: clamp(1.45rem, 3vw, 2.45rem);
+  font-weight: 700;
+  line-height: 1.05;
+  text-shadow: 0 2px 14px rgba(0,0,0,.65);
+  white-space: nowrap;
 }
-@media (max-width: 640px) {
-  .poster-art {
-    width: 100%;
-    max-height: none;
-  }
+
+.countdown-time span {
+  display: inline-block;
+  min-width: 1.25em;
+  font-variant-numeric: tabular-nums;
+}
+
+.countdown-time small {
+  color: var(--ember);
+  font-family: DM Sans, sans-serif;
+  font-size: .46em;
+  font-weight: 800;
+  letter-spacing: .1em;
+  margin: 0 .28em 0 .08em;
+  vertical-align: .22em;
+}
+
+.countdown-date {
+  color: #f2dfb0;
+  font-size: .78rem;
+  margin-top: 5px;
+}
+
+.countdown-note {
+  color: rgba(255,255,255,.68);
+  font-size: .68rem;
+  margin-top: 3px;
+}
+
+@media (max-width: 600px) {
+  .premiere-countdown { padding: 11px 12px 13px; }
+  .countdown-time { font-size: 1.35rem; }
+  .countdown-date { font-size: .7rem; }
+  .countdown-note { font-size: .62rem; }
 }
