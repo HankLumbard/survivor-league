@@ -74,7 +74,7 @@
   <div class="container" style="padding-top:8px;">
     <div style="overflow-x:auto;">
       <table>
-        <thead><tr><th>Castaway</th><th>Hometown</th><th>Status</th></tr></thead>
+        <thead><tr><th>Castaway</th><th>Occupation</th><th>Status</th></tr></thead>
         <tbody id="cast-body"></tbody>
       </table>
     </div>
@@ -152,7 +152,7 @@ async function load() {
     .sort((a, b) => a.name.localeCompare(b.name))
     .forEach((c) => {
       const tr = document.createElement("tr");
-      tr.innerHTML = `<td>${c.name}</td><td>${c.hometown}</td><td>${describeOutcome(c.outcome)}</td>`;
+      tr.innerHTML = `<td>${c.name}</td><td>${c.occupation}</td><td>${describeOutcome(c.outcome)}</td>`;
       castBody.appendChild(tr);
     });
 
