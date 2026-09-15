@@ -16,11 +16,11 @@ async function fetchLeagueData() {
   return res.json();
 }
 
-async function submitEntry({ playerName, teamName, picks }) {
+async function submitEntry({ playerName, teamName, phone, picks }) {
   const res = await fetch(SHEET_API_URL, {
     method: "POST",
     headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify({ action: "submitEntry", playerName, teamName, picks }),
+    body: JSON.stringify({ action: "submitEntry", playerName, teamName, phone, picks }),
   });
   if (!res.ok) throw new Error(`Sheet API returned ${res.status}`);
   return res.json();
