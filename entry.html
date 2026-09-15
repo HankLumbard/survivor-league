@@ -59,11 +59,11 @@
     <form id="entry-form">
       <div class="field">
         <label for="playerName">Your name</label>
-        <input type="text" id="playerName" required placeholder="e.g. Jordan Mattison" />
+        <input type="text" id="playerName" required placeholder="e.g. Jordan Smith" />
       </div>
       <div class="field">
         <label for="teamName">Team name</label>
-        <input type="text" id="teamName" required placeholder="e.g. I'm too tall to drive my porsche" />
+        <input type="text" id="teamName" required placeholder="e.g. The Immunity Idles" />
       </div>
 
       <div class="hairline"></div>
@@ -73,9 +73,21 @@
       <div class="pick-grid" id="pick-grid"></div>
 
       <div style="margin-top:28px;">
-        <button type="submit" class="btn" id="submit-btn">My Tribe Has Spoken</button>
+        <button type="submit" class="btn" id="submit-btn">Submit &amp; lock my team</button>
       </div>
     </form>
+  </div>
+</section>
+
+<section id="roster-section" class="tight">
+  <div class="container container-wide">
+    <h2>This season's castaways</h2>
+    <p class="muted small">
+      Headshots and bios courtesy of CBS press materials, linked from
+      <a href="https://cbs6albany.com/news/entertainment/meet-the-castaways-of-survivor-51" target="_blank" rel="noopener">official cast coverage</a>
+      rather than copied here.
+    </p>
+    <div class="roster-grid" id="roster-grid"></div>
   </div>
 </section>
 
@@ -98,7 +110,7 @@
 
 <footer>
   <div class="container">
-    Survivor 51 Fantasy League &mdash; run by Hank &middot; entry fee $10 via Venmo (@Henry-Lumbard-1)
+    Survivor 51 Fantasy League &mdash; run by Henry &middot; entry fee $10 via Venmo (@Henry-Lumbard-1)
   </div>
 </footer>
 
@@ -106,6 +118,49 @@
 <script src="js/api.js"></script>
 <script src="js/castaways.js"></script>
 <script>
+function initials(name) {
+  return name.replace(/[\u201c\u201d"]/g, "").split(" ").filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
+}
+
+function renderRoster() {
+  const grid = document.getElementById("roster-grid");
+  grid.innerHTML = "";
+  SURVIVOR_51_CAST.forEach((c) => {
+    const card = document.createElement("div");
+    card.className = "roster-card";
+
+    const photoWrap = document.createElement("div");
+    photoWrap.className = "roster-photo";
+
+    if (c.photo) {
+      const img = document.createElement("img");
+      img.src = c.photo;
+      img.alt = c.name.replace(/[\u201c\u201d]/g, '"');
+      img.loading = "lazy";
+      // If the hotlinked photo ever breaks (source removed/renamed it), fall
+      // back to an initials avatar instead of showing a broken-image icon.
+      img.onerror = function () {
+        photoWrap.innerHTML = `<div class="roster-initials">${initials(c.name)}</div>`;
+      };
+      photoWrap.appendChild(img);
+    } else {
+      photoWrap.innerHTML = `<div class="roster-initials">${initials(c.name)}</div>`;
+    }
+
+    card.appendChild(photoWrap);
+    const info = document.createElement("div");
+    info.className = "roster-info";
+    info.innerHTML = `
+      <h3>${c.name}</h3>
+      <p class="roster-meta">Age ${c.age} &middot; ${c.hometown}</p>
+      <p class="roster-occ">${c.occupation}</p>
+    `;
+    card.appendChild(info);
+    grid.appendChild(card);
+  });
+}
+renderRoster();
+
 (async function init() {
   try {
     const data = await fetchLeagueData();
