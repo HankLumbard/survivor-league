@@ -4,6 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Draft Your Team — Survivor 51 Fantasy League</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%94%A5</text></svg>" />
 <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -72,7 +73,7 @@
       <div class="pick-grid" id="pick-grid"></div>
 
       <div style="margin-top:28px;">
-        <button type="submit" class="btn" id="submit-btn">My Tribe Has Spoken</button>
+        <button type="submit" class="btn" id="submit-btn">Submit &amp; lock my team</button>
       </div>
     </form>
   </div>
@@ -185,7 +186,7 @@ document.getElementById("entry-form").addEventListener("submit", async (e) => {
     if (result.error) {
       showStatus(result.error, "error");
       submitBtn.disabled = false;
-      submitBtn.textContent = "My Tribe Has Spoken";
+      submitBtn.textContent = "Submit & lock my team";
       return;
     }
 
@@ -196,7 +197,7 @@ document.getElementById("entry-form").addEventListener("submit", async (e) => {
     console.error(err);
     showStatus("Something went wrong submitting your team. Please try again.", "error");
     submitBtn.disabled = false;
-    submitBtn.textContent = "My Tribe Has Spoken";
+    submitBtn.textContent = "Submit & lock my team";
   }
 });
 }
