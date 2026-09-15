@@ -52,6 +52,10 @@ a:hover { color: var(--ember-400); }
   margin: 0 auto;
   padding: 0 24px;
 }
+/* Used only by the leaderboard's standings table, which needs more room
+   than the site's normal reading-width container to fit five picks on
+   one line without forcing a horizontal scrollbar on a normal monitor. */
+.container-wide { max-width: 1320px; }
 
 /* ---------- Top nav ---------- */
 .topnav {
@@ -258,9 +262,16 @@ tr.rank-1 td:first-child { color: var(--gold-400); font-weight: 700; }
 /* Keeps each team's five picks on one line rather than wrapping the row
    onto multiple lines. The table's overflow-x:auto wrapper (in the page)
    handles any horizontal overflow with a scrollbar instead. */
-.picks-cell { white-space: nowrap; }
-.picks-cell .pick-tag { margin: 0 4px 0 0; }
-#standings-table td, #standings-table th { white-space: nowrap; }
+/* Keeps each team's five picks on one line, but only once the screen is
+   wide enough to actually fit them -- below that (phones, narrow windows)
+   picks wrap onto extra lines within the row instead, which reads better
+   than a horizontal scrollbar on a small screen. */
+.picks-cell .pick-tag { margin: 0 4px 6px 0; }
+@media (min-width: 900px) {
+  .picks-cell { white-space: nowrap; }
+  .picks-cell .pick-tag { margin: 0 4px 0 0; }
+  #standings-table td, #standings-table th { white-space: nowrap; }
+}
 
 .badge {
   display: inline-block;
