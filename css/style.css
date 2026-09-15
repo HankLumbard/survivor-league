@@ -103,15 +103,18 @@ a:hover { color: #b4f2f4; }
   position: relative;
   width: 100%;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
   background: #020c11;
   border-bottom: 1px solid rgba(244,228,189,.18);
 }
 .poster-art {
   display: block;
-  width: 100%;
+  width: min(100%, calc(78vh * 1.64454));
   height: auto;
+  max-width: 100%;
   max-height: 78vh;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
 }
 .poster-hero::after {
@@ -319,4 +322,26 @@ footer { border-top:1px solid var(--line); padding:30px 0; color:#aeb8b3; font-s
   .scoreboard .row { align-items:flex-start; }
   .scoreboard .row .val { margin-left:auto; }
   .hero-stats { gap:18px; }
+}
+
+
+/* Hero poster: preserve the complete artwork; width is capped by viewport height.
+   Source artwork ratio: 1536 / 934 = 1.64454. */
+.poster-hero {
+  min-height: 0;
+  align-items: flex-start;
+}
+.poster-art {
+  flex: 0 1 auto;
+  width: min(100%, calc(78vh * 1.64454));
+  max-width: 100%;
+  max-height: 78vh;
+  height: auto;
+  object-fit: contain;
+}
+@media (max-width: 640px) {
+  .poster-art {
+    width: 100%;
+    max-height: none;
+  }
 }
