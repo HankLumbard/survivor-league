@@ -10,6 +10,8 @@
   .admin-column { display: none; }
   .admin-column.revealed { display: table-cell; }
   .admin-reveal-section { padding-top: 12px; }
+  .payment-reminder { margin-top: 18px; }
+  .payment-reminder .venmo-name { font-size: 1.15em; font-weight: 800; letter-spacing: .02em; }
 </style>
 </head>
 <body>
@@ -43,6 +45,13 @@
       <p class="muted"><span id="entry-count">0</span> teams have entered so far. Everyone's picks and live scoring
       will be posted here once Survivor 51 premieres on September 23, 2026.</p>
       <a class="btn" href="entry.html">Draft your team</a>
+
+      <div id="payment-reminder" class="payment-reminder panel" style="display:none;">
+        <h3>Don't forget your $10 entry fee</h3>
+        <p class="muted">If you just submitted your team, please send your $10 entry fee via Venmo.</p>
+        <p class="venmo-name">Venmo: @Henry-Lumbard-1</p>
+        <a class="btn" href="https://venmo.com/u/Henry-Lumbard-1" target="_blank" rel="noopener">Pay via Venmo</a>
+      </div>
     </div>
   </div>
 </section>
