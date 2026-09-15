@@ -4,15 +4,14 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Survivor 51 Fantasy League</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%94%A5</text></svg>" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>" />
 <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-
 <nav class="topnav">
   <div class="container">
-    <a class="brand" href="index.html">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2C10 6 6 8 6 13a6 6 0 0012 0c0-3-2-4-2-7 0 2-1 3-2 3 0-3-1-5-2-7z" fill="#DB6423"/></svg>
+    <a class="brand" href="index.html" aria-label="Survivor 51 Fantasy League home">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2C10 6 6 8 6 13a6 6 0 0012 0c0-3-2-4-2-7 0 2-1 3-2 3 0-3-1-5-2-7z" fill="#ef6a25"/></svg>
       Survivor 51 Fantasy League
     </a>
     <div class="navlinks">
@@ -23,78 +22,66 @@
   </div>
 </nav>
 
-<div class="logo-hero">
-  <img src="images/logo.jpg" alt="Survivor 51" />
-</div>
+<main>
+  <section class="poster-hero" aria-label="Survivor 51 Fantasy League poster">
+    <img class="poster-art" src="images/survivor-51-hero.jpg" alt="Cinematic Survivor 51 fantasy league poster showing a tropical island, torches and ocean" />
+    <!-- The generated poster contains the visual 'ENTER YOUR TEAM' plaque. This invisible,
+         accessible HTML hotspot makes that artwork actually clickable without relying on text baked into an image. -->
+    <a class="hero-cta-hotspot" href="entry.html" aria-label="Enter your Survivor 51 fantasy team">Enter your team</a>
+    <div class="poster-caption">The season begins September 23, 2026 · Pick 5 · $10 entry</div>
+  </section>
 
-<header class="hero" style="padding-top:12px;">
-  <div class="container">
-    <div class="eyebrow">Season premieres September 23, 2026 &middot; Fiji</div>
-    <h1>Outwit. Outplay.<br />Outpick.</h1>
-    <p class="muted" style="font-size:1.1rem; margin-top:18px;">
-      Draft five Survivor 51 castaways before the season starts. Every week one of your
-      picks gets voted off, you bank points &mdash; and if your castaway goes the
-      distance, you bank a lot more.
-    </p>
-    <div style="margin-top:28px; display:flex; gap:14px; flex-wrap:wrap;">
-      <a class="btn" href="entry.html">Draft your team</a>
-      <a class="btn secondary" href="leaderboard.html">See the leaderboard</a>
-    </div>
-    <div class="hero-stats">
-      <div class="stat"><span class="num">21</span><span class="label">castaways to choose from</span></div>
-      <div class="stat"><span class="num">5</span><span class="label">picks per team</span></div>
-      <div class="stat"><span class="num">$10</span><span class="label">entry fee, via Venmo</span></div>
-    </div>
-  </div>
-</header>
-
-<section>
-  <div class="container">
-    <h2>How it works</h2>
-    <p class="muted">Pick five castaways. Your team's score is the sum of what each of them earns as the season plays out.</p>
-
-    <div class="scoreboard" style="margin-top:24px;">
-      <div class="row">
-        <span class="rule">Your castaway is voted off in week <em>N</em></span>
-        <span class="val">N points</span>
+  <section>
+    <div class="container">
+      <div class="eyebrow" style="color:var(--gold);">OUTWIT · OUTPLAY · OUTPICK</div>
+      <h1>Five castaways.<br />One winning team.</h1>
+      <p class="muted" style="font-size:1.08rem; max-width:700px;">Choose five Survivor 51 castaways before the season starts. When one of your players gets voted out, you collect that week's points. Make the Final Three or win the whole thing, and the payoff gets much bigger.</p>
+      <div style="margin-top:26px; display:flex; gap:12px; flex-wrap:wrap;">
+        <a class="btn" href="entry.html">Enter your team</a>
+        <a class="btn secondary" href="leaderboard.html">View leaderboard</a>
       </div>
-      <div class="row">
-        <span class="rule">Your castaway reaches the Final Three</span>
-        <span class="val">17 points</span>
-      </div>
-      <div class="row">
-        <span class="rule">Your castaway is named Sole Survivor</span>
-        <span class="val">20 points</span>
+      <div class="hero-stats">
+        <div class="stat"><span class="num">21</span><span class="label">castaways to choose from</span></div>
+        <div class="stat"><span class="num">5</span><span class="label">picks per team</span></div>
+        <div class="stat"><span class="num">$10</span><span class="label">entry fee via Venmo</span></div>
+        <div class="stat"><span class="num">∞</span><span class="label">bragging rights</span></div>
       </div>
     </div>
-    <p class="small muted" style="margin-top:14px;">
-      The winner earns 20 points only &mdash; not 17 for the final three <em>plus</em> 20 for winning.
-      Voted out week 1? That's 1 point. Week 6? 6 points. Every other pick still playing earns
-      nothing yet, but still has a shot at the big scores.
-    </p>
-  </div>
-</section>
+  </section>
 
-<section class="tight">
-  <div class="container">
-    <div class="panel">
-      <h3>Entering</h3>
-      <ol class="muted">
-        <li>Go to the <a href="entry.html">draft page</a> and fill in your name, a team name, and five castaways.</li>
-        <li>Submit &mdash; your entry locks immediately, no changes after that.</li>
-        <li>You'll be prompted to send the $10 entry fee via Venmo.</li>
-        <li>Once the season begins, everyone's picks and the live leaderboard are posted <a href="leaderboard.html">here</a>.</li>
-      </ol>
-      <p class="small muted" style="margin-bottom:0;">Entries close right beofre the second episode, so get your team in before September 30th!</p>
+  <section class="tight">
+    <div class="container">
+      <div class="panel">
+        <div class="eyebrow" style="color:var(--ember);">THE RULES</div>
+        <h2>How the points work</h2>
+        <p class="muted">Every castaway you draft has one chance to earn points for your team. The earlier they're voted out, the fewer points you get — so you're looking for players who can survive deep into the game.</p>
+        <div class="scoreboard" style="margin-top:24px;">
+          <div class="row"><span class="rule">Voted out in week <em>N</em></span><span class="val">N points</span></div>
+          <div class="row"><span class="rule">Reaches the Final Three</span><span class="val">17 points</span></div>
+          <div class="row"><span class="rule">Named Sole Survivor</span><span class="val">20 points</span></div>
+        </div>
+        <p class="small muted" style="margin:14px 0 0;">The winner earns <strong>20 points total</strong> — not 17 for reaching the Final Three plus 20 for winning.</p>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<footer>
-  <div class="container">
-    Survivor 51 Fantasy League &mdash; run by Hank &middot; entry fee $10 via Venmo (@Henry-Lumbard-1)
-  </div>
-</footer>
+  <section>
+    <div class="container">
+      <div class="panel">
+        <div class="eyebrow" style="color:var(--gold);">YOUR MISSION</div>
+        <h2>Pick. Lock. Pay. Watch.</h2>
+        <ol class="muted">
+          <li>Go to <a href="entry.html">Enter</a> and submit your name, team name and five castaways.</li>
+          <li>Your entry is locked immediately after submission. There are no do-overs.</li>
+          <li>Send the <strong>$10</strong> entry fee to <strong>@Henry-Lumbard-1</strong> on Venmo.</li>
+          <li>Once the season begins, everyone's picks are revealed and the leaderboard comes alive.</li>
+        </ol>
+        <p class="small muted" style="margin-bottom:0;">Entries close before Episode 2. Get your team in before September 30, 2026.</p>
+      </div>
+    </div>
+  </section>
+</main>
 
+<footer><div class="container">Survivor 51 Fantasy League · run by Henry · $10 via Venmo (@Henry-Lumbard-1)</div></footer>
 </body>
 </html>

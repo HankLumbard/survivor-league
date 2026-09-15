@@ -23,14 +23,10 @@
   </div>
 </nav>
 
-<div class="logo-hero compact">
-  <img src="images/logo.jpg" alt="Survivor 51" />
-</div>
-
-<header class="hero" style="padding:16px 0 40px;">
+<header class="hero">
   <div class="container">
-    <div class="eyebrow" id="week-label">Leaderboard</div>
-    <h1 style="font-size:clamp(1.8rem,4vw,2.6rem);">Standings</h1>
+    <div class="eyebrow" id="week-label">SURVIVOR 51 · LIVE BOARD</div>
+    <h1>Standings</h1>
     <p class="muted" id="lead-sub">Loading&hellip;</p>
   </div>
 </header>
@@ -48,6 +44,7 @@
 
 <section id="live-board" class="hidden">
   <div class="container container-wide">
+    <div class="panel" style="padding:0; overflow:hidden;">
     <div style="overflow-x:auto;">
       <table id="standings-table">
         <thead>
@@ -56,11 +53,13 @@
             <th>Team</th>
             <th>Points</th>
             <th>Max possible</th>
+            <th>Upside</th>
             <th>Picks</th>
           </tr>
         </thead>
         <tbody id="board-body"></tbody>
       </table>
+    </div>
     </div>
   </div>
 </section>
@@ -121,7 +120,7 @@ async function load() {
   const rows = entries.map((entry) => {
     const { current, max, breakdown } = scoreEntry(entry, castawaysById);
     breakdown.sort((a, b) => a.name.localeCompare(b.name));
-    return { ...entry, current, max, breakdown };
+    return { ...entry, current, max, upside: max - current, breakdown };
   });
   rows.sort((a, b) => b.current - a.current || b.max - a.max);
 
@@ -141,9 +140,10 @@ async function load() {
       .join("");
     tr.innerHTML = `
       <td>${idx + 1}</td>
-      <td>${r.teamName}</td>
-      <td>${r.current}</td>
-      <td>${r.max}</td>
+      <td><strong>${r.teamName}</strong></td>
+      <td><strong>${r.current}</strong></td>
+      <td><strong>${r.max}</strong></td>
+      <td>${r.upside > 0 ? `+${r.upside}` : "—"}</td>
       <td class="picks-cell">${picksHtml}</td>
     `;
     tbody.appendChild(tr);
