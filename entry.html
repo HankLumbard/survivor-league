@@ -66,6 +66,10 @@
 
       <div class="pick-grid" id="pick-grid"></div>
 
+      <p class="small muted center" style="margin:16px 0 0;">
+        👇 Player cards are below the dropdowns — scroll down to see photos, bios, and more about each castaway.
+      </p>
+
       <div style="margin-top:28px;">
         <button type="submit" class="btn" id="submit-btn">Submit &amp; lock my team</button>
       </div>
@@ -121,6 +125,10 @@ function initials(name) {
 function renderRoster() {
   const grid = document.getElementById("roster-grid");
   grid.innerHTML = "";
+
+  // Keep the Rizo joke card first so people see it before the real castaways.
+  renderRizoCard(grid);
+
   SURVIVOR_51_CAST.forEach((c) => {
     const card = document.createElement("div");
     card.className = "roster-card";
@@ -157,7 +165,6 @@ function renderRoster() {
     grid.appendChild(card);
   });
 
-  renderRizoCard(grid);
 }
 
 // Not a real castaway -- a running joke for the group. Styled like a roster
