@@ -99,8 +99,8 @@
 <script src="js/scoring.js"></script>
 <script>
 async function load() {
-  const data = await fetchLeagueData();
-  const settings = data.settings || { seasonStarted: false };
+  const data = await fetchLeaderboardData();
+  const settings = { seasonStarted: data.seasonStarted === true };
   const entries = data.entries || [];
 
   document.getElementById("entry-count").textContent = entries.length;
