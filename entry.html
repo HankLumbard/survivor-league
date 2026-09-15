@@ -147,7 +147,6 @@ function renderRoster() {
       photoWrap.innerHTML = `<div class="roster-initials">${initials(c.name)}</div>`;
     }
 
-    card.appendChild(photoWrap);
     const info = document.createElement("div");
     info.className = "roster-info";
     info.innerHTML = `
@@ -155,7 +154,9 @@ function renderRoster() {
       <p class="roster-meta">Age ${c.age} &middot; ${c.hometown}</p>
       <p class="roster-occ">${c.occupation}</p>
     `;
+
     card.appendChild(info);
+    card.appendChild(photoWrap);
     grid.appendChild(card);
   });
 }
