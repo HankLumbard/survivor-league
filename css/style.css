@@ -606,6 +606,11 @@ body {
 .roster-card.fake-card:hover { border-color: #E02B1D; }
 .roster-card.fake-card .roster-photo { position: relative; }
 .roster-card.fake-card .roster-photo img {
+  /* Overrides the base .roster-photo img zoom (tuned for the CBS
+     headshots) -- this photo looked right at its original, untransformed
+     crop, so cancel the transform/anchor instead of inheriting it. */
+  transform: none;
+  object-position: center 22%;
   filter: grayscale(0.5) contrast(1.05) brightness(0.85);
 }
 .roster-card.fake-card .ban-ring {
