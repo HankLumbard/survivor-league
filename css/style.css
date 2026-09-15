@@ -593,3 +593,42 @@ body {
   .roster-grid { grid-template-columns: 1fr; gap: 10px; }
   .roster-photo { width: 56px; height: 56px; }
 }
+
+/* ---------- Fake "Rizo" card (entry page roster) ---------- */
+/* A running joke, not a real castaway -- dashed border sets it apart from
+   the real roster at a glance, and it's excluded from the pick-selection
+   click logic in entry.html so it can never end up in someone's team. */
+.roster-card.fake-card {
+  cursor: pointer;
+  border-style: dashed;
+  border-color: rgba(224, 43, 29, 0.4);
+}
+.roster-card.fake-card:hover { border-color: #E02B1D; }
+.roster-card.fake-card .roster-photo { position: relative; }
+.roster-card.fake-card .roster-photo img {
+  filter: grayscale(0.5) contrast(1.05) brightness(0.85);
+}
+.roster-card.fake-card .ban-ring {
+  position: absolute;
+  inset: 0;
+  border: 5px solid #E02B1D;
+  border-radius: 50%;
+  box-sizing: border-box;
+}
+.roster-card.fake-card .ban-bar {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 5px;
+  height: 100%;
+  background: #E02B1D;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.roster-card.fake-card .roster-occ.fake-reason {
+  color: var(--sand-200);
+  font-style: italic;
+}
+.roster-card.fake-card.revealed .roster-occ.fake-reason {
+  color: #E88A46;
+  font-style: normal;
+}
