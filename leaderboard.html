@@ -48,12 +48,11 @@
 <section id="live-board" class="hidden">
   <div class="container">
     <div style="overflow-x:auto;">
-      <table>
+      <table id="standings-table">
         <thead>
           <tr>
             <th>Rank</th>
             <th>Team</th>
-            <th>Player</th>
             <th>Points</th>
             <th>Max possible</th>
             <th>Picks</th>
@@ -140,10 +139,9 @@ async function load() {
     tr.innerHTML = `
       <td>${idx + 1}</td>
       <td>${r.teamName}</td>
-      <td>${r.playerName}</td>
       <td>${r.current}</td>
       <td>${r.max}</td>
-      <td>${picksHtml}</td>
+      <td class="picks-cell">${picksHtml}</td>
     `;
     tbody.appendChild(tr);
   });
