@@ -41,23 +41,6 @@
   </div>
 </section>
 
-<section id="confirmation" class="hidden">
-  <div class="container" style="max-width:640px;">
-    <div class="panel center">
-      <h2>You're in! 🔥</h2>
-      <p class="muted">Your team is locked. Last step: send your $10 entry fee via Venmo to finish signing up.</p>
-      <a class="btn" style="margin-top:8px;" target="_blank" rel="noopener"
-         href="https://venmo.com/Henry-Lumbard-1?txn=pay&note=Survivor%2051%20Fantasy%20League%20entry">
-        Pay $10 on Venmo (@Henry-Lumbard-1)
-      </a>
-      <p class="small muted" style="margin-top:20px;">
-        Picks stay hidden until the season starts. Check the
-        <a href="leaderboard.html">leaderboard</a> after premiere night to see everyone's teams.
-      </p>
-    </div>
-  </div>
-</section>
-
 <section id="form-section">
   <div class="container" style="max-width:640px;">
     <div id="status" class="hidden"></div>
@@ -104,7 +87,22 @@
   </div>
 </section>
 
-
+<section id="confirmation" class="hidden">
+  <div class="container" style="max-width:640px;">
+    <div class="panel center">
+      <h2>You're in! 🔥</h2>
+      <p class="muted">Your team is locked. Last step: send your $10 entry fee via Venmo to finish signing up.</p>
+      <a class="btn" style="margin-top:8px;" target="_blank" rel="noopener"
+         href="https://venmo.com/Henry-Lumbard-1?txn=pay&note=Survivor%2051%20Fantasy%20League%20entry">
+        Pay $10 on Venmo (@Henry-Lumbard-1)
+      </a>
+      <p class="small muted" style="margin-top:20px;">
+        Picks stay hidden until the season starts. Check the
+        <a href="leaderboard.html">leaderboard</a> after premiere night to see everyone's teams.
+      </p>
+    </div>
+  </div>
+</section>
 
 <footer>
   <div class="container">
@@ -214,21 +212,22 @@ function renderRizoCard(grid) {
 }
 renderRoster();
 
-(async function init() {
+// Wire the form immediately so the page is usable without waiting on Google Sheets.
+// The server still enforces the season lock when a submission is posted.
+setupForm();
+
+(async function checkSeasonStatus() {
   try {
-    const data = await fetchLeagueData();
-    const settings = data.settings || { seasonStarted: false };
-    if (settings.seasonStarted) {
+    const data = await fetchLeagueStatus();
+    if (data.seasonStarted) {
       document.getElementById("form-section").classList.add("hidden");
       document.getElementById("locked-section").classList.remove("hidden");
-      return;
     }
   } catch (err) {
     console.error(err);
-    // If the check itself fails, fall through and show the form as normal --
-    // the server-side check in Code.gs still blocks a late submission either way.
+    // If the check fails, leave the form usable. Code.gs still blocks
+    // submissions after the season starts.
   }
-  setupForm();
 })();
 
 function setupForm() {
@@ -349,11 +348,8 @@ document.getElementById("entry-form").addEventListener("submit", async (e) => {
     }
 
     document.getElementById("form-section").classList.add("hidden");
-    const confirmation = document.getElementById("confirmation");
-    confirmation.classList.remove("hidden");
-    requestAnimationFrame(() => {
-      confirmation.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
+    document.getElementById("confirmation").classList.remove("hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
   } catch (err) {
     console.error(err);
     showStatus("Something went wrong submitting your team. Please try again.", "error");
