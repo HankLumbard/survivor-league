@@ -45,18 +45,6 @@
   <div class="container" style="max-width:640px;">
     <div id="status" class="hidden"></div>
 
-    <div class="nopick">
-      <div class="nopick-photo">
-        <img src="images/rizo.jpg" alt="" />
-        <div class="ban-ring"></div>
-        <div class="ban-bar"></div>
-      </div>
-      <div class="nopick-text">
-        <h3>Not draftable</h3>
-        <p>He's not on the Survivor 51 roster, so he's not an option in the dropdowns below. Nice try.</p>
-      </div>
-    </div>
-
     <form id="entry-form">
       <div class="field">
         <label for="playerName">Your name</label>
@@ -167,6 +155,59 @@ function renderRoster() {
     card.appendChild(photoWrap);
     grid.appendChild(card);
   });
+
+  renderRizoCard(grid);
+}
+
+// Not a real castaway -- a running joke for the group. Styled like a roster
+// card so it sits naturally at the end of the list, but it can't be picked
+// (see the click-wiring in setupForm, which skips .fake-card). Clicking it
+// reveals a reason, rather than adding him to anyone's team.
+const RIZO_REASONS = [
+  "Told the group chat he \u201cbasically already won\u201d before the season even aired.",
+  "Once explained the hidden immunity idol rules to a room full of people who have watched every season.",
+  "Refers to strategic gameplay as \u201cwhat I would have done.\u201d",
+  "Still brings up that one time he almost auditioned for the show.",
+  "Has never once received a torch snuff, and will not let anyone forget it.",
+];
+
+function renderRizoCard(grid) {
+  const card = document.createElement("div");
+  card.className = "roster-card fake-card";
+
+  const photoWrap = document.createElement("div");
+  photoWrap.className = "roster-photo";
+  const img = document.createElement("img");
+  img.src = "images/rizo.jpg";
+  img.alt = "Rizo";
+  photoWrap.appendChild(img);
+  const ring = document.createElement("div");
+  ring.className = "ban-ring";
+  const bar = document.createElement("div");
+  bar.className = "ban-bar";
+  photoWrap.appendChild(ring);
+  photoWrap.appendChild(bar);
+
+  const info = document.createElement("div");
+  info.className = "roster-info";
+  info.innerHTML = `
+    <h3>Rizo</h3>
+    <p class="roster-meta">Not on this season's cast</p>
+    <p class="roster-occ fake-reason">Tap for a reason to vote him off</p>
+  `;
+
+  card.appendChild(info);
+  card.appendChild(photoWrap);
+  grid.appendChild(card);
+
+  const reasonEl = info.querySelector(".fake-reason");
+  const defaultText = reasonEl.textContent;
+  card.addEventListener("click", () => {
+    const revealed = card.classList.toggle("revealed");
+    reasonEl.textContent = revealed
+      ? RIZO_REASONS[Math.floor(Math.random() * RIZO_REASONS.length)]
+      : defaultText;
+  });
 }
 renderRoster();
 
@@ -256,7 +297,7 @@ function toggleCastaway(id) {
   renderOptions();
 }
 
-document.querySelectorAll(".roster-card").forEach((card) => {
+document.querySelectorAll(".roster-card:not(.fake-card)").forEach((card) => {
   card.classList.add("clickable");
   card.setAttribute("role", "button");
   card.setAttribute("tabindex", "0");
