@@ -267,12 +267,9 @@ function renderRizoCard(grid) {
   grid.appendChild(card);
 
   const reasonEl = info.querySelector(".fake-reason");
-  const defaultText = reasonEl.textContent;
   card.addEventListener("click", () => {
-    const revealed = card.classList.toggle("revealed");
-    reasonEl.textContent = revealed
-      ? nextRizoReason()
-      : defaultText;
+    card.classList.add("revealed");
+    reasonEl.textContent = nextRizoReason();
   });
 }
 renderRoster();
