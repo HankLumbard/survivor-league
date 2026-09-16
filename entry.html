@@ -36,7 +36,7 @@
   <div class="container" style="max-width:640px;">
     <div class="panel center">
       <h2>Drafting is closed</h2>
-      <p class="muted">Survivor 51 has started, so entries are locked. If you already submitted a team, check the <a href="leaderboard.html">leaderboard</a> for scores. If you didn't get an entry in before premiere, catch us next season.</p>
+      <p class="muted">The entry deadline has passed or entries have been closed, so picks are locked. If you already submitted a team, check the <a href="leaderboard.html">leaderboard</a> for scores. Get your team in before Episode 2 next season.</p>
     </div>
   </div>
 </section>
@@ -100,8 +100,8 @@
         Pay $10 on Venmo (@Henry-Lumbard-1)
       </a>
       <p class="small muted" style="margin-top:20px;">
-        Picks stay hidden until the season starts. Check the
-        <a href="leaderboard.html">leaderboard</a> after premiere night to see everyone's teams.
+        Picks stay hidden until the entry deadline. Check the
+        <a href="leaderboard.html">leaderboard</a> after Episode 2 to see everyone's teams.
       </p>
     </div>
   </div>
@@ -207,36 +207,6 @@ const RIZO_REASONS = [
   "If voted out, he will immediately request a recount.",
 ];
 
-// Hands out RIZO_REASONS in random order with no repeats, one per click.
-// Once every reason has been shown, it reshuffles and starts again -- and
-// takes a little care that the reshuffle doesn't hand back the same line
-// that just showed, so it never feels like it repeated back-to-back.
-function shuffledCopy(arr) {
-  const copy = [...arr];
-  for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
-}
-
-let rizoQueue = [];
-let lastRizoReason = null;
-
-function nextRizoReason() {
-  if (rizoQueue.length === 0) {
-    rizoQueue = shuffledCopy(RIZO_REASONS);
-    const lastIdx = rizoQueue.length - 1;
-    if (rizoQueue[lastIdx] === lastRizoReason && rizoQueue.length > 1) {
-      // avoid the same line showing twice in a row across a reshuffle --
-      // pop() takes from the end, so that's the slot that matters here
-      [rizoQueue[lastIdx], rizoQueue[lastIdx - 1]] = [rizoQueue[lastIdx - 1], rizoQueue[lastIdx]];
-    }
-  }
-  lastRizoReason = rizoQueue.pop();
-  return lastRizoReason;
-}
-
 function renderRizoCard(grid) {
   const card = document.createElement("div");
   card.className = "roster-card fake-card";
@@ -267,9 +237,12 @@ function renderRizoCard(grid) {
   grid.appendChild(card);
 
   const reasonEl = info.querySelector(".fake-reason");
+  const defaultText = reasonEl.textContent;
   card.addEventListener("click", () => {
-    card.classList.add("revealed");
-    reasonEl.textContent = nextRizoReason();
+    const revealed = card.classList.toggle("revealed");
+    reasonEl.textContent = revealed
+      ? RIZO_REASONS[Math.floor(Math.random() * RIZO_REASONS.length)]
+      : defaultText;
   });
 }
 renderRoster();

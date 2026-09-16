@@ -41,12 +41,12 @@
 <section id="pre-season" class="hidden">
   <div class="container">
     <div class="panel center">
-      <h3>Picks are locked, but hidden until premiere night</h3>
+      <h3>Picks are open through the premiere</h3>
       <p class="muted"><span id="entry-count">0</span> teams have entered so far. Everyone's picks and live scoring
-      will be posted here once Survivor 51 premieres on September 23, 2026.</p>
+      will be posted here after the Episode 2 entry deadline on September 30, 2026.</p>
       <a class="btn" href="entry.html">Draft your team</a>
 
-      <div id="payment-reminder" class="payment-reminder panel">
+      <div id="payment-reminder" class="payment-reminder panel" style="display:none;">
         <h3>Don't forget your $10 entry fee</h3>
         <p class="muted">If you just submitted your team, please send your $10 entry fee via Venmo.</p>
         <p class="venmo-name">Venmo: @Henry-Lumbard-1</p>
@@ -115,7 +115,7 @@ async function load() {
   document.getElementById("entry-count").textContent = entries.length;
 
   if (!settings.seasonStarted) {
-    document.getElementById("lead-sub").textContent = "Picks reveal once the season premieres.";
+    document.getElementById("lead-sub").textContent = "Picks reveal after the Episode 2 entry deadline.";
     document.getElementById("pre-season").classList.remove("hidden");
     return;
   }
