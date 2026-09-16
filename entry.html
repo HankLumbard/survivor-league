@@ -207,6 +207,36 @@ const RIZO_REASONS = [
   "If voted out, he will immediately request a recount.",
 ];
 
+// Hands out RIZO_REASONS in random order with no repeats, one per click.
+// Once every reason has been shown, it reshuffles and starts again -- and
+// takes a little care that the reshuffle doesn't hand back the same line
+// that just showed, so it never feels like it repeated back-to-back.
+function shuffledCopy(arr) {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+let rizoQueue = [];
+let lastRizoReason = null;
+
+function nextRizoReason() {
+  if (rizoQueue.length === 0) {
+    rizoQueue = shuffledCopy(RIZO_REASONS);
+    const lastIdx = rizoQueue.length - 1;
+    if (rizoQueue[lastIdx] === lastRizoReason && rizoQueue.length > 1) {
+      // avoid the same line showing twice in a row across a reshuffle --
+      // pop() takes from the end, so that's the slot that matters here
+      [rizoQueue[lastIdx], rizoQueue[lastIdx - 1]] = [rizoQueue[lastIdx - 1], rizoQueue[lastIdx]];
+    }
+  }
+  lastRizoReason = rizoQueue.pop();
+  return lastRizoReason;
+}
+
 function renderRizoCard(grid) {
   const card = document.createElement("div");
   card.className = "roster-card fake-card";
@@ -241,7 +271,7 @@ function renderRizoCard(grid) {
   card.addEventListener("click", () => {
     const revealed = card.classList.toggle("revealed");
     reasonEl.textContent = revealed
-      ? RIZO_REASONS[Math.floor(Math.random() * RIZO_REASONS.length)]
+      ? nextRizoReason()
       : defaultText;
   });
 }
