@@ -6,7 +6,9 @@
  *  - The sheet itself IS the database: one tab for entries, one for
  *    castaways, one for settings. You run the league by editing cells.
  *  - Deployed as a Web App, it exposes:
- *      GET  ?  -> returns { castaways, entries, settings } as JSON
+ *      GET  ?action=status      -> season status only
+ *      GET  ?action=leaderboard -> data needed for the public leaderboard
+ *      GET  ?action=league      -> full league data (backward compatibility)
  *      POST {action:"submitEntry", ...} -> appends a new locked entry
  *
  * Setup (see README.md for the full walkthrough):
@@ -23,6 +25,14 @@
 const SHEET_ENTRIES = "Entries";
 const SHEET_CASTAWAYS = "Castaways";
 const SHEET_SETTINGS = "Settings";
+
+// Cache for up to 6 hours. Commissioner edits automatically invalidate
+// the cache, so normal weekly updates appear immediately.
+// Apps Script CacheService has a maximum TTL of 6 hours.
+const CACHE_SECONDS = 21600;
+const CACHE_KEY_STATUS = "survivor51_status";
+const CACHE_KEY_LEADERBOARD = "survivor51_leaderboard";
+const CACHE_KEY_LEAGUE = "survivor51_league";
 
 // Keep this in sync with js/castaways.js on the website — same ids, same
 // names. This is only used the first time you run setupSheets(); after
@@ -85,13 +95,51 @@ function setupSheets() {
 }
 
 function doGet(e) {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const payload = {
-    castaways: readCastaways(ss),
-    entries: readEntries(ss),
-    settings: readSettings(ss),
-  };
-  return jsonResponse(payload);
+  const action = e && e.parameter && e.parameter.action ? e.parameter.action : "league";
+  const cache = CacheService.getScriptCache();
+
+  if (action === "status") {
+    return cachedJsonResponse(cache, CACHE_KEY_STATUS, function () {
+      const ss = SpreadsheetApp.getActiveSpreadsheet();
+      const settings = readSettings(ss);
+      return {
+        seasonStarted: settings.seasonStarted === true,
+        entryCount: countEntries(ss),
+      };
+    });
+  }
+
+  if (action === "leaderboard") {
+    return cachedJsonResponse(cache, CACHE_KEY_LEADERBOARD, function () {
+      const ss = SpreadsheetApp.getActiveSpreadsheet();
+      const settings = readSettings(ss);
+      const seasonStarted = settings.seasonStarted === true;
+      if (!seasonStarted) {
+        return {
+          seasonStarted: false,
+          entryCount: countEntries(ss),
+          entries: readPublicEntries(ss),
+          castaways: [],
+        };
+      }
+      return {
+        seasonStarted: true,
+        entryCount: countEntries(ss),
+        entries: readPublicEntries(ss),
+        castaways: readCastawayOutcomes(ss),
+      };
+    });
+  }
+
+  // Backward-compatible full response for older clients.
+  return cachedJsonResponse(cache, CACHE_KEY_LEAGUE, function () {
+    const ss = SpreadsheetApp.getActiveSpreadsheet();
+    return {
+      castaways: readCastaways(ss),
+      entries: readEntries(ss),
+      settings: readSettings(ss),
+    };
+  });
 }
 
 function doPost(e) {
@@ -122,15 +170,111 @@ function doPost(e) {
     return jsonResponse({ error: "Invalid submission \u2014 fill in your name, phone number, and five different castaways." });
   }
 
-  const existing = readEntries(ss);
-  const dupe = existing.some((en) => en.playerName.trim().toLowerCase() === playerName.toLowerCase());
+  const existingNames = readPlayerNames(ss);
+  const dupe = existingNames.some((name) => name.trim().toLowerCase() === playerName.toLowerCase());
   if (dupe) {
     return jsonResponse({ error: "That name has already submitted a team." });
   }
 
   const sheet = ss.getSheetByName(SHEET_ENTRIES);
   sheet.appendRow([new Date(), playerName, teamName, picks[0], picks[1], picks[2], picks[3], picks[4], "FALSE", phone]);
+
+  // A new entry changes the status/leaderboard entry count, so don't serve
+  // an older cached response after a successful submission.
+  clearLeagueCaches();
+
   return jsonResponse({ ok: true });
+}
+
+function cachedJsonResponse(cache, key, builder) {
+  const cached = cache.get(key);
+  if (cached) {
+    return jsonResponse(JSON.parse(cached));
+  }
+
+  const payload = builder();
+  const serialized = JSON.stringify(payload);
+
+  // Apps Script CacheService has a per-value size limit. These league
+  // responses are intentionally small, but skip caching if one ever grows
+  // beyond the limit rather than breaking the request.
+  if (serialized.length <= 95000) {
+    cache.put(key, serialized, CACHE_SECONDS);
+  }
+
+  return jsonResponse(payload);
+}
+
+function clearLeagueCaches() {
+  CacheService.getScriptCache().removeAll([
+    CACHE_KEY_STATUS,
+    CACHE_KEY_LEADERBOARD,
+    CACHE_KEY_LEAGUE,
+  ]);
+}
+
+// Automatically invalidate cached data when the commissioner edits the
+// spreadsheet. This keeps the site fast between updates without making
+// the commissioner remember to clear anything manually.
+//
+// A simple onEdit trigger is enough here because it only uses CacheService.
+function onEdit(e) {
+  if (!e || !e.range) return;
+
+  const sheetName = e.range.getSheet().getName();
+  if (
+    sheetName === SHEET_CASTAWAYS ||
+    sheetName === SHEET_SETTINGS ||
+    sheetName === SHEET_ENTRIES
+  ) {
+    clearLeagueCaches();
+  }
+}
+
+function countEntries(ss) {
+  const sheet = ss.getSheetByName(SHEET_ENTRIES);
+  if (!sheet) return 0;
+  return Math.max(0, sheet.getLastRow() - 1);
+}
+
+function readPlayerNames(ss) {
+  const sheet = ss.getSheetByName(SHEET_ENTRIES);
+  if (!sheet) return [];
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return [];
+  return sheet.getRange(2, 2, lastRow - 1, 1).getValues()
+    .filter((r) => r[0])
+    .map((r) => String(r[0]));
+}
+
+function readPublicEntries(ss) {
+  const sheet = ss.getSheetByName(SHEET_ENTRIES);
+  if (!sheet) return [];
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return [];
+  // Public leaderboard only needs PlayerName, TeamName and Pick1-Pick5.
+  return sheet.getRange(2, 2, lastRow - 1, 7).getValues()
+    .filter((r) => r[0])
+    .map((r) => ({
+      playerName: String(r[0]),
+      teamName: String(r[1]),
+      picks: [String(r[2]), String(r[3]), String(r[4]), String(r[5]), String(r[6])],
+    }));
+}
+
+function readCastawayOutcomes(ss) {
+  const sheet = ss.getSheetByName(SHEET_CASTAWAYS);
+  if (!sheet) return [];
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return [];
+  // Leaderboard needs only the stable id, display name and outcome.
+  return sheet.getRange(2, 1, lastRow - 1, 5).getValues()
+    .filter((r) => r[0])
+    .map((r) => ({
+      id: String(r[0]),
+      name: String(r[1]),
+      outcome: r[4] === "" || r[4] === null || r[4] === undefined ? null : Number(r[4]),
+    }));
 }
 
 function readCastaways(ss) {
