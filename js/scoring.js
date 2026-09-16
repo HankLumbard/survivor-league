@@ -1,14 +1,14 @@
 // ------------------------------------------------------------------
 // Scoring rules for the league:
 //   - A castaway voted off in week N is worth N points (week 1 = 1 pt, week 2 = 2 pts, ...).
-//   - A castaway who reaches the final three is worth 17 points.
+//   - A non-winning castaway who survives to the end is worth 17 points.
 //   - The Sole Survivor (winner) is worth 20 points -- instead of 17, not in addition to it.
 //   - A castaway still in the game is worth 0 points so far.
 //
 // This is all captured in one field per castaway, `outcome`:
 //   outcome === null        -> still playing, locked-in value unknown yet
 //   outcome === <number 1-16> -> voted out that week, worth that many points
-//   outcome === 17           -> made the final three (did not win)
+//   outcome === 17           -> survived to the end (did not win)
 //   outcome === 20           -> won the season
 // ------------------------------------------------------------------
 
@@ -19,7 +19,7 @@ function currentPoints(outcome) {
 
 // "Max possible" mirrors how bracket standings (e.g. NCAA pools) usually show upside:
 // assume every castaway still in the game goes all the way and wins (20 pts).
-// Once a castaway's fate is locked in (eliminated, final three, or winner) their
+// Once a castaway's fate is locked in (eliminated, endgame, or winner) their
 // contribution is locked too, so max possible converges with current points as the
 // season wraps up.
 function maxPossiblePoints(outcome) {
@@ -30,7 +30,7 @@ function maxPossiblePoints(outcome) {
 function describeOutcome(outcome) {
   if (outcome === null || outcome === undefined) return "Still in";
   if (outcome === 20) return "Sole Survivor \u2014 20 pts";
-  if (outcome === 17) return "Made Final 3 \u2014 17 pts";
+  if (outcome === 17) return "Survived to the end \u2014 17 pts";
   return `Voted out wk ${outcome} \u2014 ${outcome} pt${outcome === 1 ? "" : "s"}`;
 }
 

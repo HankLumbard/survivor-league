@@ -9,7 +9,7 @@
     const remaining = target - Date.now();
 
     if (remaining <= 0) {
-      el.textContent = "THE SEASON HAS BEGUN";
+      el.textContent = "PREMIERE COMPLETE · LOCK IN BEFORE EPISODE 2";
       return;
     }
 

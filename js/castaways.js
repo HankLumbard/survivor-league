@@ -5,13 +5,13 @@
 //
 // photo: hotlinked (not hosted here) from CBS-affiliate press coverage, credited "Courtesy: CBS".
 // This site does not store a copy of these images -- see README.md for details and the risk
-// that comes with linking to someone else's server. Alexis Levine has no verified individual
-// headshot URL, so her card falls back to an initials avatar (see entry.html).
+// that comes with linking to someone else's server. Alexis uses a public cast photo from Parade/CBS;
+// the roster-card CSS applies the same crop/zoom treatment as the other player cards.
 const SURVIVOR_51_CAST = [
   { id: "aaliyah-puglia",     name: "Aaliyah Puglia",                     age: 24, hometown: "Providence, RI",       occupation: "Chef",
     photo: "https://cbs6albany.com/resources/media2/16x9/1280/800/center/80/b6cbfd4f-4722-4e95-9a4f-4cbac8693785-AaliyahPuglia.png" },
   { id: "alexis-levine",      name: "Alexis Levine",                      age: 34, hometown: "Atlanta, GA",          occupation: "Criminal Defense Attorney",
-    photo: null },
+    photo: "https://parade.com/.image/ODowMDAwMDAwMDAyMzMwMzgz/alexis-levine.jpg?profile=w2560&x=50&y=50" },
   { id: "thien-an-nguyen",    name: "An \u201cThien An\u201d Nguyen",     age: 24, hometown: "Fort Worth, TX",       occupation: "Medical Student",
     photo: "https://cbs6albany.com/resources/media2/16x9/1280/800/center/80/1d72888c-3e41-4b2d-9d59-f356f2cbac64-TheinAnNguyen.png" },
   { id: "ana-sani",           name: "Ana Sani",                           age: 34, hometown: "Toronto, ON",          occupation: "Voice Actress",
