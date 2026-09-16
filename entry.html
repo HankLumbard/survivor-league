@@ -240,12 +240,30 @@ function renderRizoCard(grid) {
   grid.appendChild(card);
 
   const reasonEl = info.querySelector(".fake-reason");
-  const defaultText = reasonEl.textContent;
+
+  // Shuffle the reasons once per page load, then reveal them in sequence.
+  // This keeps every click random-looking but guarantees no reason repeats
+  // until all reasons have been shown.
+  let shuffledReasons = [...RIZO_REASONS];
+  let reasonIndex = 0;
+
+  function shuffleReasons() {
+    for (let i = shuffledReasons.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledReasons[i], shuffledReasons[j]] = [shuffledReasons[j], shuffledReasons[i]];
+    }
+    reasonIndex = 0;
+  }
+
+  shuffleReasons();
+
   card.addEventListener("click", () => {
-    const revealed = card.classList.toggle("revealed");
-    reasonEl.textContent = revealed
-      ? RIZO_REASONS[Math.floor(Math.random() * RIZO_REASONS.length)]
-      : defaultText;
+    // Never toggle the card off. Every click advances to another reason.
+    if (reasonIndex >= shuffledReasons.length) {
+      shuffleReasons();
+    }
+    reasonEl.textContent = shuffledReasons[reasonIndex++];
+    card.classList.add("revealed");
   });
 }
 renderRoster();
