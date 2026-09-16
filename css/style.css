@@ -325,7 +325,7 @@ footer { border-top:1px solid var(--line); padding:30px 0; color:#aeb8b3; font-s
     min-height: 0;
     object-fit: cover;
     object-position: center;
-    scale: 1.15;
+    scale: 1.2;
   }
   .hero { padding:48px 0 38px; background-position:center; }
   section { padding:42px 0; }
