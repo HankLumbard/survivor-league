@@ -143,6 +143,14 @@ function doGet(e) {
     });
   }
 
+  if (action === "live-status") {
+    return cachedJsonResponse(cache, CACHE_KEY_STATUS, function () {
+      const ss = SpreadsheetApp.getActiveSpreadsheet();
+      const settings = readSettings(ss);
+      return { seasonStarted: settings.seasonStarted === true };
+    });
+  }
+
   if (action === "leaderboard") {
     return cachedJsonResponse(cache, CACHE_KEY_LEADERBOARD, function () {
       const ss = SpreadsheetApp.getActiveSpreadsheet();
