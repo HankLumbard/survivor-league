@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Leaderboard — <span class="season-label">Survivor 51</span> Fantasy League</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%94%A5</text></svg>" />
+<title>Leaderboard — Survivor 51 Fantasy League</title>
+<link rel="icon" href="images/logo.png" />
 <link rel="stylesheet" href="css/style.css" />
 <style>
   .admin-column { display: none; }
@@ -46,10 +46,10 @@
       <a class="btn" href="entry.html">Draft your team</a>
 
       <div id="payment-reminder" class="payment-reminder panel">
-        <h3>Don't forget your $10 entry fee</h3>
+        <h3>Don't forget your <span id="reminder-entry-fee">$10</span> entry fee</h3>
         <p class="muted">If you just submitted your team, please send your $10 entry fee via Venmo.</p>
-        <p class="venmo-name">Venmo: @Henry-Lumbard-1</p>
-        <a class="btn" href="https://venmo.com/u/Henry-Lumbard-1" target="_blank" rel="noopener">Pay via Venmo</a>
+        <p class="venmo-name">Venmo: <span id="reminder-venmo">@Henry-Lumbard-1</span></p>
+        <a class="btn" id="venmo-link" href="https://venmo.com/u/Henry-Lumbard-1" target="_blank" rel="noopener">Pay via Venmo</a>
       </div>
     </div>
   </div>
@@ -97,7 +97,7 @@
 
 <footer>
   <div class="container">
-    Survivor 51 Fantasy League &mdash; run by Henry &middot; entry fee $10 via Venmo (@Henry-Lumbard-1)
+    <span class="season-label">Survivor 51</span> Fantasy League &mdash; run by <span id="commissioner-name">Henry</span> &middot; entry fee <span id="footer-entry-fee">$10</span> via Venmo (<span id="footer-venmo">@Henry-Lumbard-1</span>)
   </div>
 </footer>
 
@@ -112,6 +112,13 @@ async function load() {
   applyLeagueSettings(data.settings || {});
   document.querySelectorAll(".season-label").forEach((el) => el.textContent = LEAGUE.seasonLabel);
   const settings = { ...(data.settings || {}), seasonStarted: data.seasonStarted === true };
+  document.getElementById("reminder-entry-fee").textContent = settings.entryFee;
+  document.getElementById("footer-entry-fee").textContent = settings.entryFee;
+  document.getElementById("reminder-venmo").textContent = "@" + settings.venmoHandle;
+  document.getElementById("footer-venmo").textContent = "@" + settings.venmoHandle;
+  document.getElementById("commissioner-name").textContent = settings.commissionerName;
+  document.getElementById("venmo-link").href = `https://venmo.com/u/${encodeURIComponent(settings.venmoHandle)}`;
+
   const deadlineEl = document.getElementById("entry-deadline");
   if (deadlineEl) deadlineEl.textContent = settings.entryDeadlineDisplay || settings.entryDeadline || "";
   const entries = data.entries || [];
