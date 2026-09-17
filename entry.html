@@ -47,7 +47,7 @@
     <div class="panel center">
       <h2>🔥 You're in! 🔥</h2>
       <p class="muted">Your team is locked.</p>
-      <a class="btn" style="margin-top:8px;" target="_blank" rel="noopener"
+      <a class="btn" id="venmo-payment-link" style="margin-top:8px;" target="_blank" rel="noopener"
          href="https://venmo.com/Henry-Lumbard-1?txn=pay&note=Survivor%2051%20Fantasy%20League%20entry">
         Pay $10 on Venmo (@Henry-Lumbard-1)
       </a>
@@ -92,7 +92,7 @@
       <div style="margin-top:28px;">
         <button type="submit" class="btn" id="submit-btn">Submit &amp; lock my team</button>
       </div>
-      <p class="small muted" style="margin:12px 0 0;">After submission you will be sent to the $10 Venmo payment step. The picks cannot be changed.</p>
+      <p class="small muted" style="margin:12px 0 0;">After submission you will be sent to the Venmo payment step. The picks cannot be changed.</p>
     </form>
   </div>
 </section>
@@ -274,6 +274,11 @@ renderRoster();
   applyLeagueSettings(data.settings || {});
   document.querySelectorAll(".season-label").forEach((el) => el.textContent = LEAGUE.seasonLabel);
   document.querySelectorAll(".entry-fee").forEach((el) => el.textContent = LEAGUE.entryFee);
+  const paymentLink = document.getElementById("venmo-payment-link");
+  if (paymentLink) {
+    paymentLink.href = getVenmoEntryUrl();
+    paymentLink.textContent = `Pay ${LEAGUE.entryFee} on Venmo (@${LEAGUE.venmoHandle})`;
+  }
   document.querySelectorAll(".picks-per-team").forEach((el) => el.textContent = String(LEAGUE.picksPerTeam));
   setupForm();
 
