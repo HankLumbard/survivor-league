@@ -81,9 +81,7 @@ should contain these keys:
 Do not change `seasonStarted` to `TRUE` until you are ready for the public
 leaderboard to reveal picks and live scoring.
 
-The current backend still expects five picks and the existing five-pick
-`Entries` layout. `picksPerTeam` is therefore informational for now; changing
-it requires a corresponding code/layout change.
+The website now reads `picksPerTeam` for the number of selection slots, and the backend validates that same setting. The `Entries` sheet still has five pick columns, so keep `picksPerTeam` at `5` unless the Entries layout is deliberately expanded in a future code change.
 
 ## Apps Script changes
 
@@ -141,6 +139,4 @@ Normally only `seasonStarted` changes during the season.
 
 ## Before a new season
 
-The long-term goal is to make the entire site reusable by editing the Settings
-and Castaways tabs, without manually changing season-specific text throughout
-the HTML/JavaScript. The repository is being moved toward that structure now.
+The site is now substantially reusable from the Google Sheet: season-wide text, entry fee, Venmo handle, commissioner name, premiere/deadline dates, pick count, and the active cast list are driven from the Settings/Castaways tabs. The remaining static repository data is primarily presentation assets and fallback castaway photos/details.
