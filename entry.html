@@ -272,8 +272,18 @@ renderRoster();
 // Wire the form after live settings have been loaded. so the page is usable without waiting on Google Sheets.
 // The server still enforces the season lock when a submission is posted.
 (async function initEntryPage() {
-  const data = await fetchLeagueStatus().catch(() => ({ settings: LEAGUE, seasonStarted: false }));
-  applyLeagueSettings(data.settings || {});
+  const data = await fetchSeasonStatus().catch(() => ({ settings: LEAGUE, seasonStarted: false }));
+  if (SEASON_DATA_MODE === "live" && data.castaways && data.castaways.length) {
+    const staticById = Object.fromEntries(SURVIVOR_51_CAST.map((c) => [c.id, c]));
+    ACTIVE_CASTAWAYS = data.castaways.map((c) => ({
+      ...(staticById[c.id] || {}),
+      ...c,
+      age: c.age || staticById[c.id]?.age || "",
+      photo: c.photo || staticById[c.id]?.photo || ""
+    }));
+    renderRoster();
+  }
+  applyLeagueSettings(SEASON_DATA_MODE === "static" ? LEAGUE : (data.settings || {}));
   document.querySelectorAll(".season-label").forEach((el) => el.textContent = LEAGUE.seasonLabel);
   document.querySelectorAll(".entry-fee").forEach((el) => el.textContent = LEAGUE.entryFee);
   const paymentLink = document.getElementById("venmo-payment-link");
