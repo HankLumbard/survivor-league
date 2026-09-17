@@ -50,10 +50,12 @@ At the start of a new season, the intended workflow is:
 2. Update the `Settings` tab for the new season.
 3. Replace the `Castaways` tab with the new cast.
 4. Update castaway photos/data in the website repository when needed.
-5. Test a sample entry before opening the league.
-6. Confirm GitHub Pages is publishing from `main`.
-7. Confirm the custom domain is still attached to the Pages site.
-8. Set `seasonStarted` to `TRUE` only when picks should become public/locked.
+5. Keep SEASON_DATA_MODE = "live" while setting up and testing the new season.
+6. Test a sample entry before opening the league.
+7. Run the Season Optimization step below after the season settings and cast are finalized.
+8. Confirm GitHub Pages is publishing from main (or your test branch while testing).
+9. Confirm the custom domain is still attached to the production Pages site.
+10. Set seasonStarted to TRUE only when picks should become public/locked.
 
 ## Settings tab
 
@@ -140,3 +142,33 @@ Normally only `seasonStarted` changes during the season.
 ## Before a new season
 
 The site is now substantially reusable from the Google Sheet: season-wide text, entry fee, Venmo handle, commissioner name, premiere/deadline dates, pick count, and the active cast list are driven from the Settings/Castaways tabs. The remaining static repository data is primarily presentation assets and fallback castaway photos/details.
+
+
+## Season Optimization — run after setup
+
+Once the new season's Settings and Castaways tabs are finalized, run the repository's
+**Season Optimization** process before going live.
+
+Optimization changes js/config.js to contain the finalized season settings and changes
+SEASON_DATA_MODE from "live" to "static". The existing js/castaways.js becomes the static
+source for finalized castaway names, bios, ages, hometowns, occupations, and photos.
+
+Static mode removes the Settings API request from the home page. The entry page still
+checks the live seasonStarted lock, and the leaderboard still loads live entries and
+elimination outcomes. This keeps changing league data in Google Sheets while removing
+unnecessary setup-data requests from normal page loads.
+
+### Reusable optimization prompt
+
+When a future season is ready, give ChatGPT the instruction in
+docs/SEASON-OPTIMIZATION-PROMPT.md.
+
+If the Google Sheet cannot be read directly in ChatGPT, provide/export the Settings and
+Castaways data with the prompt. The Sheet is the source of truth during setup; the
+repository becomes the optimized static copy only after the season is finalized.
+
+### If the season changes after optimization
+
+Change the Google Sheet first, then rerun the optimization process so the repository and
+Sheet stay synchronized. For an urgent one-off change, update the Sheet and then rerun
+optimization before relying on the static copy.
