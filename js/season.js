@@ -22,7 +22,19 @@ function applyLeagueSettings(settings) {
   });
 
   document.title = merged.leagueName || document.title;
+  window.dispatchEvent(new CustomEvent("leagueSettingsReady", { detail: merged }));
   return merged;
+}
+
+async function loadLeagueSettings() {
+  try {
+    const data = await fetchLeagueStatus();
+    return applyLeagueSettings(data.settings || {});
+  } catch (err) {
+    console.warn("Using fallback league settings:", err);
+    return applyLeagueSettings(LEAGUE);
+  }
+}
 }
 
 function getVenmoEntryUrl() {
