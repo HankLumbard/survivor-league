@@ -99,7 +99,7 @@ tr.rank-1 td:first-child { color:#ffe29a; font-weight:800; }
 .status-msg.error { border-color:rgba(239,106,37,.55); color:#ffae79; }
 .status-msg.success { border-color:rgba(229,173,61,.55); color:#ffe09a; }
 .roster-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:14px; margin-top:24px; }
-.roster-card { background:linear-gradient(145deg,rgba(7,39,49,.94),rgba(3,23,30,.94)); border:1px solid rgba(244,228,189,.13); border-radius:7px; padding:14px 16px; display:flex; flex-direction:row; align-items:center; gap:12px; transition:transform .12s ease, border-color .12s ease, background .12s ease, opacity .12s ease; }
+.roster-card { background:linear-gradient(145deg,rgba(7,39,49,.94),rgba(3,23,30,.94)); border:1px solid rgba(244,228,189,.13); border-radius:7px; padding:14px 16px; display:grid; grid-template-columns:minmax(0,1fr) 68px; align-items:center; gap:12px; transition:transform .12s ease, border-color .12s ease, background .12s ease, opacity .12s ease; }
 .roster-card:hover { transform:translateY(-2px); border-color:rgba(24,162,173,.65); background:linear-gradient(145deg,rgba(8,52,64,.96),rgba(3,25,33,.96)); }
 .roster-card.clickable { cursor:pointer; }
 .roster-card.clickable:focus-visible { outline:2px solid var(--water); outline-offset:2px; }
@@ -108,7 +108,7 @@ tr.rank-1 td:first-child { color:#ffe29a; font-weight:800; }
 .roster-card.selected .roster-photo::after { content:"✓"; position:absolute; right:-4px; bottom:-4px; width:21px; height:21px; border-radius:50%; background:var(--ember); color:white; font-size:12px; line-height:21px; text-align:center; font-weight:700; }
 .roster-info { text-align:left; min-width:0; }
 .roster-info h3 { font-size:1.05rem; margin-bottom:4px; }
-.roster-photo { width:68px; height:68px; border-radius:50%; overflow:hidden; background:#06232d; border:1px solid rgba(229,173,61,.34); flex-shrink:0; }
+.roster-photo { width:68px; height:68px; border-radius:50%; overflow:hidden; background:#06232d; border:1px solid rgba(229,173,61,.34); flex-shrink:0; justify-self:end; }
 .roster-photo img { width:100%; height:100%; object-fit:cover; object-position:50% 5%; transform:scale(2.2); transform-origin:50% 5%; }
 .roster-initials { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-family:"Oswald",sans-serif; font-weight:700; font-size:1.1rem; color:#ffe19a; }
 .roster-meta { font-size:.84rem; color:#aebbb6; margin:0 0 2px; }
