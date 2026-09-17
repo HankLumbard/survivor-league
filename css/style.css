@@ -92,6 +92,7 @@ tr.rank-1 td:first-child { color:#ffe29a; font-weight:800; }
 .badge.paid { background:rgba(67,171,141,.16); color:#8fe0c2; }
 .badge.unpaid { background:rgba(239,106,37,.14); color:#ffad76; }
 .center { text-align:center; }
+.center p { margin-left:auto; margin-right:auto; }
 .muted { color:#c5cdc5; }
 .hidden { display:none !important; }
 .small { font-size:.9rem; }
