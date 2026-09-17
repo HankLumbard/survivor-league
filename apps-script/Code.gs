@@ -196,8 +196,9 @@ function doPost(e) {
   const phone = (body.phone || "").toString().trim();
   const picks = Array.isArray(body.picks) ? body.picks : [];
 
-  if (!playerName || !teamName || !phone || picks.length !== 5 || new Set(picks).size !== 5) {
-    return jsonResponse({ error: "Invalid submission — fill in your name, phone number, and five different castaways." });
+  const picksPerTeam = Number(settings.picksPerTeam) || 5;
+  if (!playerName || !teamName || !phone || picks.length !== picksPerTeam || new Set(picks).size !== picksPerTeam) {
+    return jsonResponse({ error: "Invalid submission — fill in your name, phone number, and the required number of different castaways." });
   }
 
   const existingNames = readPlayerNames(ss);
