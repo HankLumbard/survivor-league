@@ -30,10 +30,11 @@
 
 <main>
   <section class="poster-hero" aria-label="Survivor 51 Fantasy League poster">
-    <img class="poster-art" src="images/survivor-51-hero.jpg" alt="Cinematic Survivor 51 fantasy league poster showing a tropical island, torches and ocean" />
-    <!-- The generated poster contains the visual 'ENTER YOUR TEAM' plaque. This invisible,
-         accessible HTML hotspot makes that artwork actually clickable without relying on text baked into an image. -->
-    <a class="hero-cta-hotspot" href="entry.html" aria-label="Enter your Survivor 51 fantasy team">Enter your team</a>
+    <div class="poster-frame">
+      <img class="poster-art" src="images/survivor-51-hero.jpg" alt="Cinematic Survivor 51 fantasy league poster showing a tropical island, torches and ocean" />
+      <!-- This hotspot is positioned against the image frame only, so the countdown below cannot affect it. -->
+      <a class="hero-cta-hotspot" href="entry.html" aria-label="Enter your Survivor 51 fantasy team">Enter your team</a>
+    </div>
     <div class="poster-caption premiere-countdown" aria-live="polite">
       <div class="countdown-time" id="premiere-countdown">Loading countdown…</div>
       <div class="countdown-date">Wednesday, September 23 · 8:00 PM ET</div>
@@ -44,7 +45,7 @@
     <div class="container">
       <div class="eyebrow" style="color:var(--gold);">OUTWIT · OUTPLAY · OUTPICK</div>
       <h1>Five castaways.<br />One winning team.</h1>
-      <p class="muted" style="font-size:1.08rem; max-width:700px;">Watch the premiere, then choose five Survivor 51 castaways before Episode 2. When one of your players gets voted out, you collect[...]
+      <p class="muted" style="font-size:1.08rem; max-width:700px;">Watch the premiere, then choose five Survivor 51 castaways before Episode 2. When one of your players gets voted out, you collect points based on how long they survived.</p>
       <div style="margin-top:26px; display:flex; gap:12px; flex-wrap:wrap;">
         <a class="btn" href="entry.html">Enter your team</a>
         <a class="btn secondary" href="leaderboard.html">View leaderboard</a>
@@ -63,7 +64,7 @@
       <div class="panel">
         <div class="eyebrow" style="color:var(--ember);">THE RULES</div>
         <h2>How the points work</h2>
-        <p class="muted">Every castaway you draft has one chance to earn points for your team. The earlier they're voted out, the fewer points you get — so you're looking for players who can sur[...]
+        <p class="muted">Every castaway you draft has one chance to earn points for your team. The earlier they're voted out, the fewer points you get — so you're looking for players who can survive deep into the game.</p>
         <div class="scoreboard" style="margin-top:24px;">
           <div class="row"><span class="rule">Voted out in week <em>N</em></span><span class="val">N points</span></div>
           <div class="row"><span class="rule">Survives till the final three (non-winner)</span><span class="val">17 points</span></div>
