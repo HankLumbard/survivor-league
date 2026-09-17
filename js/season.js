@@ -35,7 +35,6 @@ async function loadLeagueSettings() {
     return applyLeagueSettings(LEAGUE);
   }
 }
-}
 
 function getVenmoEntryUrl() {
   const note = `${LEAGUE.seasonLabel || "Survivor Fantasy League"} entry`;
