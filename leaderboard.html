@@ -109,9 +109,10 @@
 <script>
 async function load() {
   const data = await fetchLeaderboardData();
-  applyLeagueSettings(data.settings || {});
+  const loadedSettings = SEASON_DATA_MODE === "static" ? LEAGUE : (data.settings || {});
+  applyLeagueSettings(loadedSettings);
   document.querySelectorAll(".season-label").forEach((el) => el.textContent = LEAGUE.seasonLabel);
-  const settings = { ...(data.settings || {}), seasonStarted: data.seasonStarted === true };
+  const settings = { ...loadedSettings, seasonStarted: data.seasonStarted === true };
   document.getElementById("reminder-entry-fee").textContent = settings.entryFee;
   document.getElementById("footer-entry-fee").textContent = settings.entryFee;
   document.getElementById("reminder-venmo").textContent = "@" + settings.venmoHandle;
@@ -140,7 +141,7 @@ async function load() {
   // base.photo survives untouched since the sheet data never includes one.
   const staticById = Object.fromEntries(SURVIVOR_51_CAST.map((c) => [c.id, c]));
   const castawaysById = {};
-  if (data.castaways && data.castaways.length) {
+  if (SEASON_DATA_MODE === "live" && data.castaways && data.castaways.length) {
     data.castaways.forEach((c) => {
       const base = staticById[c.id] || {};
       castawaysById[c.id] = {
@@ -152,6 +153,9 @@ async function load() {
     });
   } else {
     SURVIVOR_51_CAST.forEach((c) => (castawaysById[c.id] = { ...c, outcome: null }));
+    (data.castaways || []).forEach((c) => {
+      if (castawaysById[c.id]) castawaysById[c.id].outcome = c.outcome;
+    });
   }
 
   // Build & sort leaderboard.
