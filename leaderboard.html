@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Leaderboard — Survivor 51 Fantasy League</title>
+<title>Leaderboard — <span class="season-label">Survivor 51</span> Fantasy League</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%94%A5</text></svg>" />
 <link rel="stylesheet" href="css/style.css" />
 <style>
@@ -32,7 +32,7 @@
 
 <header class="hero">
   <div class="container">
-    <div class="eyebrow" id="week-label">SURVIVOR 51 · LIVE BOARD</div>
+    <div class="eyebrow" id="week-label"><span class="season-label">SURVIVOR 51</span> · LIVE BOARD</div>
     <h1>Standings</h1>
     <p class="muted" id="lead-sub">Loading&hellip;</p>
   </div>
@@ -42,7 +42,7 @@
   <div class="container">
     <div class="panel center">
       <h3>Picks are open through the premiere</h3>
-      <p class="muted"><span id="entry-count">0</span> teams have entered so far. Everyone's picks and live scoring will be posted here after the Episode 2 entry deadline on September 30, 2026.</p>
+      <p class="muted"><span id="entry-count">0</span> teams have entered so far. Everyone's picks and live scoring will be posted here after the Episode 2 entry deadline on <span id="entry-deadline">September 30, 2026</span>.</p>
       <a class="btn" href="entry.html">Draft your team</a>
 
       <div id="payment-reminder" class="payment-reminder panel">
@@ -105,16 +105,21 @@
 <script src="js/api.js"></script>
 <script src="js/castaways.js"></script>
 <script src="js/scoring.js"></script>
+<script src="js/season.js"></script>
 <script>
 async function load() {
   const data = await fetchLeaderboardData();
-  const settings = { seasonStarted: data.seasonStarted === true };
+  applyLeagueSettings(data.settings || {});
+  document.querySelectorAll(".season-label").forEach((el) => el.textContent = LEAGUE.seasonLabel);
+  const settings = { ...(data.settings || {}), seasonStarted: data.seasonStarted === true };
+  const deadlineEl = document.getElementById("entry-deadline");
+  if (deadlineEl) deadlineEl.textContent = settings.entryDeadlineDisplay || settings.entryDeadline || "";
   const entries = data.entries || [];
 
   document.getElementById("entry-count").textContent = entries.length;
 
   if (!settings.seasonStarted) {
-    document.getElementById("lead-sub").textContent = "Picks reveal right beofore Episode 2 entry deadline.";
+    document.getElementById("lead-sub").textContent = "Picks reveal before the Episode 2 entry deadline.";
     document.getElementById("pre-season").classList.remove("hidden");
     return;
   }
