@@ -22,7 +22,29 @@ function applyLeagueSettings(settings) {
   });
 
   document.title = merged.leagueName || document.title;
+  window.dispatchEvent(new CustomEvent("leagueSettingsReady", { detail: merged }));
   return merged;
+}
+
+async function loadLeagueSettings() {
+  if (SEASON_DATA_MODE === "static") {
+    return applyLeagueSettings(LEAGUE);
+  }
+
+  try {
+    const data = await fetchLeagueStatus();
+    return applyLeagueSettings(data.settings || {});
+  } catch (err) {
+    console.warn("Using fallback league settings:", err);
+    return applyLeagueSettings(LEAGUE);
+  }
+}
+
+async function fetchSeasonStatus() {
+  if (SEASON_DATA_MODE === "static") {
+    return apiGet("live-status");
+  }
+  return fetchLeagueStatus();
 }
 
 function getVenmoEntryUrl() {

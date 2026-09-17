@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Leaderboard — Survivor 51 Fantasy League</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%94%A5</text></svg>" />
+<link rel="icon" href="images/logo.png" />
 <link rel="stylesheet" href="css/style.css" />
 <style>
   .admin-column { display: none; }
@@ -32,7 +32,7 @@
 
 <header class="hero">
   <div class="container">
-    <div class="eyebrow" id="week-label">SURVIVOR 51 · LIVE BOARD</div>
+    <div class="eyebrow" id="week-label"><span class="season-label">SURVIVOR 51</span> · LIVE BOARD</div>
     <h1>Standings</h1>
     <p class="muted" id="lead-sub">Loading&hellip;</p>
   </div>
@@ -42,14 +42,14 @@
   <div class="container">
     <div class="panel center">
       <h3>Picks are open through the premiere</h3>
-      <p class="muted"><span id="entry-count">0</span> teams have entered so far. Everyone's picks and live scoring will be posted here after the Episode 2 entry deadline on September 30, 2026.</p>
+      <p class="muted"><span id="entry-count">0</span> teams have entered so far. Everyone's picks and live scoring will be posted here after the Episode 2 entry deadline on <span id="entry-deadline">September 30, 2026</span>.</p>
       <a class="btn" href="entry.html">Draft your team</a>
 
       <div id="payment-reminder" class="payment-reminder panel">
-        <h3>Don't forget your $10 entry fee</h3>
+        <h3>Don't forget your <span id="reminder-entry-fee">$10</span> entry fee</h3>
         <p class="muted">If you just submitted your team, please send your $10 entry fee via Venmo.</p>
-        <p class="venmo-name">Venmo: @Henry-Lumbard-1</p>
-        <a class="btn" href="https://venmo.com/u/Henry-Lumbard-1" target="_blank" rel="noopener">Pay via Venmo</a>
+        <p class="venmo-name">Venmo: <span id="reminder-venmo">@Henry-Lumbard-1</span></p>
+        <a class="btn" id="venmo-link" href="https://venmo.com/u/Henry-Lumbard-1" target="_blank" rel="noopener">Pay via Venmo</a>
       </div>
     </div>
   </div>
@@ -97,7 +97,7 @@
 
 <footer>
   <div class="container">
-    Survivor 51 Fantasy League &mdash; run by Henry &middot; entry fee $10 via Venmo (@Henry-Lumbard-1)
+    <span class="season-label">Survivor 51</span> Fantasy League &mdash; run by <span id="commissioner-name">Henry</span> &middot; entry fee <span id="footer-entry-fee">$10</span> via Venmo (<span id="footer-venmo">@Henry-Lumbard-1</span>)
   </div>
 </footer>
 
@@ -105,16 +105,29 @@
 <script src="js/api.js"></script>
 <script src="js/castaways.js"></script>
 <script src="js/scoring.js"></script>
+<script src="js/season.js"></script>
 <script>
 async function load() {
   const data = await fetchLeaderboardData();
-  const settings = { seasonStarted: data.seasonStarted === true };
+  const loadedSettings = SEASON_DATA_MODE === "static" ? LEAGUE : (data.settings || {});
+  applyLeagueSettings(loadedSettings);
+  document.querySelectorAll(".season-label").forEach((el) => el.textContent = LEAGUE.seasonLabel);
+  const settings = { ...loadedSettings, seasonStarted: data.seasonStarted === true };
+  document.getElementById("reminder-entry-fee").textContent = settings.entryFee;
+  document.getElementById("footer-entry-fee").textContent = settings.entryFee;
+  document.getElementById("reminder-venmo").textContent = "@" + settings.venmoHandle;
+  document.getElementById("footer-venmo").textContent = "@" + settings.venmoHandle;
+  document.getElementById("commissioner-name").textContent = settings.commissionerName;
+  document.getElementById("venmo-link").href = `https://venmo.com/u/${encodeURIComponent(settings.venmoHandle)}`;
+
+  const deadlineEl = document.getElementById("entry-deadline");
+  if (deadlineEl) deadlineEl.textContent = settings.entryDeadlineDisplay || settings.entryDeadline || "";
   const entries = data.entries || [];
 
   document.getElementById("entry-count").textContent = entries.length;
 
   if (!settings.seasonStarted) {
-    document.getElementById("lead-sub").textContent = "Picks reveal right beofore Episode 2 entry deadline.";
+    document.getElementById("lead-sub").textContent = "Picks reveal before the Episode 2 entry deadline.";
     document.getElementById("pre-season").classList.remove("hidden");
     return;
   }
@@ -126,12 +139,22 @@ async function load() {
   // list -- so start from that list and layer the sheet's fields on top.
   // Spreading `c` after `base` only overwrites keys `c` actually has, so
   // base.photo survives untouched since the sheet data never includes one.
+  const staticById = Object.fromEntries(SURVIVOR_51_CAST.map((c) => [c.id, c]));
   const castawaysById = {};
-  SURVIVOR_51_CAST.forEach((c) => (castawaysById[c.id] = { ...c, outcome: null }));
-  if (data.castaways && data.castaways.length) {
+  if (SEASON_DATA_MODE === "live" && data.castaways && data.castaways.length) {
     data.castaways.forEach((c) => {
-      const base = castawaysById[c.id] || {};
-      castawaysById[c.id] = { ...base, ...c };
+      const base = staticById[c.id] || {};
+      castawaysById[c.id] = {
+        ...base,
+        ...c,
+        age: c.age || base.age || "",
+        photo: c.photo || base.photo || ""
+      };
+    });
+  } else {
+    SURVIVOR_51_CAST.forEach((c) => (castawaysById[c.id] = { ...c, outcome: null }));
+    (data.castaways || []).forEach((c) => {
+      if (castawaysById[c.id]) castawaysById[c.id].outcome = c.outcome;
     });
   }
 

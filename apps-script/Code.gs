@@ -97,8 +97,13 @@ function setupSheets() {
   let cast = ss.getSheetByName(SHEET_CASTAWAYS);
   if (!cast) cast = ss.insertSheet(SHEET_CASTAWAYS);
   if (cast.getLastRow() === 0) {
-    cast.appendRow(["Id", "Name", "Hometown", "Occupation", "Outcome"]);
-    CASTAWAY_SEED.forEach((c) => cast.appendRow([c.id, c.name, c.hometown, c.occupation, ""]));
+    cast.appendRow(["Id", "Name", "Hometown", "Occupation", "Outcome", "Age", "Photo"]);
+    CASTAWAY_SEED.forEach((c) => cast.appendRow([c.id, c.name, c.hometown, c.occupation, "", "", ""]));
+  } else {
+    const headers = cast.getRange(1, 1, 1, cast.getLastColumn()).getValues()[0].map(String);
+    ["Age", "Photo"].forEach((header) => {
+      if (!headers.includes(header)) cast.getRange(1, cast.getLastColumn() + 1).setValue(header);
+    });
   }
 
   let settings = ss.getSheetByName(SHEET_SETTINGS);
@@ -132,8 +137,17 @@ function doGet(e) {
       return {
         seasonStarted: settings.seasonStarted === true,
         entryCount: countEntries(ss),
+        castaways: readCastaways(ss),
         settings: settings,
       };
+    });
+  }
+
+  if (action === "live-status") {
+    return cachedJsonResponse(cache, CACHE_KEY_STATUS, function () {
+      const ss = SpreadsheetApp.getActiveSpreadsheet();
+      const settings = readSettings(ss);
+      return { seasonStarted: settings.seasonStarted === true };
     });
   }
 
@@ -155,7 +169,7 @@ function doGet(e) {
         seasonStarted: true,
         entryCount: countEntries(ss),
         entries: readPublicEntries(ss),
-        castaways: readCastawayOutcomes(ss),
+        castaways: readCastaways(ss),
         settings: settings,
       };
     });
@@ -196,8 +210,9 @@ function doPost(e) {
   const phone = (body.phone || "").toString().trim();
   const picks = Array.isArray(body.picks) ? body.picks : [];
 
-  if (!playerName || !teamName || !phone || picks.length !== 5 || new Set(picks).size !== 5) {
-    return jsonResponse({ error: "Invalid submission — fill in your name, phone number, and five different castaways." });
+  const picksPerTeam = Number(settings.picksPerTeam) || 5;
+  if (!playerName || !teamName || !phone || picks.length !== picksPerTeam || new Set(picks).size !== picksPerTeam) {
+    return jsonResponse({ error: "Invalid submission — fill in your name, phone number, and the required number of different castaways." });
   }
 
   const existingNames = readPlayerNames(ss);
@@ -311,15 +326,32 @@ function readCastaways(ss) {
   const sheet = ss.getSheetByName(SHEET_CASTAWAYS);
   if (!sheet) return [];
   const values = sheet.getDataRange().getValues();
-  const rows = values.slice(1);
-  return rows
-    .filter((r) => r[0])
+  if (values.length < 2) return [];
+
+  const headers = values[0].map((h) => String(h).trim().toLowerCase());
+  const col = (name, fallback) => {
+    const index = headers.indexOf(name.toLowerCase());
+    return index >= 0 ? index : fallback;
+  };
+
+  const idCol = col("id", 0);
+  const nameCol = col("name", 1);
+  const hometownCol = col("hometown", 2);
+  const occupationCol = col("occupation", 3);
+  const outcomeCol = col("outcome", 4);
+  const ageCol = col("age", -1);
+  const photoCol = col("photo", -1);
+
+  return values.slice(1)
+    .filter((r) => r[idCol])
     .map((r) => ({
-      id: String(r[0]),
-      name: String(r[1]),
-      hometown: String(r[2]),
-      occupation: String(r[3]),
-      outcome: r[4] === "" || r[4] === null || r[4] === undefined ? null : Number(r[4]),
+      id: String(r[idCol]),
+      name: String(r[nameCol] || ""),
+      hometown: String(r[hometownCol] || ""),
+      occupation: String(r[occupationCol] || ""),
+      age: ageCol >= 0 && r[ageCol] !== "" ? Number(r[ageCol]) : null,
+      photo: photoCol >= 0 ? String(r[photoCol] || "") : "",
+      outcome: r[outcomeCol] === "" || r[outcomeCol] === null || r[outcomeCol] === undefined ? null : Number(r[outcomeCol]),
     }));
 }
 

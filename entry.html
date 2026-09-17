@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Draft Your Team — Survivor 51 Fantasy League</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%94%A5</text></svg>" />
+<link rel="icon" href="images/logo.png" />
 <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -25,9 +25,9 @@
 
 <header class="hero">
   <div class="container">
-    <div class="eyebrow">SURVIVOR 51 · DRAFT BOARD</div>
-    <h1>Pick five.<br />Lock in.</h1>
-    <p class="muted">Choose the five castaways you think can survive the island. Your entry becomes permanent the moment you submit. (Text me if there's a problem, I'll take care of you!)</p>
+    <div class="eyebrow"><span class="season-label">SURVIVOR 51</span> · DRAFT BOARD</div>
+    <h1>Pick <span class="picks-per-team">five</span>.<br />Lock in.</h1>
+    <p class="muted">Choose your castaways you think can survive the island. Your entry becomes permanent the moment you submit. (Text me if there's a problem, I'll take care of you!)</p>
     <p class="muted small">Tip: use the dropdowns or tap a castaway card below. Selected castaways are marked so you can build your roster visually.</p>
   </div>
 </header>
@@ -47,7 +47,7 @@
     <div class="panel center">
       <h2>🔥 You're in! 🔥</h2>
       <p class="muted">Your team is locked.</p>
-      <a class="btn" style="margin-top:8px;" target="_blank" rel="noopener"
+      <a class="btn" id="venmo-payment-link" style="margin-top:8px;" target="_blank" rel="noopener"
          href="https://venmo.com/Henry-Lumbard-1?txn=pay&note=Survivor%2051%20Fantasy%20League%20entry">
         Pay $10 on Venmo (@Henry-Lumbard-1)
       </a>
@@ -81,8 +81,8 @@
       </div>
 
       <div class="hairline"></div>
-      <h3 style="margin-top:20px;">Your five castaways</h3>
-      <p class="small muted">Each castaway can only be selected once. The five slots update as you make your choices.</p>
+      <h3 style="margin-top:20px;">Your <span class="picks-per-team">five</span> castaways</h3>
+      <p class="small muted">Each castaway can only be selected once. The slots update as you make your choices.</p>
       <p class="small muted center" style="margin:16px 0 18px;">
         👇 <strong>Player cards are below the dropdowns.</strong> Scroll down to see photos and bios. You can <strong>tap a player card to select them</strong>, or use the <strong>dropdowns</strong> above.
       </p>
@@ -92,7 +92,7 @@
       <div style="margin-top:28px;">
         <button type="submit" class="btn" id="submit-btn">Submit &amp; lock my team</button>
       </div>
-      <p class="small muted" style="margin:12px 0 0;">After submission you will be sent to the $10 Venmo payment step. The picks cannot be changed.</p>
+      <p class="small muted" style="margin:12px 0 0;">After submission you will be sent to the Venmo payment step. The picks cannot be changed.</p>
     </form>
   </div>
 </section>
@@ -117,10 +117,13 @@
 <script src="js/config.js"></script>
 <script src="js/api.js"></script>
 <script src="js/castaways.js"></script>
+<script src="js/season.js"></script>
 <script>
 function initials(name) {
   return name.replace(/[\u201c\u201d"]/g, "").split(" ").filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
 }
+
+let ACTIVE_CASTAWAYS = SURVIVOR_51_CAST;
 
 function renderRoster() {
   const grid = document.getElementById("roster-grid");
@@ -129,7 +132,7 @@ function renderRoster() {
   // Keep the Rizo joke card first so people see it before the real castaways.
   renderRizoCard(grid);
 
-  SURVIVOR_51_CAST.forEach((c) => {
+  ACTIVE_CASTAWAYS.forEach((c) => {
     const card = document.createElement("div");
     card.className = "roster-card";
     card.dataset.id = c.id;
@@ -266,21 +269,34 @@ function renderRizoCard(grid) {
 }
 renderRoster();
 
-// Wire the form immediately so the page is usable without waiting on Google Sheets.
+// Wire the form after live settings have been loaded. so the page is usable without waiting on Google Sheets.
 // The server still enforces the season lock when a submission is posted.
-setupForm();
+(async function initEntryPage() {
+  const data = await fetchSeasonStatus().catch(() => ({ settings: LEAGUE, seasonStarted: false }));
+  if (SEASON_DATA_MODE === "live" && data.castaways && data.castaways.length) {
+    const staticById = Object.fromEntries(SURVIVOR_51_CAST.map((c) => [c.id, c]));
+    ACTIVE_CASTAWAYS = data.castaways.map((c) => ({
+      ...(staticById[c.id] || {}),
+      ...c,
+      age: c.age || staticById[c.id]?.age || "",
+      photo: c.photo || staticById[c.id]?.photo || ""
+    }));
+    renderRoster();
+  }
+  applyLeagueSettings(SEASON_DATA_MODE === "static" ? LEAGUE : (data.settings || {}));
+  document.querySelectorAll(".season-label").forEach((el) => el.textContent = LEAGUE.seasonLabel);
+  document.querySelectorAll(".entry-fee").forEach((el) => el.textContent = LEAGUE.entryFee);
+  const paymentLink = document.getElementById("venmo-payment-link");
+  if (paymentLink) {
+    paymentLink.href = getVenmoEntryUrl();
+    paymentLink.textContent = `Pay ${LEAGUE.entryFee} on Venmo (@${LEAGUE.venmoHandle})`;
+  }
+  document.querySelectorAll(".picks-per-team").forEach((el) => el.textContent = String(LEAGUE.picksPerTeam));
+  setupForm();
 
-(async function checkSeasonStatus() {
-  try {
-    const data = await fetchLeagueStatus();
-    if (data.seasonStarted) {
-      document.getElementById("form-section").classList.add("hidden");
-      document.getElementById("locked-section").classList.remove("hidden");
-    }
-  } catch (err) {
-    console.error(err);
-    // If the check fails, leave the form usable. Code.gs still blocks
-    // submissions after the season starts.
+  if (data.seasonStarted) {
+    document.getElementById("form-section").classList.add("hidden");
+    document.getElementById("locked-section").classList.remove("hidden");
   }
 })();
 
@@ -308,7 +324,7 @@ function renderOptions() {
   selects.forEach((select) => {
     const current = select.value;
     select.innerHTML = '<option value="">Choose a castaway&hellip;</option>';
-    SURVIVOR_51_CAST.forEach((c) => {
+    ACTIVE_CASTAWAYS.forEach((c) => {
       if (chosen.includes(c.id) && c.id !== current) return; // already taken by another slot
       const opt = document.createElement("option");
       opt.value = c.id;
@@ -380,7 +396,7 @@ document.getElementById("entry-form").addEventListener("submit", async (e) => {
   const picks = selects.map((s) => s.value);
 
   if (new Set(picks).size !== NUM_PICKS || picks.includes("")) {
-    showStatus("Pick five different castaways before submitting.", "error");
+    showStatus(`Pick ${NUM_PICKS} different castaways before submitting.`, "error");
     return;
   }
   if (!phone) {
