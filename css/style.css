@@ -141,6 +141,8 @@ tr.rank-1 td:first-child { color:#ffe29a; font-weight:800; }
 .torch-band .container { position:relative; }
 .torch-sub { color:#d4dbd3; max-width:44ch; margin:0; }
 footer { border-top:1px solid var(--line); padding:30px 0; color:#aeb8b3; font-size:.9rem; background:rgba(1,9,13,.72); }
+footer .container { font-size: 0; }
+footer .container::after { content: "Season 51: Operated by Hank"; font-size: .9rem; }
 @media (max-width: 800px) { .topnav .container { align-items:flex-start; padding-top:12px; padding-bottom:12px; flex-direction:column; } .navlinks { width:100%; justify-content:space-between; gap:12px; } .navlinks a { padding-top:0; } }
 @media (max-width: 640px) { .container { padding:0 17px; } .brand { font-size:.96rem; } .poster-frame { width:100%; } .poster-art { width:100%; height:auto; min-height:0; object-fit:cover; object-position:center; scale:1.2; } .hero-cta-hotspot { left: 25%; top: 82%; width: 51%; height: 18%; } }
 .premiere-countdown { padding:14px 20px 16px; text-align:center; letter-spacing:.04em; }
