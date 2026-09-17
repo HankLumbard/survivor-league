@@ -19,8 +19,9 @@ Sept 23, 2026 on CBS — pulled from Wikipedia and cast-reveal coverage.
 - **Apps Script** (`apps-script/Code.gs`) is a small script that lives
   *inside* the Google Sheet. It's what lets the website read from and write
   to the sheet, since a plain static site can't talk to a spreadsheet
-  directly. You paste this code in once and deploy it — after that you
-  never touch it again.
+  directly. You paste this code in once and deploy it.
+- **Commissioner guide** (`docs/COMMISSIONER.md`) documents season setup,
+  weekly operation, and handing the league to someone else.
 
 ## One-time setup (about 15 minutes)
 
@@ -41,6 +42,8 @@ Sept 23, 2026 on CBS — pulled from Wikipedia and cast-reveal coverage.
 5. Switch back to the spreadsheet tab — you should now see three tabs:
    `Entries`, `Castaways` (pre-filled with all 21 castaways), and
    `Settings`.
+6. Running `setupSheets` again later is safe: it adds missing Settings rows
+   but preserves existing Settings values.
 
 ### 3. Deploy the script as a web app
 1. Still in the Apps Script editor, click **Deploy → New deployment**.
@@ -51,7 +54,7 @@ Sept 23, 2026 on CBS — pulled from Wikipedia and cast-reveal coverage.
 5. Open `js/config.js` in this project and paste that URL in as
    `SHEET_API_URL`.
 
-**Important:** if you ever edit `Code.gs` later, saving isn't enough — go
+**Important:** if you edit `Code.gs` later, saving isn't enough — go
 to **Deploy → Manage deployments**, click the pencil icon, and create a
 **New version** so the live `/exec` URL picks up your change.
 
@@ -70,35 +73,35 @@ to **Deploy → Manage deployments**, click the pencil icon, and create a
 
 Everything happens directly in the Google Sheet — no separate admin page.
 
+- **Settings tab**: season-wide values live here. Current settings include
+  the league name, season label, entry fee, Venmo handle, picks per team,
+  premiere date/time, entry deadline, commissioner name, and `seasonStarted`.
+  The Apps Script returns these settings to the website as public season
+  configuration. `seasonStarted` controls when picks/scoring become live.
 - **Entries tab**: every submitted team shows up here as a locked-in row —
-  player name, team name, five picks, and a `Paid` column. Change `Paid`
-  from `FALSE` to `TRUE` once someone Venmos you. (Editing a row here does
-  *not* let a player edit their own entry — the website only ever appends
-  new rows; only you, editing the sheet, can change or delete one.)
+  player name, team name, five picks, and a `Paid` column. Change `Paid` from
+  `FALSE` to `TRUE` once someone Venmos you. (Editing a row here does *not*
+  let a player edit their own entry — the website only ever appends new rows;
+  only you, editing the sheet, can change or delete one.)
 - **Castaways tab**: has one `Outcome` column per castaway. Leave it blank
   while they're still playing. When someone is voted out, type the week
-  number (`1`, `2`, `3`...) into their row. When the season reaches the
-  end, type `17` for each Final Three member and `20` for the winner. The
+  number (`1`, `2`, `3`...) into their row. When the season reaches the end,
+  type `17` for each Final Three member and `20` for the winner. The
   leaderboard recalculates from these values automatically.
-- **Settings tab**: has a `seasonStarted` row, set to `FALSE` by default.
-  Flip it to `TRUE` once the premiere airs — this is what reveals
-  everyone's picks and scores on the public leaderboard. Before that, the
-  leaderboard only shows how many teams have entered so far.
 
 ## Notes & limits
 
-- "Max possible points" on the leaderboard assumes every castaway still in
-  the game goes on to win (20 points) — the same convention an NCAA
-  bracket pool uses for its "maximum possible" column. It's calculated
-  independently per team, since in principle any of them could still be
-  right.
-- The website polls the sheet fresh every time someone loads the
-  leaderboard page — there's no real-time push, so tell people to refresh
-  if they're checking right after you update a castaway's status.
+- "Max possible points" on the leaderboard assumes every castaway still in the
+  game goes on to win (20 points) — the same convention an NCAA bracket pool
+  uses for its "maximum possible" column. It's calculated independently per
+  team, since in principle any of them could still be right.
+- The website polls the sheet fresh every time someone loads the leaderboard
+  page — there's no real-time push, so tell people to refresh if they're
+  checking right after you update a castaway's status.
 - If the leaderboard or entry form ever shows a network/CORS error in the
   browser console, the most common cause is either (a) `SHEET_API_URL` in
   `js/config.js` isn't filled in yet, or (b) you edited `Code.gs` and
   forgot to create a new deployment version (see step 3 above).
-- Only one person can hold the `Execute as: Me` deployment — that's
-  whoever's Google account owns the sheet. That's fine for a single
-  commissioner running the league.
+- Only one person can hold the `Execute as: Me` deployment — that's whoever's
+  Google account owns the sheet. See `docs/COMMISSIONER.md` for the handoff
+  process.
