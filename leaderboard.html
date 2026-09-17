@@ -138,13 +138,20 @@ async function load() {
   // list -- so start from that list and layer the sheet's fields on top.
   // Spreading `c` after `base` only overwrites keys `c` actually has, so
   // base.photo survives untouched since the sheet data never includes one.
+  const staticById = Object.fromEntries(SURVIVOR_51_CAST.map((c) => [c.id, c]));
   const castawaysById = {};
-  SURVIVOR_51_CAST.forEach((c) => (castawaysById[c.id] = { ...c, outcome: null }));
   if (data.castaways && data.castaways.length) {
     data.castaways.forEach((c) => {
-      const base = castawaysById[c.id] || {};
-      castawaysById[c.id] = { ...base, ...c };
+      const base = staticById[c.id] || {};
+      castawaysById[c.id] = {
+        ...base,
+        ...c,
+        age: c.age || base.age || "",
+        photo: c.photo || base.photo || ""
+      };
     });
+  } else {
+    SURVIVOR_51_CAST.forEach((c) => (castawaysById[c.id] = { ...c, outcome: null }));
   }
 
   // Build & sort leaderboard.
