@@ -6,7 +6,7 @@
  *  - The sheet itself IS the database: one tab for entries, one for
  *    castaways, one for settings. You run the league by editing cells.
  *  - Deployed as a Web App, it exposes:
- *      GET  ?action=status      -> season status only
+ *      GET  ?action=status      -> season status + public season settings
  *      GET  ?action=leaderboard -> data needed for the public leaderboard
  *      GET  ?action=league      -> full league data (backward compatibility)
  *      POST {action:"submitEntry", ...} -> appends a new locked entry
@@ -33,6 +33,23 @@ const CACHE_SECONDS = 21600;
 const CACHE_KEY_STATUS = "survivor51_status";
 const CACHE_KEY_LEADERBOARD = "survivor51_leaderboard";
 const CACHE_KEY_LEAGUE = "survivor51_league";
+
+// Season-wide values live in the Google Sheet's Settings tab. These values
+// are only used to seed missing Settings rows; existing values are preserved.
+const DEFAULT_SETTINGS = {
+  leagueName: "Survivor 51 Fantasy League",
+  seasonLabel: "Survivor 51",
+  entryFee: "$10",
+  venmoHandle: "Henry-Lumbard-1",
+  picksPerTeam: 5,
+  premiereDate: "September 23, 2026",
+  premiereDateTime: "2026-09-23T20:00:00-04:00",
+  premiereDisplay: "Wednesday, September 23 · 8:00 PM ET",
+  entryDeadline: "September 30, 2026",
+  entryDeadlineDisplay: "8:00 PM ET on September 30, 2026",
+  commissionerName: "Henry",
+  seasonStarted: false,
+};
 
 // Keep this in sync with js/castaways.js on the website — same ids, same
 // names. This is only used the first time you run setupSheets(); after
@@ -86,12 +103,22 @@ function setupSheets() {
 
   let settings = ss.getSheetByName(SHEET_SETTINGS);
   if (!settings) settings = ss.insertSheet(SHEET_SETTINGS);
-  if (settings.getLastRow() === 0) {
-    settings.appendRow(["Key", "Value"]);
-    settings.appendRow(["seasonStarted", "FALSE"]);
+  if (settings.getLastRow() === 0) settings.appendRow(["Key", "Value"]);
+
+  const existingKeys = new Set();
+  if (settings.getLastRow() >= 2) {
+    settings.getRange(2, 1, settings.getLastRow() - 1, 1).getValues().forEach(([key]) => {
+      if (key) existingKeys.add(String(key));
+    });
   }
 
-  SpreadsheetApp.getUi().alert("Sheets are set up. Add a checkbox column look to Paid/Outcome if you like — this only ran once.");
+  Object.entries(DEFAULT_SETTINGS).forEach(([key, value]) => {
+    if (!existingKeys.has(key)) {
+      settings.appendRow([key, value]);
+    }
+  });
+
+  SpreadsheetApp.getUi().alert("Sheets are set up. Existing Settings values were preserved; missing season settings were added.");
 }
 
 function doGet(e) {
@@ -105,6 +132,7 @@ function doGet(e) {
       return {
         seasonStarted: settings.seasonStarted === true,
         entryCount: countEntries(ss),
+        settings: settings,
       };
     });
   }
@@ -120,6 +148,7 @@ function doGet(e) {
           entryCount: countEntries(ss),
           entries: readPublicEntries(ss),
           castaways: [],
+          settings: settings,
         };
       }
       return {
@@ -127,6 +156,7 @@ function doGet(e) {
         entryCount: countEntries(ss),
         entries: readPublicEntries(ss),
         castaways: readCastawayOutcomes(ss),
+        settings: settings,
       };
     });
   }
@@ -158,7 +188,7 @@ function doPost(e) {
 
   const settings = readSettings(ss);
   if (settings.seasonStarted === true) {
-    return jsonResponse({ error: "Entries are closed \u2014 the season has already started." });
+    return jsonResponse({ error: "Entries are closed — the season has already started." });
   }
 
   const playerName = (body.playerName || "").toString().trim();
@@ -167,7 +197,7 @@ function doPost(e) {
   const picks = Array.isArray(body.picks) ? body.picks : [];
 
   if (!playerName || !teamName || !phone || picks.length !== 5 || new Set(picks).size !== 5) {
-    return jsonResponse({ error: "Invalid submission \u2014 fill in your name, phone number, and five different castaways." });
+    return jsonResponse({ error: "Invalid submission — fill in your name, phone number, and five different castaways." });
   }
 
   const existingNames = readPlayerNames(ss);
@@ -312,12 +342,12 @@ function readEntries(ss) {
 
 function readSettings(ss) {
   const sheet = ss.getSheetByName(SHEET_SETTINGS);
-  if (!sheet) return { seasonStarted: false };
+  if (!sheet) return { ...DEFAULT_SETTINGS };
   const values = sheet.getDataRange().getValues();
-  const settings = {};
+  const settings = { ...DEFAULT_SETTINGS };
   values.slice(1).forEach(([key, value]) => {
     if (!key) return;
-    settings[key] = String(value).toUpperCase() === "TRUE" ? true : String(value).toUpperCase() === "FALSE" ? false : value;
+    settings[String(key)] = String(value).toUpperCase() === "TRUE" ? true : String(value).toUpperCase() === "FALSE" ? false : value;
   });
   return settings;
 }
