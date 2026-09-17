@@ -6,12 +6,65 @@
 <title>Survivor 51 Fantasy League</title>
 <meta property="og:title" content="Survivor 51 Fantasy League" />
 <meta property="og:description" content="Pick 5 castaways, lock in your team, and compete for bragging rights. Entry: $10" />
-<meta property="og:image" content="https://outwitoutplayoutpick.com/images/survivor-51-hero.jpg" />
+<meta property="og:image" content="https://outwitoutplayoutpick.com/images/logo.jpg" />
 <meta property="og:url" content="https://outwitoutplayoutpick.com" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔥</text></svg>" />
 <link rel="stylesheet" href="css/style.css" />
+<style>
+  .simple-home-hero {
+    padding: 54px 0 34px;
+    background: linear-gradient(180deg, rgba(3,20,27,.98), rgba(2,11,17,.98));
+    border-bottom: 1px solid var(--line);
+    text-align: center;
+  }
+  .simple-home-hero .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .simple-home-logo {
+    display: block;
+    width: min(680px, 88vw);
+    height: auto;
+    margin: 0 auto 22px;
+  }
+  .season-motto {
+    margin: 0 auto 22px;
+    color: var(--sand);
+    font-family: "Oswald", Impact, sans-serif;
+    font-size: clamp(1.25rem, 3vw, 2rem);
+    font-weight: 700;
+    letter-spacing: .10em;
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+  .season-motto .crossed {
+    color: rgba(244,228,189,.68);
+    text-decoration-line: line-through;
+    text-decoration-color: var(--paint-red);
+    text-decoration-thickness: 3px;
+    text-decoration-skip-ink: none;
+  }
+  .season-motto .outpick {
+    color: var(--gold);
+  }
+  .simple-home-hero .premiere-countdown {
+    width: min(760px, 94vw);
+    margin-top: 4px;
+  }
+  .home-entry-section {
+    padding-top: 28px;
+  }
+  .home-entry-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+  }
+</style>
 </head>
 <body>
 <nav class="topnav">
@@ -29,27 +82,27 @@
 </nav>
 
 <main>
-  <section class="poster-hero" aria-label="Survivor 51 Fantasy League poster">
-    <div class="poster-frame">
-      <img class="poster-art" src="images/survivor-51-hero.jpg" alt="Cinematic Survivor 51 fantasy league poster showing a tropical island, torches and ocean" />
-      <!-- This hotspot is positioned against the image frame only, so the countdown below cannot affect it. -->
-      <a class="hero-cta-hotspot" href="entry.html" aria-label="Enter your Survivor 51 fantasy team">Enter your team</a>
-    </div>
-    <div class="poster-caption premiere-countdown" aria-live="polite">
-      <div class="countdown-time" id="premiere-countdown">Loading countdown…</div>
-      <div class="countdown-date">Wednesday, September 23 · 8:00 PM ET</div>
+  <section class="simple-home-hero" aria-label="Survivor 51 Fantasy League">
+    <div class="container">
+      <img class="simple-home-logo" src="images/logo.jpg" alt="Survivor 51 official logo" />
+      <div class="season-motto" aria-label="Outwit outplay outlast crossed out, replaced by outpick">
+        <span class="crossed">Outwit</span> ·
+        <span class="crossed">Outplay</span> ·
+        <span class="crossed">Outlast</span> ·
+        <span class="outpick">Outpick</span>
+      </div>
+      <div class="poster-caption premiere-countdown" aria-live="polite">
+        <div class="countdown-time" id="premiere-countdown">Loading countdown…</div>
+        <div class="countdown-date">Wednesday, September 23 · 8:00 PM ET</div>
+      </div>
     </div>
   </section>
 
   <section>
     <div class="container">
-      <div class="eyebrow" style="color:var(--gold);">OUTWIT · OUTPLAY · OUTPICK</div>
+      <div class="eyebrow" style="color:var(--gold);">THE GAME</div>
       <h1>Five castaways.<br />One winning team.</h1>
       <p class="muted" style="font-size:1.08rem; max-width:700px;">Watch the premiere, then choose five Survivor 51 castaways before Episode 2. When one of your players gets voted out, you collect points based on how long they survived.</p>
-      <div style="margin-top:26px; display:flex; gap:12px; flex-wrap:wrap;">
-        <a class="btn" href="entry.html">Enter your team</a>
-        <a class="btn secondary" href="leaderboard.html">View leaderboard</a>
-      </div>
       <div class="hero-stats">
         <div class="stat"><span class="num">21</span><span class="label">Castaways to choose from</span></div>
         <div class="stat"><span class="num">5</span><span class="label">Picks per team</span></div>
@@ -75,24 +128,28 @@
     </div>
   </section>
 
-  <section>
+  <section class="home-entry-section">
     <div class="container">
       <div class="panel">
         <div class="eyebrow" style="color:var(--gold);">YOUR MISSION</div>
         <h2>Pick. Lock. Watch.</h2>
         <ol class="muted">
-          <li>Watch the premiere, then go to <a href="entry.html">Enter</a> and make your five picks before Episode 2.</li>
+          <li>Watch the premiere, then make your five picks before Episode 2.</li>
           <li>Your entry is locked immediately after submission.</li>
           <li>Send the <strong>$10</strong> entry fee to <strong>@Henry-Lumbard-1</strong> on Venmo.</li>
           <li>Once the second episode begins, everyone's picks are revealed and the leaderboard comes alive.</li>
         </ol>
         <p class="small muted" style="margin-bottom:0;">Entries close at 8:00 PM ET on September 30, 2026, before Episode 2.</p>
+        <div class="home-entry-actions">
+          <a class="btn" href="entry.html">Enter Your Team</a>
+          <a class="btn secondary" href="leaderboard.html">View Leaderboard</a>
+        </div>
       </div>
     </div>
   </section>
 </main>
 
 <footer><div class="container">Survivor 51 Fantasy League</div></footer>
-  <script src="js/countdown.js"></script>
+<script src="js/countdown.js"></script>
 </body>
 </html>
