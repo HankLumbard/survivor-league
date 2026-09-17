@@ -123,6 +123,8 @@ function initials(name) {
   return name.replace(/[\u201c\u201d"]/g, "").split(" ").filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
 }
 
+let ACTIVE_CASTAWAYS = SURVIVOR_51_CAST;
+
 function renderRoster() {
   const grid = document.getElementById("roster-grid");
   grid.innerHTML = "";
@@ -130,7 +132,7 @@ function renderRoster() {
   // Keep the Rizo joke card first so people see it before the real castaways.
   renderRizoCard(grid);
 
-  SURVIVOR_51_CAST.forEach((c) => {
+  ACTIVE_CASTAWAYS.forEach((c) => {
     const card = document.createElement("div");
     card.className = "roster-card";
     card.dataset.id = c.id;
@@ -312,7 +314,7 @@ function renderOptions() {
   selects.forEach((select) => {
     const current = select.value;
     select.innerHTML = '<option value="">Choose a castaway&hellip;</option>';
-    SURVIVOR_51_CAST.forEach((c) => {
+    ACTIVE_CASTAWAYS.forEach((c) => {
       if (chosen.includes(c.id) && c.id !== current) return; // already taken by another slot
       const opt = document.createElement("option");
       opt.value = c.id;
@@ -384,7 +386,7 @@ document.getElementById("entry-form").addEventListener("submit", async (e) => {
   const picks = selects.map((s) => s.value);
 
   if (new Set(picks).size !== NUM_PICKS || picks.includes("")) {
-    showStatus("Pick five different castaways before submitting.", "error");
+    showStatus(`Pick ${NUM_PICKS} different castaways before submitting.`, "error");
     return;
   }
   if (!phone) {
