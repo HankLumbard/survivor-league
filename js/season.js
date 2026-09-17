@@ -27,6 +27,10 @@ function applyLeagueSettings(settings) {
 }
 
 async function loadLeagueSettings() {
+  if (SEASON_DATA_MODE === "static") {
+    return applyLeagueSettings(LEAGUE);
+  }
+
   try {
     const data = await fetchLeagueStatus();
     return applyLeagueSettings(data.settings || {});
@@ -34,6 +38,13 @@ async function loadLeagueSettings() {
     console.warn("Using fallback league settings:", err);
     return applyLeagueSettings(LEAGUE);
   }
+}
+
+async function fetchSeasonStatus() {
+  if (SEASON_DATA_MODE === "static") {
+    return apiGet("live-status");
+  }
+  return fetchLeagueStatus();
 }
 
 function getVenmoEntryUrl() {
