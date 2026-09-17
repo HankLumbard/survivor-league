@@ -5,103 +5,107 @@ Survivor fantasy league, hosted free on GitHub Pages. The "database" is a
 Google Sheet — no separate backend service to learn. You run the league by
 editing cells in the sheet.
 
-The cast in `js/castaways.js` (and `apps-script/Code.gs`) is the real
-Survivor 51 cast — 21 castaways, announced Aug 25 2026, season premieres
-Sept 23, 2026 on CBS — pulled from Wikipedia and cast-reveal coverage.
-
 ## How the pieces fit together
 
-- **The website** (`index.html`, `entry.html`, `leaderboard.html`) is plain
-  static HTML/CSS/JS, hosted on GitHub Pages.
-- **The Google Sheet** holds three tabs: `Entries`, `Castaways`, `Settings`.
-  This is where all the data lives, and where you'll do all your admin —
-  no separate admin page to log into.
-- **Apps Script** (`apps-script/Code.gs`) is a small script that lives
-  *inside* the Google Sheet. It's what lets the website read from and write
-  to the sheet, since a plain static site can't talk to a spreadsheet
-  directly. You paste this code in once and deploy it.
-- **Commissioner guide** (`docs/COMMISSIONER.md`) documents season setup,
-  weekly operation, and handing the league to someone else.
+- **The website** (index.html, entry.html, leaderboard.html) is plain static HTML/CSS/JS, hosted on GitHub Pages.
+- **The Google Sheet** holds three tabs: Entries, Castaways, Settings. This is where live league data and commissioner administration live.
+- **Apps Script** (apps-script/Code.gs) is a small script that lives inside the Google Sheet. It lets the website read from and write to the sheet.
+- **The commissioner guide** (docs/COMMISSIONER.md) documents setup, weekly operation, future-season setup, optimization, and handoff.
 
-## One-time setup (about 15 minutes)
+## Current production architecture
+
+The repository is now optimized for the current season.
+
+- SEASON_DATA_MODE is static.
+- Finalized season settings are stored in js/config.js.
+- Finalized castaway details/photos are stored in js/castaways.js.
+- The Google Sheet remains the live source for entries, payment status, seasonStarted, and castaway outcomes/scores.
+- The leaderboard still reads live entries and castaway outcomes from Apps Script.
+- The entry page still checks the live seasonStarted status.
+- Normal page loads do not need to fetch finalized setup data from the Sheet, while changing league results still updates the site.
+
+For a future season, switch back to SEASON_DATA_MODE = "live" while setting up and testing the new season. After the new Settings and Castaways data are finalized, run the optimization process again.
+
+## One-time setup
 
 ### 1. Create the Google Sheet
-1. Go to https://sheets.google.com and create a new blank spreadsheet.
-   Name it "Survivor 51 Fantasy League" or similar.
+1. Create a blank spreadsheet.
+2. Name it for the league/season.
 
-### 2. Add the Apps Script
-1. In the sheet, go to **Extensions → Apps Script**.
-2. Delete the placeholder code in `Code.gs`, and paste in the entire
-   contents of `apps-script/Code.gs` from this project.
-3. Click the save icon (or Ctrl/Cmd+S).
-4. Back in the toolbar, run the `setupSheets` function once: select it from
-   the function dropdown next to the "Debug" button, then click **Run**.
-   The first time, Google will ask you to authorize the script — click
-   through **Advanced → Go to (project name) → Allow**. This is expected;
-   it's your own script running in your own sheet.
-5. Switch back to the spreadsheet tab — you should now see three tabs:
-   `Entries`, `Castaways` (pre-filled with all 21 castaways), and
-   `Settings`.
-6. Running `setupSheets` again later is safe: it adds missing Settings rows
-   but preserves existing Settings values.
+### 2. Install Apps Script
+1. Go to **Extensions → Apps Script**.
+2. Paste the complete apps-script/Code.gs from this repository.
+3. Save.
+4. Run setupSheets once.
+5. Authorize the script when Google asks.
+6. Confirm the three tabs exist: Entries, Castaways, and Settings.
 
-### 3. Deploy the script as a web app
-1. Still in the Apps Script editor, click **Deploy → New deployment**.
-2. Click the gear icon next to "Select type" and choose **Web app**.
-3. Set **Execute as**: "Me". Set **Who has access**: "Anyone".
-4. Click **Deploy**, authorize again if asked, then copy the URL that ends
-   in `/exec`.
-5. Open `js/config.js` in this project and paste that URL in as
-   `SHEET_API_URL`.
+Running setupSheets again later is safe. It adds missing Settings rows and missing Castaways columns without replacing existing values.
 
-**Important:** if you edit `Code.gs` later, saving isn't enough — go
-to **Deploy → Manage deployments**, click the pencil icon, and create a
-**New version** so the live `/exec` URL picks up your change.
+### 3. Deploy Apps Script
+1. In Apps Script, choose **Deploy → New deployment**.
+2. Choose **Web app**.
+3. Set **Execute as** to the sheet owner/commissioner.
+4. Set **Who has access** to **Anyone**.
+5. Deploy and copy the URL ending in /exec.
+6. Put that exact URL into js/config.js as SHEET_API_URL.
 
-### 4. Push this project to GitHub and turn on Pages
-1. Create a new repository on GitHub and push all these files to it
-   (including the `css/` and `js/` folders — you don't need to push the
-   `apps-script/` folder, but it's fine if you do).
-2. In the repo, go to **Settings → Pages**.
-3. Under **Build and deployment**, set **Source** to "Deploy from a
-   branch", branch `main`, folder `/ (root)`. Save.
-4. GitHub gives you a URL like `https://yourusername.github.io/your-repo/`.
-   That's your live site. Share `/entry.html` for drafting and `/index.html`
-   for the rules.
+**Important deployment lesson:** if you create a brand-new Web App deployment, Google can give it a different /exec URL. If the website still points at the old URL, the site will fail to load the leaderboard/API. After creating a new deployment, update SHEET_API_URL in GitHub and test it before changing production.
+
+If you only change Code.gs without creating a new deployment version, the live /exec deployment may still run the old code. Use **Deploy → Manage deployments → edit the existing deployment → New version → Deploy**.
+
+### 4. GitHub Pages
+1. Push the repository to GitHub.
+2. Use main as the production branch.
+3. In **Settings → Pages**, choose **Deploy from a branch**, main, / (root).
+4. If using a custom domain, keep the CNAME file in the production branch.
+
+## Recommended future-season workflow
+
+### Phase A — Set up safely
+1. Keep production main unchanged.
+2. Create/update a development branch for the new season.
+3. If possible, use the separate survivor-league-test repository as the sandbox. It has GitHub Pages enabled and does not use the production custom-domain CNAME.
+4. Switch SEASON_DATA_MODE to "live" while setting up.
+5. Update the Google Sheet Settings tab.
+6. Replace/update the Castaways tab for the new season.
+7. Run setupSheets if needed.
+8. Test the Entry page, leaderboard, castaway display, and a sample entry in the sandbox.
+9. Do not merge to main until the sandbox works end-to-end.
+
+### Phase B — Optimize the finalized season
+1. Confirm the Google Sheet Settings and Castaways data are final.
+2. Run the instructions in docs/SEASON-OPTIMIZATION-PROMPT.md.
+3. Confirm js/config.js contains the finalized settings and SEASON_DATA_MODE = "static".
+4. Confirm js/castaways.js contains the finalized castaway data/photos.
+5. Test the sandbox again.
+6. Merge the season branch into main.
+7. Verify the production custom domain and all three main pages.
+
+### Phase C — Run the season
+Use the Google Sheet for live administration:
+- **Entries:** submitted teams and Paid status.
+- **Castaways:** update Outcome as eliminations happen.
+- **Settings:** season-wide configuration and seasonStarted.
+
+After editing live scoring data, refresh the leaderboard to see the changes.
 
 ## Running the league week to week
 
-Everything happens directly in the Google Sheet — no separate admin page.
+### Entries
+Every submitted team is appended to Entries. Mark Paid as TRUE after receiving payment. Players cannot edit an existing submission through the website.
 
-- **Settings tab**: season-wide values live here. Current settings include
-  the league name, season label, entry fee, Venmo handle, picks per team,
-  premiere date/time, entry deadline, commissioner name, and `seasonStarted`.
-  The Apps Script returns these settings to the website as public season
-  configuration. `seasonStarted` controls when picks/scoring become live.
-- **Entries tab**: every submitted team shows up here as a locked-in row —
-  player name, team name, five picks, and a `Paid` column. Change `Paid` from
-  `FALSE` to `TRUE` once someone Venmos you. (Editing a row here does *not*
-  let a player edit their own entry — the website only ever appends new rows;
-  only you, editing the sheet, can change or delete one.)
-- **Castaways tab**: has one `Outcome` column per castaway. Leave it blank
-  while they're still playing. When someone is voted out, type the week
-  number (`1`, `2`, `3`...) into their row. When the season reaches the end,
-  type `17` for each Final Three member and `20` for the winner. The
-  leaderboard recalculates from these values automatically.
+### Castaways
+Leave Outcome blank while a castaway is still playing. Enter the week number when they are voted out. The current scoring convention uses 17 for each Final Three member and 20 for the winner.
+
+### Settings
+Normally seasonStarted is the key live switch. Do not change it to TRUE until the league is ready to reveal picks/scoring.
 
 ## Notes & limits
 
-- "Max possible points" on the leaderboard assumes every castaway still in the
-  game goes on to win (20 points) — the same convention an NCAA bracket pool
-  uses for its "maximum possible" column. It's calculated independently per
-  team, since in principle any of them could still be right.
-- The website polls the sheet fresh every time someone loads the leaderboard
-  page — there's no real-time push, so tell people to refresh if they're
-  checking right after you update a castaway's status.
-- If the leaderboard or entry form ever shows a network/CORS error in the
-  browser console, the most common cause is either (a) `SHEET_API_URL` in
-  `js/config.js` isn't filled in yet, or (b) you edited `Code.gs` and
-  forgot to create a new deployment version (see step 3 above).
-- Only one person can hold the `Execute as: Me` deployment — that's whoever's
-  Google account owns the sheet. See `docs/COMMISSIONER.md` for the handoff
-  process.
+- "Max possible points" assumes every castaway still in the game goes on to win (20 points).
+- The website reads live entries/outcomes when the leaderboard loads; refresh after commissioner updates.
+- If the site shows a network/CORS error, first check that SHEET_API_URL matches the current active Web App deployment URL.
+- If Apps Script code was changed, confirm the active deployment has a new version.
+- Only the account that owns the Apps Script deployment can execute it as "Me." A future commissioner will need control of the Sheet/Apps Script and GitHub repository.
+- The Entries layout currently supports five picks. Keep picksPerTeam at 5 unless the Entries layout and code are deliberately expanded.
