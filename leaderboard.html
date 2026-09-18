@@ -20,7 +20,7 @@
 <nav class="topnav">
   <div class="container">
     <a class="brand" href="index.html">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2C10 6 6 8 6 13a6 6 0 0012 0c0-3-2-4-2-7 0 2-1 3-2 3 0-3-1-5-2-7z" fill="#DB6423"/></svg>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2C10 6 6 8 6 13a6 6 0 0012 0c0-3-2-4-2-7 0 2-1 3-2 3 0 2-1 3-2 7 0 2-1 3-2 3 0-3-1-5-2-7 0 2-1 3-2 3 0-3-1-5-2-7z" fill="#DB6423"/></svg>
       Survivor 51 Fantasy League
     </a>
     <div class="navlinks">
@@ -90,7 +90,7 @@
   </div>
 </section>
 
-<section class="tight admin-reveal-section">
+<section id="admin-reveal-section" class="tight admin-reveal-section hidden">
   <div class="container center">
     <button type="button" class="btn secondary" id="reveal-admin-btn">Show Max Points &amp; Upside</button>
   </div>
@@ -138,8 +138,6 @@ async function load() {
   // Load castaways. The sheet is the live source for outcome/name/etc, but it
   // has no photo column -- photos only live in the static SURVIVOR_51_CAST
   // list -- so start from that list and layer the sheet's fields on top.
-  // Spreading `c` after `base` only overwrites keys `c` actually has, so
-  // base.photo survives untouched since the sheet data never includes one.
   const staticById = Object.fromEntries(SURVIVOR_51_CAST.map((c) => [c.id, c]));
   const castawaysById = {};
   if (SEASON_DATA_MODE === "live" && data.castaways && data.castaways.length) {
@@ -196,6 +194,7 @@ async function load() {
 
   document.getElementById("live-board").classList.remove("hidden");
   document.getElementById("cast-pool").classList.remove("hidden");
+  document.getElementById("admin-reveal-section").classList.remove("hidden");
 
   document.getElementById("reveal-admin-btn").addEventListener("click", revealAdminColumns);
 }
