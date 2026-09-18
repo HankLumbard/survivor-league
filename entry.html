@@ -28,7 +28,7 @@
   <div class="container">
     <div class="eyebrow"><span class="season-label">SURVIVOR 51</span> · DRAFT BOARD</div>
     <h1>Pick <span class="picks-per-team">five</span>.<br />Lock in.</h1>
-    <p class="muted">Choose your castaways you think can survive the island. Your entry becomes permanent the moment you submit. (Text me if there's a problem, I'll take care of you!)</p>
+    <p class="muted">Choose your castaways you think can survive the island. Your picks lock right before Episode 2. (Text me if there's a problem, I'll take care of you!)</p>
     <p class="muted small">Tip: use the dropdowns or tap a castaway card below. Selected castaways are marked so you can build your roster visually.</p>
   </div>
 </header>
@@ -47,7 +47,7 @@
   <div class="container" style="max-width:640px;">
     <div class="panel center">
       <h2>🔥 You're in! 🔥</h2>
-      <p class="muted">Your team is locked.</p>
+      <p class="muted">Your team is submitted. Picks lock right before Episode 2.</p>
       <a class="btn" id="venmo-payment-link" style="margin-top:8px;" target="_blank" rel="noopener"
          href="https://venmo.com/Henry-Lumbard-1?txn=pay&note=Survivor%2051%20Fantasy%20League%20entry">
         Pay $10 on Venmo (@Henry-Lumbard-1)
@@ -91,9 +91,9 @@
       <div class="pick-grid" id="pick-grid"></div>
 
       <div style="margin-top:28px;">
-        <button type="submit" class="btn" id="submit-btn">Submit &amp; lock my team</button>
+        <button type="submit" class="btn" id="submit-btn">Submit my team</button>
       </div>
-      <p class="small muted" style="margin:12px 0 0;">After submission you will be sent to the Venmo payment step. The picks cannot be changed.</p>
+      <p class="small muted" style="margin:12px 0 0;">After submission you will be sent to the Venmo payment step. Picks lock right before Episode 2.</p>
     </form>
   </div>
 </section>
@@ -410,7 +410,7 @@ document.getElementById("entry-form").addEventListener("submit", async (e) => {
 
   const submitBtn = document.getElementById("submit-btn");
   submitBtn.disabled = true;
-  submitBtn.textContent = "Locking it in…";
+  submitBtn.textContent = "Submitting…";
 
   try {
     const result = await submitEntry({ playerName, teamName, phone, picks });
