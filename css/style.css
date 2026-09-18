@@ -162,7 +162,7 @@ footer .container { font-size: 0; }
 footer .container::after { content: "Season 51: Operated by Hank"; font-size: .9rem; }
 @media (max-width: 800px) { .topnav .container { align-items:flex-start; padding-top:12px; padding-bottom:12px; flex-direction:column; } .navlinks { width:100%; justify-content:space-between; gap:12px; } .navlinks a { padding-top:0; } }
 @media (min-width: 801px) { .topnav .container { min-height: 82px; } .brand { font-size: 2rem; } .navlinks { gap: 30px; } .navlinks a { font-size: 1.75rem; padding: 24px 0 20px; } }
-@media (max-width: 640px) { .container { padding:0 17px; } .brand { font-size:.96rem; } .poster-frame { width:100%; } .poster-art { width:100%; height:auto; min-height:0; object-fit:cover; object-position:center; scale:1.2; } .hero-cta-hotspot { left: 25%; top: 82%; width: 51%; height: 18%; } }
+@media (max-width: 640px) { .container { padding:0 17px; } .brand { font-size:1.55rem; } .navlinks a { font-size:1.42rem; } .poster-frame { width:100%; } .poster-art { width:100%; height:auto; min-height:0; object-fit:cover; object-position:center; scale:1.2; } .hero-cta-hotspot { left: 25%; top: 82%; width: 51%; height: 18%; } }
 .premiere-countdown { padding:14px 20px 16px; text-align:center; letter-spacing:.04em; }
 .countdown-kicker { color:var(--gold); font-family:Oswald,sans-serif; font-size:.78rem; font-weight:700; letter-spacing:.16em; margin-bottom:5px; }
 .countdown-time { color:#fff7df; font-family:Oswald,Impact,sans-serif; font-size:clamp(1.45rem,3vw,2.45rem); font-weight:700; line-height:1.05; text-shadow:0 2px 14px rgba(0,0,0,.65); white-space:nowrap; }
