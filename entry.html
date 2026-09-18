@@ -352,6 +352,17 @@ function flashRosterStatus(msg) {
   el.textContent = msg;
   el.className = "status-msg error";
   clearTimeout(flashRosterStatus._t);
+
+  // On mobile, bring the error into view immediately. This is especially
+  // important when the user taps a sixth player near the bottom of the page.
+  if (window.matchMedia("(max-width: 767px)").matches) {
+    requestAnimationFrame(() => {
+      const topOffset = 70;
+      const y = el.getBoundingClientRect().top + window.scrollY - topOffset;
+      window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+    });
+  }
+
   flashRosterStatus._t = setTimeout(() => el.classList.add("hidden"), 2600);
 }
 
