@@ -153,3 +153,25 @@ footer .container::after { content: "Season 51: Operated by Hank"; font-size: .9
 .countdown-date { color:#f2dfb0; font-size:.78rem; margin-top:5px; }
 .countdown-note { color:rgba(255,255,255,.68); font-size:.68rem; margin-top:3px; }
 @media (max-width:600px) { .premiere-countdown { padding:11px 12px 13px; } .countdown-time { font-size:1.35rem; } .countdown-date { font-size:.7rem; } .countdown-note { font-size:.62rem; } }
+
+/* Subtle shared flame animation */
+.brand svg path {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: flame-flicker 1.6s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes flame-flicker {
+  0%, 100% { transform: rotate(-2deg) scale(1); opacity: 1; }
+  25% { transform: rotate(2deg) scale(1.04, .97); opacity: .96; }
+  50% { transform: rotate(-1deg) scale(.98, 1.03); opacity: 1; }
+  75% { transform: rotate(2deg) scale(1.03, .98); opacity: .97; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brand svg path {
+    animation: none;
+    transform: none;
+  }
+}
