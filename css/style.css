@@ -154,13 +154,12 @@ footer .container::after { content: "Season 51: Operated by Hank"; font-size: .9
 .countdown-note { color:rgba(255,255,255,.68); font-size:.68rem; margin-top:3px; }
 @media (max-width:600px) { .premiere-countdown { padding:11px 12px 13px; } .countdown-time { font-size:1.35rem; } .countdown-date { font-size:.7rem; } .countdown-note { font-size:.62rem; } }
 
-/* Shared multicolor flame icon animation */
+/* Shared native fire emoji animation */
 .brand-flame {
   display: inline-block;
-  width: 1.18em;
-  height: 1.18em;
-  flex: 0 0 auto;
-  object-fit: contain;
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  font-size: 1.18em;
+  line-height: 1;
   transform-origin: 50% 90%;
   animation: flame-wave 1.25s ease-in-out infinite;
   will-change: transform;
