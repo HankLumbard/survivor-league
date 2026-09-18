@@ -1,4 +1,4 @@
-# Survivor 51 Fantasy League
+# Survivor 51 Fantasy League Website
 
 A small static site (home, draft entry, leaderboard) for a family/friends
 Survivor fantasy league, hosted free on GitHub Pages. The "database" is a
