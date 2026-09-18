@@ -130,7 +130,6 @@ function renderRoster() {
   const grid = document.getElementById("roster-grid");
   grid.innerHTML = "";
 
-  // Keep the Rizo joke card first so people see it before the real castaways.
   renderRizoCard(grid);
 
   ACTIVE_CASTAWAYS.forEach((c) => {
@@ -146,8 +145,6 @@ function renderRoster() {
       img.src = c.photo;
       img.alt = c.name.replace(/[\u201c\u201d]/g, '"');
       img.loading = "lazy";
-      // If the hotlinked photo ever breaks (source removed/renamed it), fall
-      // back to an initials avatar instead of showing a broken-image icon.
       img.onerror = function () {
         photoWrap.innerHTML = `<div class="roster-initials">${initials(c.name)}</div>`;
       };
@@ -171,10 +168,6 @@ function renderRoster() {
 
 }
 
-// Not a real castaway -- a running joke for the group. Styled like a roster
-// card so it sits naturally at the end of the list, but it can't be picked
-// (see the click-wiring in setupForm, which skips .fake-card). Clicking it
-// reveals a reason, rather than adding him to anyone's team.
 const RIZO_REASONS = [
   "Told the group chat he “basically already won” before the season even aired.",
   "Once explained the hidden immunity idol rules to a room full of people who have watched every season.",
@@ -243,9 +236,6 @@ function renderRizoCard(grid) {
 
   const reasonEl = info.querySelector(".fake-reason");
 
-  // Shuffle the reasons once per page load, then reveal them in sequence.
-  // This keeps every click random-looking but guarantees no reason repeats
-  // until all reasons have been shown.
   let shuffledReasons = [...RIZO_REASONS];
   let reasonIndex = 0;
 
@@ -260,7 +250,6 @@ function renderRizoCard(grid) {
   shuffleReasons();
 
   card.addEventListener("click", () => {
-    // Never toggle the card off. Every click advances to another reason.
     if (reasonIndex >= shuffledReasons.length) {
       shuffleReasons();
     }
@@ -268,10 +257,9 @@ function renderRizoCard(grid) {
     card.classList.add("revealed");
   });
 }
+
 renderRoster();
 
-// Wire the form after live settings have been loaded. so the page is usable without waiting on Google Sheets.
-// The server still enforces the season lock when a submission is posted.
 (async function initEntryPage() {
   const data = await fetchSeasonStatus().catch(() => ({ settings: LEAGUE, seasonStarted: false }));
   if (SEASON_DATA_MODE === "live" && data.castaways && data.castaways.length) {
@@ -316,8 +304,8 @@ for (let i = 0; i < NUM_PICKS; i++) {
   select.dataset.index = i;
   field.appendChild(label);
   field.appendChild(select);
-  grid.appendChild(field);
   selects.push(select);
+  grid.appendChild(field);
 }
 
 function renderOptions() {
@@ -326,7 +314,7 @@ function renderOptions() {
     const current = select.value;
     select.innerHTML = '<option value="">Choose a castaway&hellip;</option>';
     ACTIVE_CASTAWAYS.forEach((c) => {
-      if (chosen.includes(c.id) && c.id !== current) return; // already taken by another slot
+      if (chosen.includes(c.id) && c.id !== current) return;
       const opt = document.createElement("option");
       opt.value = c.id;
       opt.textContent = `${c.name} \u2014 ${c.hometown}`;
@@ -339,7 +327,6 @@ function renderOptions() {
 selects.forEach((s) => s.addEventListener("change", renderOptions));
 renderOptions();
 
-// ---- Roster card click-to-select, kept in sync with the dropdowns ----
 function syncRosterSelection() {
   const chosen = selects.map((s) => s.value).filter(Boolean);
   document.querySelectorAll(".roster-card").forEach((card) => {
@@ -351,18 +338,22 @@ function flashRosterStatus(msg) {
   const el = document.getElementById("roster-status");
   el.textContent = msg;
   el.className = "status-msg error";
-  clearTimeout(flashRosterStatus._t);
 
-  // On mobile, bring the error into view immediately. This is especially
-  // important when the user taps a sixth player near the bottom of the page.
   if (window.matchMedia("(max-width: 767px)").matches) {
     requestAnimationFrame(() => {
-      // Leave enough room above the warning for the mobile header and
-      // a few lines of context so the full message is comfortably visible.
       const topOffset = 220;
       const y = el.getBoundingClientRect().top + window.scrollY - topOffset;
       window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
     });
+  }
+}
+
+function clearRosterStatusIfBelowLimit() {
+  const selectedCount = selects.filter((s) => s.value).length;
+  if (selectedCount <= NUM_PICKS - 1) {
+    const el = document.getElementById("roster-status");
+    el.textContent = "";
+    el.className = "hidden status-msg";
   }
 }
 
@@ -373,12 +364,13 @@ function toggleCastaway(id) {
   } else {
     const emptySlot = selects.find((s) => s.value === "");
     if (!emptySlot) {
-      flashRosterStatus("Your team is already full \u2014 tap a selected castaway to remove them first.");
+      flashRosterStatus("Your team is already full — tap a selected castaway to remove them first.");
       return;
     }
     emptySlot.value = id;
   }
   renderOptions();
+  clearRosterStatusIfBelowLimit();
 }
 
 document.querySelectorAll(".roster-card:not(.fake-card)").forEach((card) => {
@@ -418,7 +410,7 @@ document.getElementById("entry-form").addEventListener("submit", async (e) => {
 
   const submitBtn = document.getElementById("submit-btn");
   submitBtn.disabled = true;
-  submitBtn.textContent = "Locking it in\u2026";
+  submitBtn.textContent = "Locking it in…";
 
   try {
     const result = await submitEntry({ playerName, teamName, phone, picks });
