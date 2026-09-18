@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 300 300">
+  <rect width="300" height="300" fill="#063b43"/>
+  <clipPath id="iconCrop">
+    <rect x="0" y="47.5" width="300" height="205"/>
+  </clipPath>
+  <image
+    href="logo.png"
+    x="-350"
+    y="-317.5"
+    width="1024"
+    height="640"
+    preserveAspectRatio="none"
+    clip-path="url(#iconCrop)"
+  />
+</svg>
