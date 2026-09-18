@@ -421,6 +421,12 @@ document.getElementById("entry-form").addEventListener("submit", async (e) => {
       return;
     }
 
+    const paymentLink = document.getElementById("venmo-payment-link");
+    if (paymentLink) {
+      paymentLink.href = getVenmoEntryUrl(teamName);
+      paymentLink.textContent = `Pay ${LEAGUE.entryFee} on Venmo (@${LEAGUE.venmoHandle})`;
+    }
+
     document.getElementById("form-section").classList.add("hidden");
     document.getElementById("confirmation").classList.remove("hidden");
     window.scrollTo({ top: 0, behavior: "smooth" });
