@@ -123,6 +123,11 @@ function setupSheets() {
     }
   });
 
+  // Make sure the spreadsheet has the installable change trigger needed to
+  // catch structural changes such as deleting rows. This is safe to run
+  // repeatedly; it will not create duplicate triggers.
+  ensureSpreadsheetChangeTrigger();
+
   SpreadsheetApp.getUi().alert("Sheets are set up. Existing Settings values were preserved; missing season settings were added.");
 }
 
@@ -262,7 +267,8 @@ function clearLeagueCaches() {
 // spreadsheet. This keeps the site fast between updates without making
 // the commissioner remember to clear anything manually.
 //
-// A simple onEdit trigger is enough here because it only uses CacheService.
+// onEdit handles normal cell-value changes. Row deletion is a structural
+// spreadsheet change, so an installable onChange trigger handles that too.
 function onEdit(e) {
   if (!e || !e.range) return;
 
@@ -273,6 +279,32 @@ function onEdit(e) {
     sheetName === SHEET_ENTRIES
   ) {
     clearLeagueCaches();
+  }
+}
+
+function onChange(e) {
+  if (!e) return;
+
+  // Structural changes such as REMOVE_ROW do not fire onEdit.
+  // Clearing all league caches here is safe for this small league and
+  // ensures deletes are reflected immediately.
+  clearLeagueCaches();
+}
+
+function ensureSpreadsheetChangeTrigger() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const triggers = ScriptApp.getProjectTriggers();
+
+  const alreadyExists = triggers.some((trigger) =>
+    trigger.getHandlerFunction() === "onChange" &&
+    trigger.getEventType() === ScriptApp.EventType.ON_CHANGE
+  );
+
+  if (!alreadyExists) {
+    ScriptApp.newTrigger("onChange")
+      .forSpreadsheet(ss)
+      .onChange()
+      .create();
   }
 }
 
