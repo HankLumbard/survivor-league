@@ -154,23 +154,27 @@ footer .container::after { content: "Season 51: Operated by Hank"; font-size: .9
 .countdown-note { color:rgba(255,255,255,.68); font-size:.68rem; margin-top:3px; }
 @media (max-width:600px) { .premiere-countdown { padding:11px 12px 13px; } .countdown-time { font-size:1.35rem; } .countdown-date { font-size:.7rem; } .countdown-note { font-size:.62rem; } }
 
-/* Subtle shared flame animation */
-.brand svg path {
-  transform-box: fill-box;
-  transform-origin: 50% 100%;
-  animation: flame-flicker 1.6s ease-in-out infinite;
-  will-change: transform, opacity;
+/* Shared native fire emoji animation */
+.brand-flame {
+  display: inline-block;
+  font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+  font-size: 1.18em;
+  line-height: 1;
+  transform-origin: 50% 90%;
+  animation: flame-wave 1.25s ease-in-out infinite;
+  will-change: transform;
 }
 
-@keyframes flame-flicker {
-  0%, 100% { transform: rotate(-2deg) scale(1); opacity: 1; }
-  25% { transform: rotate(2deg) scale(1.04, .97); opacity: .96; }
-  50% { transform: rotate(-1deg) scale(.98, 1.03); opacity: 1; }
-  75% { transform: rotate(2deg) scale(1.03, .98); opacity: .97; }
+@keyframes flame-wave {
+  0%, 100% { transform: rotate(-8deg) skewX(-2deg) scale(1); }
+  20% { transform: rotate(7deg) skewX(2deg) scale(1.06, .96); }
+  40% { transform: rotate(-6deg) skewX(-3deg) scale(.97, 1.05); }
+  60% { transform: rotate(8deg) skewX(2deg) scale(1.05, .97); }
+  80% { transform: rotate(-5deg) skewX(-2deg) scale(.98, 1.04); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .brand svg path {
+  .brand-flame {
     animation: none;
     transform: none;
   }
