@@ -29,10 +29,10 @@ body::before {
   z-index: 0;
   opacity: .14;
   background:
-    linear-gradient(90deg, transparent 14%, rgba(239,106,37,.18) 14.2% 14.35%, transparent 14.55%),
-    linear-gradient(90deg, transparent 84%, rgba(229,173,61,.16) 84.2% 84.35%, transparent 84.55%),
-    linear-gradient(90deg, transparent 7%, rgba(90,48,24,.12) 7.2% 7.35%, transparent 7.55%),
-    linear-gradient(90deg, transparent 93%, rgba(90,48,24,.10) 93.2% 93.35%, transparent 93.55%);
+    radial-gradient(120px 120px at 12% 18%, rgba(239,106,37,.18), transparent 70%),
+    linear-gradient(90deg, transparent 11%, rgba(90,48,24,.14) 11.15% 11.35%, transparent 11.5%),
+    radial-gradient(100px 110px at 88% 72%, rgba(229,173,61,.14), transparent 70%),
+    linear-gradient(90deg, transparent 88%, rgba(90,48,24,.12) 88.15% 88.35%, transparent 88.5%);
   background-size: 100% 100%;
 }
 body > * {
