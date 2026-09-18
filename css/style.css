@@ -29,26 +29,11 @@ body::before {
   z-index: 0;
   opacity: .14;
   background:
-    radial-gradient(120px 150px at 10% 18%, rgba(239,106,37,.20), transparent 72%),
-    linear-gradient(90deg, transparent 9.6%, rgba(90,48,24,.16) 9.8% 10.2%, transparent 10.4%),
-    radial-gradient(115px 145px at 90% 78%, rgba(239,106,37,.17), transparent 72%),
-    linear-gradient(90deg, transparent 89.6%, rgba(90,48,24,.14) 89.8% 90.2%, transparent 90.4%),
-    radial-gradient(135px 170px at 78% 12%, rgba(229,173,61,.14), transparent 72%),
-    linear-gradient(90deg, transparent 77.8%, rgba(90,48,24,.11) 78% 78.3%, transparent 78.5%);
+    linear-gradient(90deg, transparent 14%, rgba(239,106,37,.18) 14.2% 14.35%, transparent 14.55%),
+    linear-gradient(90deg, transparent 84%, rgba(229,173,61,.16) 84.2% 84.35%, transparent 84.55%),
+    linear-gradient(90deg, transparent 7%, rgba(90,48,24,.12) 7.2% 7.35%, transparent 7.55%),
+    linear-gradient(90deg, transparent 93%, rgba(90,48,24,.10) 93.2% 93.35%, transparent 93.55%);
   background-size: 100% 100%;
-}
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  opacity: .09;
-  background:
-    radial-gradient(170px 120px at 10% 16%, rgba(239,106,37,.22), transparent 70%),
-    radial-gradient(180px 125px at 90% 76%, rgba(239,106,37,.18), transparent 70%),
-    radial-gradient(160px 120px at 78% 10%, rgba(229,173,61,.16), transparent 70%);
-  filter: blur(10px);
 }
 body > * {
   position: relative;
