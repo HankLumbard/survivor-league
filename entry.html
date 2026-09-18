@@ -357,13 +357,13 @@ function flashRosterStatus(msg) {
   // important when the user taps a sixth player near the bottom of the page.
   if (window.matchMedia("(max-width: 767px)").matches) {
     requestAnimationFrame(() => {
-      const topOffset = 70;
+      // Leave enough room above the warning for the mobile header and
+      // a few lines of context so the full message is comfortably visible.
+      const topOffset = 220;
       const y = el.getBoundingClientRect().top + window.scrollY - topOffset;
       window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
     });
   }
-
-  flashRosterStatus._t = setTimeout(() => el.classList.add("hidden"), 2600);
 }
 
 function toggleCastaway(id) {
