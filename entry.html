@@ -430,6 +430,7 @@ document.getElementById("entry-form").addEventListener("submit", async (e) => {
       paymentLink.textContent = `Pay ${LEAGUE.entryFee} on Venmo (@${LEAGUE.venmoHandle})`;
     }
 
+    document.querySelector("header.hero").classList.add("hidden");
     document.getElementById("form-section").classList.add("hidden");
     document.getElementById("confirmation").classList.remove("hidden");
     document.getElementById("roster-section").classList.add("hidden");
