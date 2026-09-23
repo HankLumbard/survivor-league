@@ -119,7 +119,11 @@ async function load() {
   document.getElementById("footer-entry-fee").textContent = settings.entryFee;
   document.getElementById("footer-venmo").textContent = "@" + settings.venmoHandle;
   document.getElementById("commissioner-name").textContent = settings.commissionerName;
-  document.getElementById("venmo-link").href = getVenmoEntryUrl();
+  const venmoLink = document.getElementById("venmo-link");
+  if (venmoLink) {
+    venmoLink.href = getVenmoEntryUrl();
+    venmoLink.textContent = `Pay ${settings.entryFee} on Venmo (@${settings.venmoHandle})`;
+  }
 
   const deadlineEl = document.getElementById("entry-deadline");
   if (deadlineEl) deadlineEl.textContent = settings.entryDeadlineDisplay || settings.entryDeadline || "";
