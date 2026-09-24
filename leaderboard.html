@@ -16,7 +16,18 @@
   .standings-payment { flex: 0 0 auto; }
   @media (max-width: 600px) {
     .standings-header { gap: 12px; }
-    .standings-payment { font-size: .9rem; padding: 10px 14px; }
+    .standings-payment {
+      flex: 0 1 48%;
+      min-width: 0;
+      max-width: 48%;
+      box-sizing: border-box;
+      padding: 10px;
+      font-size: .9rem;
+      line-height: 1.2;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      text-align: center;
+    }
   }
 </style>
 </head>
