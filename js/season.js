@@ -48,7 +48,8 @@ async function fetchSeasonStatus() {
 }
 
 function getVenmoEntryUrl(teamName = "") {
-  // Keep the live site on Venmo's safe profile URL while the prefilled
-  // payment deep link is tested separately on venmo-test.html.
-  return `https://venmo.com/u/${encodeURIComponent(LEAGUE.venmoHandle)}`;
+  const leagueLabel = LEAGUE.seasonLabel || "Survivor Fantasy League";
+  const note = `${leagueLabel} entry - ${teamName || "Team"}`;
+  const amount = String(LEAGUE.entryFee || "$10").replace(/[^0-9.]/g, "") || "10";
+  return `venmo://paycharge?txn=pay&recipients=${encodeURIComponent(LEAGUE.venmoHandle)}&amount=${encodeURIComponent(amount)}&note=${encodeURIComponent(note)}`;
 }
