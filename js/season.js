@@ -48,18 +48,7 @@ async function fetchSeasonStatus() {
 }
 
 function getVenmoEntryUrl(teamName = "") {
-  const leagueLabel = LEAGUE.seasonLabel || "Survivor Fantasy League";
-  const note = `${leagueLabel} entry - ${teamName || "Team"}`;
-  const amount = String(LEAGUE.entryFee || "$10").replace(/[^0-9.]/g, "") || "10";
-  const params = new URLSearchParams({
-    txn: "pay",
-    recipients: LEAGUE.venmoHandle,
-    amount,
-    note
-  });
-
-  // Venmo's profile URL can discard transaction parameters during the
-  // web-to-app handoff. The paycharge endpoint is intended to initialize
-  // a payment with recipient, amount, and note.
-  return `https://venmo.com/paycharge?${params.toString().replace(/\+/g, "%20")}`;
+  // Keep the live site on Venmo's safe profile URL while the prefilled
+  // payment deep link is tested separately on venmo-test.html.
+  return `https://venmo.com/u/${encodeURIComponent(LEAGUE.venmoHandle)}`;
 }
