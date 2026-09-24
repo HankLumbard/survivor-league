@@ -15,6 +15,7 @@
 
       if (remaining <= 0) {
         el.textContent = "PREMIERE COMPLETE · LOCK IN BEFORE EPISODE 2";
+        el.style.whiteSpace = "normal";
         return;
       }
 
