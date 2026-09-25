@@ -126,6 +126,7 @@ function initials(name) {
 }
 
 let ACTIVE_CASTAWAYS = SURVIVOR_51_CAST;
+const UNAVAILABLE_CASTAWAY_IDS = new Set(["aaliyah-puglia"]);
 
 function renderRoster() {
   const grid = document.getElementById("roster-grid");
@@ -318,6 +319,7 @@ function renderOptions() {
     const current = select.value;
     select.innerHTML = '<option value="">Choose a castaway&hellip;</option>';
     ACTIVE_CASTAWAYS.forEach((c) => {
+      if (UNAVAILABLE_CASTAWAY_IDS.has(c.id)) return;
       if (chosen.includes(c.id) && c.id !== current) return;
       const opt = document.createElement("option");
       opt.value = c.id;
@@ -362,6 +364,7 @@ function clearRosterStatusIfBelowLimit() {
 }
 
 function toggleCastaway(id) {
+  if (UNAVAILABLE_CASTAWAY_IDS.has(id)) return;
   const alreadyIn = selects.find((s) => s.value === id);
   if (alreadyIn) {
     alreadyIn.value = "";
@@ -378,6 +381,7 @@ function toggleCastaway(id) {
 }
 
 document.querySelectorAll(".roster-card:not(.fake-card)").forEach((card) => {
+  if (UNAVAILABLE_CASTAWAY_IDS.has(card.dataset.id)) return;
   card.classList.add("clickable");
   card.setAttribute("role", "button");
   card.setAttribute("tabindex", "0");
@@ -403,6 +407,10 @@ document.getElementById("entry-form").addEventListener("submit", async (e) => {
   const phone = document.getElementById("phone").value.trim();
   const picks = selects.map((s) => s.value);
 
+  if (picks.some((id) => UNAVAILABLE_CASTAWAY_IDS.has(id))) {
+    showStatus("One of those castaways is no longer available for new teams.", "error");
+    return;
+  }
   if (new Set(picks).size !== NUM_PICKS || picks.includes("")) {
     showStatus(`Pick ${NUM_PICKS} different castaways before submitting.`, "error");
     return;
