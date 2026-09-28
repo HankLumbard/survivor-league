@@ -13,6 +13,9 @@
   .admin-reveal-section { padding-top: 12px; }
   .standings-header { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
   .standings-header h1 { margin-bottom: 0; }
+  .pick-tag.castaway-hover { position: relative; z-index: 1; color: #17211f; background: #ffe27a; border-color: #fff1a8; box-shadow: 0 0 0 2px #e4a936, 0 0 14px rgba(255,226,122,.55); font-weight: 700; }
+  .pick-highlight-hint { display: none; }
+  @media (hover: none) { .pick-highlight-hint { display: block; margin: 0 0 10px; } }
   .standings-payment { flex: 0 0 auto; }
   @media (max-width: 600px) {
     .standings-header { gap: 12px; }
@@ -71,6 +74,7 @@
 
 <section id="live-board" class="hidden">
   <div class="container container-wide">
+<p class="muted pick-highlight-hint">Tap a castaway to highlight the same name across all teams. Tap the same name again to clear, or tap another to switch.</p>
     <div class="panel" style="padding:0; overflow:hidden;">
     <div style="overflow-x:auto;">
       <table id="standings-table">
@@ -191,7 +195,7 @@ async function load() {
         if (b.outcome === 20) cls = "winner";
         else if (b.outcome === 17) cls = "final3";
         else if (typeof b.outcome === "number") cls = "out";
-        return `<span class="pick-tag ${cls}">${b.name}</span>`;
+        return `<span class="pick-tag ${cls}" data-castaway-id="${b.id}" title="Hover or tap to highlight this castaway across teams">${b.name}</span>`;
       })
       .join("");
     tr.innerHTML = `
@@ -203,6 +207,41 @@ async function load() {
       <td class="picks-cell">${picksHtml}</td>
     `;
     tbody.appendChild(tr);
+  });
+
+  // Desktop hover and mobile tap both highlight every team that picked this castaway.
+  let hoveredCastawayId = null;
+  let selectedCastawayId = null;
+  function refreshCastawayHighlights() {
+    tbody.querySelectorAll(".pick-tag[data-castaway-id]").forEach((tag) => {
+      const id = tag.dataset.castawayId;
+      tag.classList.toggle("castaway-hover", id === hoveredCastawayId || id === selectedCastawayId);
+    });
+  }
+  tbody.addEventListener("pointerover", (event) => {
+    if (event.pointerType === "touch") return;
+    const tag = event.target.closest(".pick-tag[data-castaway-id]");
+    if (tag) {
+      hoveredCastawayId = tag.dataset.castawayId;
+      refreshCastawayHighlights();
+    }
+  });
+  tbody.addEventListener("pointerout", (event) => {
+    if (event.pointerType === "touch") return;
+    const tag = event.target.closest(".pick-tag[data-castaway-id]");
+    if (tag && !tag.contains(event.relatedTarget)) {
+      hoveredCastawayId = null;
+      refreshCastawayHighlights();
+    }
+  });
+  tbody.addEventListener("click", (event) => {
+    const isTouchInput = event.pointerType === "touch" ||
+      (event.pointerType == null && window.matchMedia("(hover: none)").matches);
+    if (!isTouchInput) return;
+    const tag = event.target.closest(".pick-tag[data-castaway-id]");
+    const tappedId = tag ? tag.dataset.castawayId : null;
+    selectedCastawayId = tappedId && tappedId !== selectedCastawayId ? tappedId : null;
+    refreshCastawayHighlights();
   });
 
   renderCastawayCards(castawaysById);
