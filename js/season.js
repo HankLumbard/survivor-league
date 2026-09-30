@@ -51,5 +51,12 @@ function getVenmoEntryUrl(teamName = "") {
   const leagueLabel = LEAGUE.seasonLabel || "Survivor Fantasy League";
   const note = `${leagueLabel} entry - ${teamName || "Team"}`;
   const amount = String(LEAGUE.entryFee || "$10").replace(/[^0-9.]/g, "") || "10";
-  return `venmo://paycharge?txn=pay&recipients=${encodeURIComponent(LEAGUE.venmoHandle)}&amount=${encodeURIComponent(amount)}&note=${encodeURIComponent(note)}`;
+  const handle = encodeURIComponent(LEAGUE.venmoHandle);
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  if (isMobile) {
+    return `venmo://paycharge?txn=pay&recipients=${handle}&amount=${encodeURIComponent(amount)}&note=${encodeURIComponent(note)}`;
+  }
+
+  return `https://venmo.com/u/${handle}`;
 }
