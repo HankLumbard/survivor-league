@@ -76,7 +76,7 @@
   <div class="container container-wide">
 <p class="muted pick-highlight-hint">Tap a castaway to highlight the same name across all teams. Tap the same name again to clear, or tap another to switch.</p>
     <div class="panel" style="padding:0; overflow:hidden;">
-    <div style="overflow-x:auto;">
+    <div id="standings-scroll" style="overflow-x:auto;">
       <table id="standings-table">
         <thead>
           <tr>
@@ -249,6 +249,17 @@ async function load() {
   document.getElementById("live-board").classList.remove("hidden");
   document.getElementById("cast-pool").classList.remove("hidden");
   document.getElementById("admin-reveal-section").classList.remove("hidden");
+
+  // Start mobile standings at Team after the table and web fonts finish laying out.
+  const alignMobileStandings = () => {
+    if (!window.matchMedia("(max-width: 640px)").matches) return;
+    const scroller = document.getElementById("standings-scroll");
+    const teamHeader = document.querySelector("#standings-table th:nth-child(2)");
+    scroller.scrollLeft = teamHeader.getBoundingClientRect().left -
+      scroller.getBoundingClientRect().left + scroller.scrollLeft - scroller.clientLeft;
+  };
+  await document.fonts.ready;
+  requestAnimationFrame(alignMobileStandings);
 
   document.getElementById("reveal-admin-btn").addEventListener("click", revealAdminColumns);
 }
