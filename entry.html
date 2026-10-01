@@ -267,6 +267,10 @@ renderRoster();
 
 (async function initEntryPage() {
   const data = await fetchSeasonStatus().catch(() => ({ settings: LEAGUE, seasonStarted: false }));
+  if (data.seasonStarted === true) {
+    window.location.replace("leaderboard.html");
+    return;
+  }
   if (SEASON_DATA_MODE === "live" && data.castaways && data.castaways.length) {
     const staticById = Object.fromEntries(SURVIVOR_51_CAST.map((c) => [c.id, c]));
     ACTIVE_CASTAWAYS = data.castaways.map((c) => ({
@@ -288,10 +292,6 @@ renderRoster();
   document.querySelectorAll(".picks-per-team").forEach((el) => el.textContent = String(LEAGUE.picksPerTeam));
   setupForm();
 
-  if (data.seasonStarted) {
-    document.getElementById("form-section").classList.add("hidden");
-    document.getElementById("locked-section").classList.remove("hidden");
-  }
 })();
 
 function setupForm() {

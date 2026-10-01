@@ -131,6 +131,11 @@
 <script src="js/countdown.js"></script>
 <script>
 (async function initHome() {
+  const data = await fetchSeasonStatus().catch(() => null);
+  if (data && data.seasonStarted === true) {
+    window.location.replace("leaderboard.html");
+    return;
+  }
   const settings = await loadLeagueSettings();
   document.querySelectorAll(".season-label").forEach((el) => el.textContent = settings.seasonLabel);
   document.querySelectorAll(".entry-fee").forEach((el) => el.textContent = settings.entryFee);
