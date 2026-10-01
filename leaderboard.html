@@ -219,7 +219,7 @@ async function load() {
     });
   }
   tbody.addEventListener("pointerover", (event) => {
-    if (event.pointerType === "touch") return;
+    if (event.pointerType === "touch" || window.matchMedia("(hover: none)").matches) return;
     const tag = event.target.closest(".pick-tag[data-castaway-id]");
     if (tag) {
       hoveredCastawayId = tag.dataset.castawayId;
@@ -227,7 +227,7 @@ async function load() {
     }
   });
   tbody.addEventListener("pointerout", (event) => {
-    if (event.pointerType === "touch") return;
+    if (event.pointerType === "touch" || window.matchMedia("(hover: none)").matches) return;
     const tag = event.target.closest(".pick-tag[data-castaway-id]");
     if (tag && !tag.contains(event.relatedTarget)) {
       hoveredCastawayId = null;
@@ -236,7 +236,7 @@ async function load() {
   });
   tbody.addEventListener("click", (event) => {
     const isTouchInput = event.pointerType === "touch" ||
-      (event.pointerType == null && window.matchMedia("(hover: none)").matches);
+      window.matchMedia("(hover: none)").matches;
     if (!isTouchInput) return;
     const tag = event.target.closest(".pick-tag[data-castaway-id]");
     const tappedId = tag ? tag.dataset.castawayId : null;
