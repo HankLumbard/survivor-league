@@ -2,10 +2,13 @@
 
 The Google Sheet remains the source of truth. GitHub Actions reads the existing
 `?action=leaderboard` endpoint and saves a validated, public-only mirror at
-`data/live-league.json`. No Apps Script installation, redeployment or new
+`data/live-league.json` and a static HTML view at `data/live-league.html`. No Apps Script installation, redeployment or new
 personal access token is needed.
 
-Canonical analysis source:
+Primary source for ordinary ChatGPT web readers:
+https://outwitoutplayoutpick.com/data/live-league.html
+
+Canonical structured analysis source:
 https://github.com/HankLumbard/survivor-league/blob/main/data/live-league.json
 
 Website mirror:

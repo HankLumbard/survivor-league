@@ -40,6 +40,24 @@ function publicLeague(source) {
   return { schemaVersion: 1, seasonStarted: source.seasonStarted, entryCount: source.entryCount, settings, scoring: { stillPlaying: 0, nonWinningFinalist: 17, winner: 20, maxPossiblePointsNote: 'Website display ceiling: each remaining pick is valued at 20. This is not a jointly achievable team scenario.' }, castaways, entries };
 }
 
+function leagueHtml(snapshot) {
+  const escape = value => String(value).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const cast = Object.fromEntries(snapshot.castaways.map(c => [c.id, c]));
+  const teams = snapshot.entries.map(e => `<tr><td>${escape(e.playerName)}</td><td>${escape(e.teamName)}</td><td>${e.picks.map(id => escape(cast[id].name)).join(', ')}</td><td>${e.currentPoints}</td><td>${e.remainingPicks}</td></tr>`).join('\n');
+  const outcomes = snapshot.castaways.map(c => `<tr><td>${escape(c.name)}</td><td>${escape(c.id)}</td><td>${c.outcome === null ? 'Still playing' : c.outcome}</td></tr>`).join('\n');
+  return `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Survivor league data for recaps and scenarios</title><style>body{font:16px system-ui,sans-serif;max-width:1100px;margin:2rem auto;padding:0 1rem;line-height:1.5}table{border-collapse:collapse;width:100%;margin-bottom:2rem}th,td{text-align:left;border-bottom:1px solid #ddd;padding:.6rem;vertical-align:top}th{background:#eee}.table-wrap{overflow-x:auto}</style></head>
+<body><h1>${escape(snapshot.settings.leagueName || 'Survivor league')} — public data</h1>
+<p>Last data change: <time>${escape(snapshot.updatedAt)}</time>. Source: the commissioner’s Google Sheet, through the live leaderboard API. Automated checks run approximately every 15 minutes; scheduled runs may be delayed.</p>
+<p>Season started: ${snapshot.seasonStarted ? 'Yes' : 'No'}. Teams: ${snapshot.entryCount}. Picks per team: ${snapshot.settings.picksPerTeam}.</p>
+<p><a href="../leaderboard.html">Leaderboard</a> · <a href="live-league.json">Structured JSON</a></p>
+<h2>Teams and locked picks</h2>${snapshot.seasonStarted ? '' : '<p>Picks remain hidden until the season starts.</p>'}
+<div class="table-wrap"><table><thead><tr><th>Player</th><th>Team</th><th>Picks</th><th>Current points</th><th>Remaining picks</th></tr></thead><tbody>${teams}</tbody></table></div>
+<h2>Castaway outcomes</h2><p>A blank outcome in the Sheet means still playing. Numeric outcomes are the exact point values recorded by the commissioner. Non-winning finalists receive 17 points; the winner receives 20.</p>
+<div class="table-wrap"><table><thead><tr><th>Castaway</th><th>Stable ID</th><th>Outcome / points</th></tr></thead><tbody>${outcomes}</tbody></table></div>
+<p>${escape(snapshot.scoring.maxPossiblePointsNote)}</p></body></html>\n`;
+}
+
 async function syncLeague() {
   const config = fs.readFileSync(path.join(root, 'js/config.js'), 'utf8');
   const url = config.match(/const SHEET_API_URL\s*=\s*"([^"]+)"/)?.[1];
@@ -59,18 +77,28 @@ async function syncLeague() {
     }
   }
   const destination = path.join(root, 'data/live-league.json');
+  let published;
   if (fs.existsSync(destination)) {
-    const { updatedAt, ...previous } = JSON.parse(fs.readFileSync(destination, 'utf8'));
-    if (JSON.stringify(previous) === JSON.stringify(snapshot)) {
-      console.log('League data unchanged; previous snapshot retained.');
-      return;
-    }
+    const previousSnapshot = JSON.parse(fs.readFileSync(destination, 'utf8'));
+    const { updatedAt, ...previous } = previousSnapshot;
+    if (JSON.stringify(previous) === JSON.stringify(snapshot)) published = previousSnapshot;
   }
   fs.mkdirSync(path.dirname(destination), { recursive: true });
-  fs.writeFileSync(destination + '.tmp', JSON.stringify({ updatedAt: new Date().toISOString(), ...snapshot }, null, 2) + '\n');
-  fs.renameSync(destination + '.tmp', destination);
-  console.log(`Published snapshot: ${snapshot.entryCount} teams, ${snapshot.entries.reduce((n, e) => n + e.picks.length, 0)} public picks.`);
+  if (!published) {
+    published = { updatedAt: new Date().toISOString(), ...snapshot };
+    fs.writeFileSync(destination + '.tmp', JSON.stringify(published, null, 2) + '\n');
+    fs.renameSync(destination + '.tmp', destination);
+    console.log(`Published snapshot: ${snapshot.entryCount} teams, ${snapshot.entries.reduce((n, e) => n + e.picks.length, 0)} public picks.`);
+  } else {
+    console.log('League data unchanged; previous snapshot retained.');
+  }
+  const htmlPath = path.join(root, 'data/live-league.html');
+  const html = leagueHtml(published);
+  if (!fs.existsSync(htmlPath) || fs.readFileSync(htmlPath, 'utf8') !== html) {
+    fs.writeFileSync(htmlPath + '.tmp', html);
+    fs.renameSync(htmlPath + '.tmp', htmlPath);
+  }
 }
 
-module.exports = { publicLeague, syncLeague };
+module.exports = { publicLeague, leagueHtml, syncLeague };
 if (require.main === module) syncLeague().catch(error => { console.error(error.message); process.exitCode = 1; });
