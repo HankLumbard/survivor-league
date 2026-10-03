@@ -1,0 +1,51 @@
+name: Refresh public league data
+on:
+  schedule:
+    - cron: '7,22,37,52 * * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/sync-league.yml'
+      - 'scripts/sync-league*'
+      - 'js/config.js'
+      - 'js/scoring.js'
+permissions:
+  contents: write
+  pages: write
+concurrency:
+  group: public-league-data
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test public export
+        run: node --test scripts/sync-league.test.cjs
+      - name: Fetch and validate the live leaderboard
+        run: node scripts/sync-league.cjs
+      - name: Commit only changed league data
+        id: snapshot
+        run: |
+          if git diff --quiet -- data/live-league.json; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add data/live-league.json
+          git commit -m 'Refresh public league snapshot'
+          git push origin HEAD:main
+          echo 'changed=true' >> "$GITHUB_OUTPUT"
+      # GITHUB_TOKEN pushes do not trigger Pages automatically.
+      - name: Rebuild the existing branch-based Pages site
+        if: steps.snapshot.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api --method POST "repos/$GITHUB_REPOSITORY/pages/builds"

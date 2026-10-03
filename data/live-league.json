@@ -1,0 +1,368 @@
+{
+  "updatedAt": "2026-10-03T02:21:36.853Z",
+  "schemaVersion": 1,
+  "seasonStarted": true,
+  "entryCount": 17,
+  "settings": {
+    "leagueName": "Survivor 51 Fantasy League",
+    "seasonLabel": "Survivor 51",
+    "picksPerTeam": 5,
+    "seasonStarted": true,
+    "premiereDateTime": "2026-09-23T20:00:00-04:00",
+    "entryDeadline": "2026-09-30T04:00:00.000Z",
+    "entryDeadlineDisplay": "8:00 PM ET on September 30, 2026"
+  },
+  "scoring": {
+    "stillPlaying": 0,
+    "nonWinningFinalist": 17,
+    "winner": 20,
+    "maxPossiblePointsNote": "Website display ceiling: each remaining pick is valued at 20. This is not a jointly achievable team scenario."
+  },
+  "castaways": [
+    {
+      "id": "aaliyah-puglia",
+      "name": "Aaliyah",
+      "outcome": 0
+    },
+    {
+      "id": "alexis-levine",
+      "name": "Alexis",
+      "outcome": null
+    },
+    {
+      "id": "ana-sani",
+      "name": "Ana",
+      "outcome": null
+    },
+    {
+      "id": "brady-booker",
+      "name": "Brady",
+      "outcome": null
+    },
+    {
+      "id": "carter-krull",
+      "name": "Carter",
+      "outcome": null
+    },
+    {
+      "id": "cristian-chavez",
+      "name": "Christian",
+      "outcome": null
+    },
+    {
+      "id": "danny-kilby",
+      "name": "Kilby",
+      "outcome": null
+    },
+    {
+      "id": "devin-way",
+      "name": "Devin",
+      "outcome": null
+    },
+    {
+      "id": "eric-macksoud",
+      "name": "Eric",
+      "outcome": null
+    },
+    {
+      "id": "jelly-loblack",
+      "name": "Jelly",
+      "outcome": null
+    },
+    {
+      "id": "jenna-doore",
+      "name": "Jenna",
+      "outcome": null
+    },
+    {
+      "id": "kristin-flickinger",
+      "name": "Kristin",
+      "outcome": null
+    },
+    {
+      "id": "lewis-kelly",
+      "name": "Lewis",
+      "outcome": null
+    },
+    {
+      "id": "linnea-capobianco",
+      "name": "Linnea",
+      "outcome": null
+    },
+    {
+      "id": "maggie-nestor",
+      "name": "Maggie",
+      "outcome": null
+    },
+    {
+      "id": "mike-pinsky",
+      "name": "Mike",
+      "outcome": null
+    },
+    {
+      "id": "ori-jean-charles",
+      "name": "Ori",
+      "outcome": null
+    },
+    {
+      "id": "patt-cannaday",
+      "name": "Patt",
+      "outcome": null
+    },
+    {
+      "id": "rob-antonson",
+      "name": "Rob",
+      "outcome": null
+    },
+    {
+      "id": "sharonda-cox",
+      "name": "Sharonda",
+      "outcome": null
+    },
+    {
+      "id": "thien-an-nguyen",
+      "name": "Thien An",
+      "outcome": null
+    }
+  ],
+  "entries": [
+    {
+      "playerName": "Elli Lumbard",
+      "teamName": "alfredisgonnawinsurvivorpool-fred",
+      "picks": [
+        "ana-sani",
+        "jelly-loblack",
+        "kristin-flickinger",
+        "lewis-kelly",
+        "sharonda-cox"
+      ],
+      "currentPoints": 0,
+      "maxPossiblePoints": 100,
+      "remainingPicks": 5
+    },
+    {
+      "playerName": "Harriet Spears",
+      "teamName": "Black Widow Brigade",
+      "picks": [
+        "kristin-flickinger",
+        "linnea-capobianco",
+        "maggie-nestor",
+        "patt-cannaday",
+        "thien-an-nguyen"
+      ],
+      "currentPoints": 0,
+      "maxPossiblePoints": 100,
+      "remainingPicks": 5
+    },
+    {
+      "playerName": "Stefan Gartner",
+      "teamName": "Brad's pitt",
+      "picks": [
+        "danny-kilby",
+        "eric-macksoud",
+        "kristin-flickinger",
+        "lewis-kelly",
+        "ori-jean-charles"
+      ],
+      "currentPoints": 0,
+      "maxPossiblePoints": 100,
+      "remainingPicks": 5
+    },
+    {
+      "playerName": "Jonathan Ozer",
+      "teamName": "Double Chocolate Chunk",
+      "picks": [
+        "alexis-levine",
+        "danny-kilby",
+        "jenna-doore",
+        "kristin-flickinger",
+        "ori-jean-charles"
+      ],
+      "currentPoints": 0,
+      "maxPossiblePoints": 100,
+      "remainingPicks": 5
+    },
+    {
+      "playerName": "Jordan Mattison",
+      "teamName": "Eating Good in the Neighborhood",
+      "picks": [
+        "jenna-doore",
+        "kristin-flickinger",
+        "mike-pinsky",
+        "patt-cannaday",
+        "rob-antonson"
+      ],
+      "currentPoints": 0,
+      "maxPossiblePoints": 100,
+      "remainingPicks": 5
+    },
+    {
+      "playerName": "Sarah Lumbard",
+      "teamName": "Flint Keepers",
+      "picks": [
+        "alexis-levine",
+        "carter-krull",
+        "kristin-flickinger",
+        "mike-pinsky",
+        "sharonda-cox"
+      ],
+      "currentPoints": 0,
+      "maxPossiblePoints": 100,
+      "remainingPicks": 5
+    },
+    {
+      "playerName": "Laura Rybak",
+      "teamName": "I’m back baby!",
+      "picks": [
+        "alexis-levine",
+        "cristian-chavez",
+        "jelly-loblack",
+        "kristin-flickinger",
+        "rob-antonson"
+      ],
+      "currentPoints": 0,
+      "maxPossiblePoints": 100,
+      "remainingPicks": 5
+    },
+    {
+      "playerName": "Jena Mattison",
+      "teamName": "In my Radical Era",
+      "picks": [
+        "carter-krull",
+        "jelly-loblack",
+        "linnea-capobianco",
+        "mike-pinsky",
+        "ori-jean-charles"
+      ],
+      "currentPoints": 0,
+      "maxPossiblePoints": 100,
+      "remainingPicks": 5
+    },
+    {
+      "playerName": "Jackie Lerash",
+      "teamName": "Jackpot",
+      "picks": [
+        "jelly-loblack",
+        "lewis-kelly",
+        "ori-jean-charles",
+        "sharonda-cox",
+        "thien-an-nguyen"
+      ],
+      "currentPoints": 0,
+      "maxPossiblePoints": 100,
+      "remainingPicks": 5
+    },
+    {
+      "playerName": "Shaun Rybak",
+      "teamName": "Jeff Ps Plastic Surgeon",
+      "picks": [
+        "cristian-chavez",
+        "maggie-nestor",
+        "mike-pinsky",
+        "ori-jean-charles",
+        "patt-cannaday"
+      ],
+      "currentPoints": 0,
+      "maxPossiblePoints": 100,
+      "remainingPicks": 5
+    },
+    {
+      "playerName": "Jennifer Spears Rybak",
+      "teamName": "Jeff’s Botox Gang",
+      "picks": [
+        "carter-krull",
+        "kristin-flickinger",
+        "maggie-nestor",
+        "patt-cannaday",
+        "sharonda-cox"
+      ],
+      "currentPoints": 0,
+      "maxPossiblePoints": 100,
+      "remainingPicks": 5
+    },
+    {
+      "playerName": "Henry Lumbard",
+      "teamName": "Never Rizo",
+      "picks": [
+        "carter-krull",
+        "kristin-flickinger",
+        "maggie-nestor",
+        "mike-pinsky",
+        "patt-cannaday"
+      ],
+      "currentPoints": 0,
+      "maxPossiblePoints": 100,
+      "remainingPicks": 5
+    },
+    {
+      "playerName": "Nick John",
+      "teamName": "Patt Mike Kilby",
+      "picks": [
+        "danny-kilby",
+        "maggie-nestor",
+        "mike-pinsky",
+        "patt-cannaday",
+        "thien-an-nguyen"
+      ],
+      "currentPoints": 0,
+      "maxPossiblePoints": 100,
+      "remainingPicks": 5
+    },
+    {
+      "playerName": "Beth Valenti",
+      "teamName": "Probst Me Already",
+      "picks": [
+        "maggie-nestor",
+        "mike-pinsky",
+        "ori-jean-charles",
+        "patt-cannaday",
+        "sharonda-cox"
+      ],
+      "currentPoints": 0,
+      "maxPossiblePoints": 100,
+      "remainingPicks": 5
+    },
+    {
+      "playerName": "Margo Mattison",
+      "teamName": "Slay queen diva clock it battie 67",
+      "picks": [
+        "ana-sani",
+        "devin-way",
+        "kristin-flickinger",
+        "maggie-nestor",
+        "mike-pinsky"
+      ],
+      "currentPoints": 0,
+      "maxPossiblePoints": 100,
+      "remainingPicks": 5
+    },
+    {
+      "playerName": "Frank Mattison",
+      "teamName": "Surevivor",
+      "picks": [
+        "brady-booker",
+        "devin-way",
+        "jenna-doore",
+        "patt-cannaday",
+        "rob-antonson"
+      ],
+      "currentPoints": 0,
+      "maxPossiblePoints": 100,
+      "remainingPicks": 5
+    },
+    {
+      "playerName": "Debbie Lerash",
+      "teamName": "Wavingthru",
+      "picks": [
+        "cristian-chavez",
+        "jelly-loblack",
+        "kristin-flickinger",
+        "ori-jean-charles",
+        "thien-an-nguyen"
+      ],
+      "currentPoints": 0,
+      "maxPossiblePoints": 100,
+      "remainingPicks": 5
+    }
+  ]
+}
