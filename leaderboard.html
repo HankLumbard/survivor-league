@@ -192,8 +192,8 @@ async function load() {
     const picksHtml = r.breakdown
       .map((b) => {
         let cls = "active";
-        if (b.outcome === 20) cls = "winner";
-        else if (b.outcome === 17) cls = "final3";
+        if (b.outcome === 25) cls = "winner";
+        else if (b.outcome === 20) cls = "final3";
         else if (typeof b.outcome === "number") cls = "out";
         return `<span class="pick-tag ${cls}" data-castaway-id="${b.id}" title="Hover or tap to highlight this castaway across teams">${b.name}</span>`;
       })
@@ -269,8 +269,8 @@ function initials(name) {
 }
 
 function statusClass(outcome) {
-  if (outcome === 20) return "winner";
-  if (outcome === 17) return "final3";
+  if (outcome === 25) return "winner";
+  if (outcome === 20) return "final3";
   if (typeof outcome === "number") return "out";
   return "";
 }

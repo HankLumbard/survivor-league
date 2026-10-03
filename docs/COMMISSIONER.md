@@ -122,9 +122,13 @@ Mark Paid as TRUE after receiving the entry fee. Entries submitted through the s
 Leave Outcome blank while a castaway is still playing.
 
 The current scoring convention is:
-- voted out in week N → N points
-- final three non-winner → 17 points
-- winner → 20 points
+- eliminated before picks locked → 0 points
+- first elimination after picks locked (Episode 2) → 1 point
+- each subsequent elimination → 1 more point, up to 17 for the last elimination before the Final 3
+- final three non-winner → 20 points
+- winner → 25 total points
+
+Outcome is a point value, not an episode number. Publish results one episode behind the broadcast; leave unpublished outcomes blank until the weekly manual update.
 
 After changing outcomes, refresh the leaderboard.
 

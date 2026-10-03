@@ -14,9 +14,9 @@
   },
   "scoring": {
     "stillPlaying": 0,
-    "nonWinningFinalist": 17,
-    "winner": 20,
-    "maxPossiblePointsNote": "Website display ceiling: each remaining pick is valued at 20. This is not a jointly achievable team scenario."
+    "nonWinningFinalist": 20,
+    "winner": 25,
+    "maxPossiblePointsNote": "Website display ceiling: each remaining pick is valued at 25. This is not a jointly achievable team scenario."
   },
   "castaways": [
     {
@@ -137,7 +137,7 @@
         "sharonda-cox"
       ],
       "currentPoints": 0,
-      "maxPossiblePoints": 100,
+      "maxPossiblePoints": 125,
       "remainingPicks": 5
     },
     {
@@ -151,7 +151,7 @@
         "thien-an-nguyen"
       ],
       "currentPoints": 0,
-      "maxPossiblePoints": 100,
+      "maxPossiblePoints": 125,
       "remainingPicks": 5
     },
     {
@@ -165,7 +165,7 @@
         "ori-jean-charles"
       ],
       "currentPoints": 0,
-      "maxPossiblePoints": 100,
+      "maxPossiblePoints": 125,
       "remainingPicks": 5
     },
     {
@@ -179,7 +179,7 @@
         "ori-jean-charles"
       ],
       "currentPoints": 0,
-      "maxPossiblePoints": 100,
+      "maxPossiblePoints": 125,
       "remainingPicks": 5
     },
     {
@@ -193,7 +193,7 @@
         "rob-antonson"
       ],
       "currentPoints": 0,
-      "maxPossiblePoints": 100,
+      "maxPossiblePoints": 125,
       "remainingPicks": 5
     },
     {
@@ -207,7 +207,7 @@
         "sharonda-cox"
       ],
       "currentPoints": 0,
-      "maxPossiblePoints": 100,
+      "maxPossiblePoints": 125,
       "remainingPicks": 5
     },
     {
@@ -221,7 +221,7 @@
         "rob-antonson"
       ],
       "currentPoints": 0,
-      "maxPossiblePoints": 100,
+      "maxPossiblePoints": 125,
       "remainingPicks": 5
     },
     {
@@ -235,7 +235,7 @@
         "ori-jean-charles"
       ],
       "currentPoints": 0,
-      "maxPossiblePoints": 100,
+      "maxPossiblePoints": 125,
       "remainingPicks": 5
     },
     {
@@ -249,7 +249,7 @@
         "thien-an-nguyen"
       ],
       "currentPoints": 0,
-      "maxPossiblePoints": 100,
+      "maxPossiblePoints": 125,
       "remainingPicks": 5
     },
     {
@@ -263,7 +263,7 @@
         "patt-cannaday"
       ],
       "currentPoints": 0,
-      "maxPossiblePoints": 100,
+      "maxPossiblePoints": 125,
       "remainingPicks": 5
     },
     {
@@ -277,7 +277,7 @@
         "sharonda-cox"
       ],
       "currentPoints": 0,
-      "maxPossiblePoints": 100,
+      "maxPossiblePoints": 125,
       "remainingPicks": 5
     },
     {
@@ -291,7 +291,7 @@
         "patt-cannaday"
       ],
       "currentPoints": 0,
-      "maxPossiblePoints": 100,
+      "maxPossiblePoints": 125,
       "remainingPicks": 5
     },
     {
@@ -305,7 +305,7 @@
         "thien-an-nguyen"
       ],
       "currentPoints": 0,
-      "maxPossiblePoints": 100,
+      "maxPossiblePoints": 125,
       "remainingPicks": 5
     },
     {
@@ -319,7 +319,7 @@
         "sharonda-cox"
       ],
       "currentPoints": 0,
-      "maxPossiblePoints": 100,
+      "maxPossiblePoints": 125,
       "remainingPicks": 5
     },
     {
@@ -333,7 +333,7 @@
         "mike-pinsky"
       ],
       "currentPoints": 0,
-      "maxPossiblePoints": 100,
+      "maxPossiblePoints": 125,
       "remainingPicks": 5
     },
     {
@@ -347,7 +347,7 @@
         "rob-antonson"
       ],
       "currentPoints": 0,
-      "maxPossiblePoints": 100,
+      "maxPossiblePoints": 125,
       "remainingPicks": 5
     },
     {
@@ -361,7 +361,7 @@
         "thien-an-nguyen"
       ],
       "currentPoints": 0,
-      "maxPossiblePoints": 100,
+      "maxPossiblePoints": 125,
       "remainingPicks": 5
     }
   ]

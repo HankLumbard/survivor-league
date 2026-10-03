@@ -34,7 +34,7 @@ Before `seasonStarted` is true it publishes no entries or picks. Outcome zero
 is preserved exactly; a blank outcome (`null`) means still playing.
 
 Scores use `js/scoring.js`, the same functions used by the leaderboard. Its
-max-points ceiling values every remaining pick at 20; do not treat this as a
+max-points ceiling values every remaining pick at 25; do not treat this as a
 jointly achievable result when calculating elimination scenarios.
 
 Fetch, validation or write failures leave the previous snapshot intact and

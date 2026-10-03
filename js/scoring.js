@@ -1,15 +1,11 @@
 // ------------------------------------------------------------------
-// Scoring rules for the league:
-//   - A castaway voted off in week N is worth N points (week 1 = 1 pt, week 2 = 2 pts, ...).
-//   - A non-winning castaway who survives to the end is worth 17 points.
-//   - The Sole Survivor (winner) is worth 20 points -- instead of 17, not in addition to it.
-//   - A castaway still in the game is worth 0 points so far.
-//
-// This is all captured in one field per castaway, `outcome`:
-//   outcome === null        -> still playing, locked-in value unknown yet
-//   outcome === <number 1-16> -> voted out that week, worth that many points
-//   outcome === 17           -> survived to the end (did not win)
-//   outcome === 20           -> won the season
+// Outcomes are point values entered by the commissioner, not episode numbers.
+//   0: eliminated before picks locked (Aaliyah).
+//   1-17: successive eliminations after picks locked, starting with Episode 2.
+//   20: reaches the Final 3 (non-winner).
+//   25: Sole Survivor, total points rather than an additional bonus.
+//   null: still playing in the published data; worth 0 points so far.
+// Keep outcomes tied to the Sheet's delayed results, never broadcast results.
 // ------------------------------------------------------------------
 
 function currentPoints(outcome) {
@@ -18,20 +14,21 @@ function currentPoints(outcome) {
 }
 
 // "Max possible" mirrors how bracket standings (e.g. NCAA pools) usually show upside:
-// assume every castaway still in the game goes all the way and wins (20 pts).
+// assume every castaway still in the game goes all the way and wins (25 pts).
 // Once a castaway's fate is locked in (eliminated, endgame, or winner) their
 // contribution is locked too, so max possible converges with current points as the
 // season wraps up.
 function maxPossiblePoints(outcome) {
-  if (outcome === null || outcome === undefined) return 20;
+  if (outcome === null || outcome === undefined) return 25;
   return outcome;
 }
 
 function describeOutcome(outcome) {
   if (outcome === null || outcome === undefined) return "Still in";
-  if (outcome === 20) return "Sole Survivor \u2014 20 pts";
-  if (outcome === 17) return "Survived to the end \u2014 17 pts";
-  return `Voted out wk ${outcome} \u2014 ${outcome} pt${outcome === 1 ? "" : "s"}`;
+  if (outcome === 25) return "Sole Survivor \u2014 25 pts";
+  if (outcome === 20) return "Final 3 \u2014 20 pts";
+  if (outcome === 0) return "Eliminated before picks locked \u2014 0 pts";
+  return `Elimination ${outcome} after picks locked \u2014 ${outcome} pt${outcome === 1 ? "" : "s"}`;
 }
 
 // Given an entry {picks: [castawayId, ...]} and a castawayId -> castaway map,

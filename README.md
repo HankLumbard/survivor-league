@@ -96,14 +96,14 @@ After editing live scoring data, refresh the leaderboard to see the changes.
 Every submitted team is appended to Entries. Mark Paid as TRUE after receiving payment. Players cannot edit an existing submission through the website.
 
 ### Castaways
-Leave Outcome blank while a castaway is still playing. Enter the week number when they are voted out. The current scoring convention uses 17 for each Final Three member and 20 for the winner.
+Leave Outcome blank while a castaway is still playing. Enter point values, not episode numbers: 0 for eliminations before picks locked; 1 for the first elimination after picks locked (Episode 2), increasing by 1 for each subsequent elimination up to 17 for the last elimination before the Final 3; 20 for non-winning Final Three members; 25 total for the winner. Keep results one episode behind the broadcast and update outcomes only when ready to publish them.
 
 ### Settings
 Normally seasonStarted is the key live switch. Do not change it to TRUE until the league is ready to reveal picks/scoring.
 
 ## Notes & limits
 
-- "Max possible points" assumes every castaway still in the game goes on to win (20 points).
+- "Max possible points" assumes every castaway still in the game goes on to win (25 points).
 - The website reads live entries/outcomes when the leaderboard loads; refresh after commissioner updates.
 - If the site shows a network/CORS error, first check that SHEET_API_URL matches the current active Web App deployment URL.
 - If Apps Script code was changed, confirm the active deployment has a new version.

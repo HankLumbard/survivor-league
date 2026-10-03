@@ -4,7 +4,7 @@ const { scoreEntry } = require('../js/scoring.js');
 
 const root = path.resolve(__dirname, '..');
 const settingsKeys = ['leagueName', 'seasonLabel', 'picksPerTeam', 'seasonStarted', 'premiereDateTime', 'entryDeadline', 'entryDeadlineDisplay'];
-const validOutcomes = new Set([0, ...Array.from({ length: 17 }, (_, i) => i + 1), 20]);
+const validOutcomes = new Set([0, ...Array.from({ length: 17 }, (_, i) => i + 1), 20, 25]);
 
 function publicLeague(source) {
   if (!source || typeof source.seasonStarted !== 'boolean' || !Array.isArray(source.entries) || !Array.isArray(source.castaways)) {
@@ -37,7 +37,7 @@ function publicLeague(source) {
   }
   settings.seasonStarted = source.seasonStarted;
   settings.picksPerTeam = picksPerTeam;
-  return { schemaVersion: 1, seasonStarted: source.seasonStarted, entryCount: source.entryCount, settings, scoring: { stillPlaying: 0, nonWinningFinalist: 17, winner: 20, maxPossiblePointsNote: 'Website display ceiling: each remaining pick is valued at 20. This is not a jointly achievable team scenario.' }, castaways, entries };
+  return { schemaVersion: 1, seasonStarted: source.seasonStarted, entryCount: source.entryCount, settings, scoring: { stillPlaying: 0, nonWinningFinalist: 20, winner: 25, maxPossiblePointsNote: 'Website display ceiling: each remaining pick is valued at 25. This is not a jointly achievable team scenario.' }, castaways, entries };
 }
 
 function leagueHtml(snapshot) {
@@ -53,7 +53,7 @@ function leagueHtml(snapshot) {
 <p><a href="../leaderboard.html">Leaderboard</a> · <a href="live-league.json">Structured JSON</a></p>
 <h2>Teams and locked picks</h2>${snapshot.seasonStarted ? '' : '<p>Picks remain hidden until the season starts.</p>'}
 <div class="table-wrap"><table><thead><tr><th>Player</th><th>Team</th><th>Picks</th><th>Current points</th><th>Remaining picks</th></tr></thead><tbody>${teams}</tbody></table></div>
-<h2>Castaway outcomes</h2><p>A blank outcome in the Sheet means still playing. Numeric outcomes are the exact point values recorded by the commissioner. Non-winning finalists receive 17 points; the winner receives 20.</p>
+<h2>Castaway outcomes</h2><p>A blank outcome in the Sheet means still playing. Numeric outcomes are the exact point values recorded by the commissioner. Non-winning finalists receive 20 points; the winner receives 25.</p>
 <div class="table-wrap"><table><thead><tr><th>Castaway</th><th>Stable ID</th><th>Outcome / points</th></tr></thead><tbody>${outcomes}</tbody></table></div>
 <p>${escape(snapshot.scoring.maxPossiblePointsNote)}</p></body></html>\n`;
 }

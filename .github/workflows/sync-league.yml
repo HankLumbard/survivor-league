@@ -28,7 +28,7 @@ jobs:
         with:
           node-version: '22'
       - name: Test public export
-        run: node --test scripts/sync-league.test.cjs
+        run: node --test scripts/*.test.cjs
       - name: Fetch and validate the live leaderboard
         run: node scripts/sync-league.cjs
       - name: Commit only changed league data
