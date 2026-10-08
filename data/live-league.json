@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-03T02:21:36.853Z",
+  "updatedAt": "2026-10-08T00:08:33.123Z",
   "schemaVersion": 1,
   "seasonStarted": true,
   "entryCount": 17,
@@ -32,7 +32,7 @@
     {
       "id": "ana-sani",
       "name": "Ana",
-      "outcome": null
+      "outcome": 1
     },
     {
       "id": "brady-booker",
@@ -136,9 +136,9 @@
         "lewis-kelly",
         "sharonda-cox"
       ],
-      "currentPoints": 0,
-      "maxPossiblePoints": 125,
-      "remainingPicks": 5
+      "currentPoints": 1,
+      "maxPossiblePoints": 101,
+      "remainingPicks": 4
     },
     {
       "playerName": "Harriet Spears",
@@ -332,9 +332,9 @@
         "maggie-nestor",
         "mike-pinsky"
       ],
-      "currentPoints": 0,
-      "maxPossiblePoints": 125,
-      "remainingPicks": 5
+      "currentPoints": 1,
+      "maxPossiblePoints": 101,
+      "remainingPicks": 4
     },
     {
       "playerName": "Frank Mattison",
