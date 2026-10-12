@@ -15,7 +15,9 @@ function backend(started = true) {
       ['Id', 'Name', 'Hometown', 'Occupation', 'Outcome', 'Age', 'Photo'],
       ...['a', 'b', 'c', 'd', 'e'].map((id, i) => [id, id, '', '', [0, 1, null, 20, 25][i], '', '']),
     ],
-    Settings: [['Key', 'Value'], ['seasonStarted', started], ['adminSecret', 'PRIVATE_SETTING']],
+    Settings: [['Key', 'Value'], ['seasonStarted', started], ['adminSecret', 'PRIVATE_SETTING'],
+      ['premiereDate', new Date('2026-09-23T04:00:00Z')],
+      ['entryDeadline', new Date('2026-09-30T04:00:00Z')]],
   };
   const ss = {
     getSheetByName(name) {
@@ -36,6 +38,7 @@ function backend(started = true) {
     ['survivor51_status', JSON.stringify({ settings: { secret: 'PRIVATE_CACHED_SETTING' } })],
   ]);
   const context = vm.createContext({
+    Date,
     SpreadsheetApp: { getActiveSpreadsheet: () => ss },
     CacheService: { getScriptCache: () => ({
       get: key => cache.get(key),
@@ -69,6 +72,8 @@ test('Started leaderboard and legacy league retain names, picks and exact outcom
     assert.deepEqual(Array.from(result.entries[0].picks), ['a', 'b', 'c', 'd', 'e']);
     assert.deepEqual(Array.from(result.castaways, c => c.outcome), [0, 1, null, 20, 25]);
     assert.equal(publicLeague(result).entries[0].currentPoints, 46);
+    assert.equal(result.settings.premiereDate, '2026-09-23T04:00:00.000Z');
+    assert.equal(result.settings.entryDeadline, '2026-09-30T04:00:00.000Z');
   }
 });
 

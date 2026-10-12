@@ -408,6 +408,8 @@ function readPublicSettings(ss) {
     const value = settings[key];
     if (["string", "number", "boolean"].includes(typeof value)) {
       publicSettings[key] = value;
+    } else if (value instanceof Date && !isNaN(value.getTime())) {
+      publicSettings[key] = value.toISOString();
     }
   });
   return publicSettings;
