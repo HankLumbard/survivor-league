@@ -8,7 +8,7 @@
  *  - Deployed as a Web App, it exposes:
  *      GET  ?action=status      -> season status + public season settings
  *      GET  ?action=leaderboard -> data needed for the public leaderboard
- *      GET  ?action=league      -> full league data (backward compatibility)
+ *      GET  ?action=league      -> public league data (backward compatibility)
  *      POST {action:"submitEntry", ...} -> appends a new locked entry
  *
  * Setup (see README.md for the full walkthrough):
@@ -30,9 +30,11 @@ const SHEET_SETTINGS = "Settings";
 // the cache, so normal weekly updates appear immediately.
 // Apps Script CacheService has a maximum TTL of 6 hours.
 const CACHE_SECONDS = 21600;
-const CACHE_KEY_STATUS = "survivor51_status";
-const CACHE_KEY_LEADERBOARD = "survivor51_leaderboard";
-const CACHE_KEY_LEAGUE = "survivor51_league";
+// Versioned keys prevent previously cached private responses being served.
+const CACHE_KEY_STATUS = "survivor51_status_public_v2";
+const CACHE_KEY_LIVE_STATUS = "survivor51_live_status_public_v2";
+const CACHE_KEY_LEADERBOARD = "survivor51_leaderboard_public_v2";
+const CACHE_KEY_LEAGUE = "survivor51_league_public_v2";
 
 // Season-wide values live in the Google Sheet's Settings tab. These values
 // are only used to seed missing Settings rows; existing values are preserved.
@@ -133,12 +135,15 @@ function setupSheets() {
 
 function doGet(e) {
   const action = e && e.parameter && e.parameter.action ? e.parameter.action : "league";
+  if (!["status", "live-status", "leaderboard", "league"].includes(action)) {
+    return jsonResponse({ error: "Unknown action." });
+  }
   const cache = CacheService.getScriptCache();
 
   if (action === "status") {
     return cachedJsonResponse(cache, CACHE_KEY_STATUS, function () {
       const ss = SpreadsheetApp.getActiveSpreadsheet();
-      const settings = readSettings(ss);
+      const settings = readPublicSettings(ss);
       return {
         seasonStarted: settings.seasonStarted === true,
         entryCount: countEntries(ss),
@@ -149,9 +154,9 @@ function doGet(e) {
   }
 
   if (action === "live-status") {
-    return cachedJsonResponse(cache, CACHE_KEY_STATUS, function () {
+    return cachedJsonResponse(cache, CACHE_KEY_LIVE_STATUS, function () {
       const ss = SpreadsheetApp.getActiveSpreadsheet();
-      const settings = readSettings(ss);
+      const settings = readPublicSettings(ss);
       return { seasonStarted: settings.seasonStarted === true };
     });
   }
@@ -159,13 +164,13 @@ function doGet(e) {
   if (action === "leaderboard") {
     return cachedJsonResponse(cache, CACHE_KEY_LEADERBOARD, function () {
       const ss = SpreadsheetApp.getActiveSpreadsheet();
-      const settings = readSettings(ss);
+      const settings = readPublicSettings(ss);
       const seasonStarted = settings.seasonStarted === true;
       if (!seasonStarted) {
         return {
           seasonStarted: false,
           entryCount: countEntries(ss),
-          entries: readPublicEntries(ss),
+          entries: [],
           castaways: [],
           settings: settings,
         };
@@ -180,13 +185,18 @@ function doGet(e) {
     });
   }
 
-  // Backward-compatible full response for older clients.
+  // Older clients receive the same public fields as the leaderboard.
+  // Phone numbers, payment status and timestamps are never public.
   return cachedJsonResponse(cache, CACHE_KEY_LEAGUE, function () {
     const ss = SpreadsheetApp.getActiveSpreadsheet();
+    const settings = readPublicSettings(ss);
+    const seasonStarted = settings.seasonStarted === true;
     return {
+      seasonStarted: seasonStarted,
+      entryCount: countEntries(ss),
       castaways: readCastaways(ss),
-      entries: readEntries(ss),
-      settings: readSettings(ss),
+      entries: seasonStarted ? readPublicEntries(ss) : [],
+      settings: settings,
     };
   });
 }
@@ -258,8 +268,12 @@ function cachedJsonResponse(cache, key, builder) {
 function clearLeagueCaches() {
   CacheService.getScriptCache().removeAll([
     CACHE_KEY_STATUS,
+    CACHE_KEY_LIVE_STATUS,
     CACHE_KEY_LEADERBOARD,
     CACHE_KEY_LEAGUE,
+    "survivor51_status",
+    "survivor51_leaderboard",
+    "survivor51_league",
   ]);
 }
 
@@ -387,21 +401,16 @@ function readCastaways(ss) {
     }));
 }
 
-function readEntries(ss) {
-  const sheet = ss.getSheetByName(SHEET_ENTRIES);
-  if (!sheet) return [];
-  const values = sheet.getDataRange().getValues();
-  const rows = values.slice(1);
-  return rows
-    .filter((r) => r[1])
-    .map((r) => ({
-      timestamp: r[0] instanceof Date ? r[0].toISOString() : String(r[0]),
-      playerName: String(r[1]),
-      teamName: String(r[2]),
-      picks: [String(r[3]), String(r[4]), String(r[5]), String(r[6]), String(r[7])],
-      paid: String(r[8]).toUpperCase() === "TRUE",
-      phone: r[9] ? String(r[9]) : "",
-    }));
+function readPublicSettings(ss) {
+  const settings = readSettings(ss);
+  const publicSettings = {};
+  Object.keys(DEFAULT_SETTINGS).forEach((key) => {
+    const value = settings[key];
+    if (["string", "number", "boolean"].includes(typeof value)) {
+      publicSettings[key] = value;
+    }
+  });
+  return publicSettings;
 }
 
 function readSettings(ss) {
