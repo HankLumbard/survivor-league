@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-08T00:08:33.123Z",
+  "updatedAt": "2026-10-15T22:12:26.719Z",
   "schemaVersion": 1,
   "seasonStarted": true,
   "entryCount": 17,
@@ -107,12 +107,12 @@
     {
       "id": "patt-cannaday",
       "name": "Patt",
-      "outcome": null
+      "outcome": 3
     },
     {
       "id": "rob-antonson",
       "name": "Rob",
-      "outcome": null
+      "outcome": 2
     },
     {
       "id": "sharonda-cox",
@@ -150,9 +150,9 @@
         "patt-cannaday",
         "thien-an-nguyen"
       ],
-      "currentPoints": 0,
-      "maxPossiblePoints": 125,
-      "remainingPicks": 5
+      "currentPoints": 3,
+      "maxPossiblePoints": 103,
+      "remainingPicks": 4
     },
     {
       "playerName": "Stefan Gartner",
@@ -192,9 +192,9 @@
         "patt-cannaday",
         "rob-antonson"
       ],
-      "currentPoints": 0,
-      "maxPossiblePoints": 125,
-      "remainingPicks": 5
+      "currentPoints": 5,
+      "maxPossiblePoints": 80,
+      "remainingPicks": 3
     },
     {
       "playerName": "Sarah Lumbard",
@@ -220,9 +220,9 @@
         "kristin-flickinger",
         "rob-antonson"
       ],
-      "currentPoints": 0,
-      "maxPossiblePoints": 125,
-      "remainingPicks": 5
+      "currentPoints": 2,
+      "maxPossiblePoints": 102,
+      "remainingPicks": 4
     },
     {
       "playerName": "Jena Mattison",
@@ -262,9 +262,9 @@
         "ori-jean-charles",
         "patt-cannaday"
       ],
-      "currentPoints": 0,
-      "maxPossiblePoints": 125,
-      "remainingPicks": 5
+      "currentPoints": 3,
+      "maxPossiblePoints": 103,
+      "remainingPicks": 4
     },
     {
       "playerName": "Jennifer Spears Rybak",
@@ -276,9 +276,9 @@
         "patt-cannaday",
         "sharonda-cox"
       ],
-      "currentPoints": 0,
-      "maxPossiblePoints": 125,
-      "remainingPicks": 5
+      "currentPoints": 3,
+      "maxPossiblePoints": 103,
+      "remainingPicks": 4
     },
     {
       "playerName": "Henry Lumbard",
@@ -290,9 +290,9 @@
         "mike-pinsky",
         "patt-cannaday"
       ],
-      "currentPoints": 0,
-      "maxPossiblePoints": 125,
-      "remainingPicks": 5
+      "currentPoints": 3,
+      "maxPossiblePoints": 103,
+      "remainingPicks": 4
     },
     {
       "playerName": "Nick John",
@@ -304,9 +304,9 @@
         "patt-cannaday",
         "thien-an-nguyen"
       ],
-      "currentPoints": 0,
-      "maxPossiblePoints": 125,
-      "remainingPicks": 5
+      "currentPoints": 3,
+      "maxPossiblePoints": 103,
+      "remainingPicks": 4
     },
     {
       "playerName": "Beth Valenti",
@@ -318,9 +318,9 @@
         "patt-cannaday",
         "sharonda-cox"
       ],
-      "currentPoints": 0,
-      "maxPossiblePoints": 125,
-      "remainingPicks": 5
+      "currentPoints": 3,
+      "maxPossiblePoints": 103,
+      "remainingPicks": 4
     },
     {
       "playerName": "Margo Mattison",
@@ -346,9 +346,9 @@
         "patt-cannaday",
         "rob-antonson"
       ],
-      "currentPoints": 0,
-      "maxPossiblePoints": 125,
-      "remainingPicks": 5
+      "currentPoints": 5,
+      "maxPossiblePoints": 80,
+      "remainingPicks": 3
     },
     {
       "playerName": "Debbie Lerash",
