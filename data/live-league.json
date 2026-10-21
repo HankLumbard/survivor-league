@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-15T22:12:26.719Z",
+  "updatedAt": "2026-10-21T23:27:30.004Z",
   "schemaVersion": 1,
   "seasonStarted": true,
   "entryCount": 17,
@@ -72,7 +72,7 @@
     {
       "id": "jenna-doore",
       "name": "Jenna",
-      "outcome": null
+      "outcome": 4
     },
     {
       "id": "kristin-flickinger",
@@ -178,9 +178,9 @@
         "kristin-flickinger",
         "ori-jean-charles"
       ],
-      "currentPoints": 0,
-      "maxPossiblePoints": 125,
-      "remainingPicks": 5
+      "currentPoints": 4,
+      "maxPossiblePoints": 104,
+      "remainingPicks": 4
     },
     {
       "playerName": "Jordan Mattison",
@@ -192,9 +192,9 @@
         "patt-cannaday",
         "rob-antonson"
       ],
-      "currentPoints": 5,
-      "maxPossiblePoints": 80,
-      "remainingPicks": 3
+      "currentPoints": 9,
+      "maxPossiblePoints": 59,
+      "remainingPicks": 2
     },
     {
       "playerName": "Sarah Lumbard",
@@ -346,9 +346,9 @@
         "patt-cannaday",
         "rob-antonson"
       ],
-      "currentPoints": 5,
-      "maxPossiblePoints": 80,
-      "remainingPicks": 3
+      "currentPoints": 9,
+      "maxPossiblePoints": 59,
+      "remainingPicks": 2
     },
     {
       "playerName": "Debbie Lerash",
