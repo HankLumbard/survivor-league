@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-21T23:27:30.004Z",
+  "updatedAt": "2026-10-28T23:40:46.829Z",
   "schemaVersion": 1,
   "seasonStarted": true,
   "entryCount": 17,
@@ -27,7 +27,7 @@
     {
       "id": "alexis-levine",
       "name": "Alexis",
-      "outcome": null
+      "outcome": 5
     },
     {
       "id": "ana-sani",
@@ -82,7 +82,7 @@
     {
       "id": "lewis-kelly",
       "name": "Lewis",
-      "outcome": null
+      "outcome": 6
     },
     {
       "id": "linnea-capobianco",
@@ -136,9 +136,9 @@
         "lewis-kelly",
         "sharonda-cox"
       ],
-      "currentPoints": 1,
-      "maxPossiblePoints": 101,
-      "remainingPicks": 4
+      "currentPoints": 7,
+      "maxPossiblePoints": 82,
+      "remainingPicks": 3
     },
     {
       "playerName": "Harriet Spears",
@@ -164,9 +164,9 @@
         "lewis-kelly",
         "ori-jean-charles"
       ],
-      "currentPoints": 0,
-      "maxPossiblePoints": 125,
-      "remainingPicks": 5
+      "currentPoints": 6,
+      "maxPossiblePoints": 106,
+      "remainingPicks": 4
     },
     {
       "playerName": "Jonathan Ozer",
@@ -178,9 +178,9 @@
         "kristin-flickinger",
         "ori-jean-charles"
       ],
-      "currentPoints": 4,
-      "maxPossiblePoints": 104,
-      "remainingPicks": 4
+      "currentPoints": 9,
+      "maxPossiblePoints": 84,
+      "remainingPicks": 3
     },
     {
       "playerName": "Jordan Mattison",
@@ -206,9 +206,9 @@
         "mike-pinsky",
         "sharonda-cox"
       ],
-      "currentPoints": 0,
-      "maxPossiblePoints": 125,
-      "remainingPicks": 5
+      "currentPoints": 5,
+      "maxPossiblePoints": 105,
+      "remainingPicks": 4
     },
     {
       "playerName": "Laura Rybak",
@@ -220,9 +220,9 @@
         "kristin-flickinger",
         "rob-antonson"
       ],
-      "currentPoints": 2,
-      "maxPossiblePoints": 102,
-      "remainingPicks": 4
+      "currentPoints": 7,
+      "maxPossiblePoints": 82,
+      "remainingPicks": 3
     },
     {
       "playerName": "Jena Mattison",
@@ -248,9 +248,9 @@
         "sharonda-cox",
         "thien-an-nguyen"
       ],
-      "currentPoints": 0,
-      "maxPossiblePoints": 125,
-      "remainingPicks": 5
+      "currentPoints": 6,
+      "maxPossiblePoints": 106,
+      "remainingPicks": 4
     },
     {
       "playerName": "Shaun Rybak",
