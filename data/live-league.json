@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-28T23:40:46.829Z",
+  "updatedAt": "2026-11-03T02:27:46.822Z",
   "schemaVersion": 1,
   "seasonStarted": true,
   "entryCount": 17,
@@ -82,12 +82,12 @@
     {
       "id": "lewis-kelly",
       "name": "Lewis",
-      "outcome": 6
+      "outcome": null
     },
     {
       "id": "linnea-capobianco",
       "name": "Linnea",
-      "outcome": null
+      "outcome": 6
     },
     {
       "id": "maggie-nestor",
@@ -136,9 +136,9 @@
         "lewis-kelly",
         "sharonda-cox"
       ],
-      "currentPoints": 7,
-      "maxPossiblePoints": 82,
-      "remainingPicks": 3
+      "currentPoints": 1,
+      "maxPossiblePoints": 101,
+      "remainingPicks": 4
     },
     {
       "playerName": "Harriet Spears",
@@ -150,9 +150,9 @@
         "patt-cannaday",
         "thien-an-nguyen"
       ],
-      "currentPoints": 3,
-      "maxPossiblePoints": 103,
-      "remainingPicks": 4
+      "currentPoints": 9,
+      "maxPossiblePoints": 84,
+      "remainingPicks": 3
     },
     {
       "playerName": "Stefan Gartner",
@@ -164,9 +164,9 @@
         "lewis-kelly",
         "ori-jean-charles"
       ],
-      "currentPoints": 6,
-      "maxPossiblePoints": 106,
-      "remainingPicks": 4
+      "currentPoints": 0,
+      "maxPossiblePoints": 125,
+      "remainingPicks": 5
     },
     {
       "playerName": "Jonathan Ozer",
@@ -234,9 +234,9 @@
         "mike-pinsky",
         "ori-jean-charles"
       ],
-      "currentPoints": 0,
-      "maxPossiblePoints": 125,
-      "remainingPicks": 5
+      "currentPoints": 6,
+      "maxPossiblePoints": 106,
+      "remainingPicks": 4
     },
     {
       "playerName": "Jackie Lerash",
@@ -248,9 +248,9 @@
         "sharonda-cox",
         "thien-an-nguyen"
       ],
-      "currentPoints": 6,
-      "maxPossiblePoints": 106,
-      "remainingPicks": 4
+      "currentPoints": 0,
+      "maxPossiblePoints": 125,
+      "remainingPicks": 5
     },
     {
       "playerName": "Shaun Rybak",
