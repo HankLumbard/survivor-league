@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-03T02:27:46.822Z",
+  "updatedAt": "2026-11-05T03:42:34.240Z",
   "schemaVersion": 1,
   "seasonStarted": true,
   "entryCount": 17,
@@ -102,7 +102,7 @@
     {
       "id": "ori-jean-charles",
       "name": "Ori",
-      "outcome": null
+      "outcome": 7
     },
     {
       "id": "patt-cannaday",
@@ -164,9 +164,9 @@
         "lewis-kelly",
         "ori-jean-charles"
       ],
-      "currentPoints": 0,
-      "maxPossiblePoints": 125,
-      "remainingPicks": 5
+      "currentPoints": 7,
+      "maxPossiblePoints": 107,
+      "remainingPicks": 4
     },
     {
       "playerName": "Jonathan Ozer",
@@ -178,9 +178,9 @@
         "kristin-flickinger",
         "ori-jean-charles"
       ],
-      "currentPoints": 9,
-      "maxPossiblePoints": 84,
-      "remainingPicks": 3
+      "currentPoints": 16,
+      "maxPossiblePoints": 66,
+      "remainingPicks": 2
     },
     {
       "playerName": "Jordan Mattison",
@@ -234,9 +234,9 @@
         "mike-pinsky",
         "ori-jean-charles"
       ],
-      "currentPoints": 6,
-      "maxPossiblePoints": 106,
-      "remainingPicks": 4
+      "currentPoints": 13,
+      "maxPossiblePoints": 88,
+      "remainingPicks": 3
     },
     {
       "playerName": "Jackie Lerash",
@@ -248,9 +248,9 @@
         "sharonda-cox",
         "thien-an-nguyen"
       ],
-      "currentPoints": 0,
-      "maxPossiblePoints": 125,
-      "remainingPicks": 5
+      "currentPoints": 7,
+      "maxPossiblePoints": 107,
+      "remainingPicks": 4
     },
     {
       "playerName": "Shaun Rybak",
@@ -262,9 +262,9 @@
         "ori-jean-charles",
         "patt-cannaday"
       ],
-      "currentPoints": 3,
-      "maxPossiblePoints": 103,
-      "remainingPicks": 4
+      "currentPoints": 10,
+      "maxPossiblePoints": 85,
+      "remainingPicks": 3
     },
     {
       "playerName": "Jennifer Spears Rybak",
@@ -318,9 +318,9 @@
         "patt-cannaday",
         "sharonda-cox"
       ],
-      "currentPoints": 3,
-      "maxPossiblePoints": 103,
-      "remainingPicks": 4
+      "currentPoints": 10,
+      "maxPossiblePoints": 85,
+      "remainingPicks": 3
     },
     {
       "playerName": "Margo Mattison",
@@ -360,9 +360,9 @@
         "ori-jean-charles",
         "thien-an-nguyen"
       ],
-      "currentPoints": 0,
-      "maxPossiblePoints": 125,
-      "remainingPicks": 5
+      "currentPoints": 7,
+      "maxPossiblePoints": 107,
+      "remainingPicks": 4
     }
   ]
 }
